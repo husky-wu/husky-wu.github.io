@@ -20,31 +20,35 @@
     var CONFIG = {"hostname":"husky-wu.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="嗷呜呜是只小明夋">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HuskyWu的博客">
-<meta property="og:url" content="https://husky-wu.github.io/index.html">
+  <meta name="description" content="文档目录 [TOC] 1.环境介绍百货–数据库服务器    实例名称 IP 账户 密码 db_name db_unique_name service_name    zbds-baihuo-DB01 172.16.35.141 zyadmin ** zbdsora zbdsora zbdsora   zbds-baihuo-DB02 172.16.35.140 zyadmin ** zbdsora">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle-DataGuard-Rman-auxiliary搭建备库">
+<meta property="og:url" content="https://husky-wu.github.io/2020/05/25/Oracle-DataGuard-Rman-auxiliary%E6%90%AD%E5%BB%BA%E5%A4%87%E5%BA%93/index.html">
 <meta property="og:site_name" content="HuskyWu的博客">
-<meta property="og:description" content="嗷呜呜是只小明夋">
+<meta property="og:description" content="文档目录 [TOC] 1.环境介绍百货–数据库服务器    实例名称 IP 账户 密码 db_name db_unique_name service_name    zbds-baihuo-DB01 172.16.35.141 zyadmin ** zbdsora zbdsora zbdsora   zbds-baihuo-DB02 172.16.35.140 zyadmin ** zbdsora">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-25T06:37:05.000Z">
+<meta property="article:modified_time" content="2020-05-25T06:41:31.959Z">
 <meta property="article:author" content="HuskyWu">
 <meta property="article:tag" content="Oracle">
+<meta property="article:tag" content="Data Guard">
+<meta property="article:tag" content="主从">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://husky-wu.github.io/">
+<link rel="canonical" href="https://husky-wu.github.io/2020/05/25/Oracle-DataGuard-Rman-auxiliary%E6%90%AD%E5%BB%BA%E5%A4%87%E5%BA%93/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>HuskyWu的博客</title>
+  <title>Oracle-DataGuard-Rman-auxiliary搭建备库 | HuskyWu的博客</title>
   
 
 
@@ -159,9 +163,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -177,10 +182,9 @@
       <meta itemprop="name" content="HuskyWu的博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/25/Oracle-DataGuard-Rman-auxiliary%E6%90%AD%E5%BB%BA%E5%A4%87%E5%BA%93/" class="post-title-link" itemprop="url">Oracle-DataGuard-Rman-auxiliary搭建备库</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Oracle-DataGuard-Rman-auxiliary搭建备库
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -213,7 +217,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>文档目录</p>
+        <p>文档目录</p>
 <p>[TOC]</p>
 <h2 id="1-环境介绍"><a href="#1-环境介绍" class="headerlink" title="1.环境介绍"></a>1.环境介绍</h2><p>百货–数据库服务器</p>
 <table>
@@ -409,91 +413,35 @@
 
 <p>SQL&gt; alter database create standby controlfile as ‘/u01/bak/control01.ctl’;</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">将备库控制文件拷贝至db11</span><br><span class="line">scp ezdb12:&#x2F;u01&#x2F;bak&#x2F;control01.ctl &#x2F;alidata&#x2F;oradata&#x2F;zbdsora&#x2F;control01.ctl</span><br><span class="line">cp &#x2F;alidata&#x2F;oradata&#x2F;zbdsora&#x2F;control01.ctl &#x2F;u01&#x2F;app&#x2F;oracle&#x2F;fast_recovery_area&#x2F;zbdsora&#x2F;</span><br><span class="line">mv &#x2F;u01&#x2F;app&#x2F;oracle&#x2F;fast_recovery_area&#x2F;zbdsora&#x2F;control01.ctl &#x2F;u01&#x2F;app&#x2F;oracle&#x2F;fast_recovery_area&#x2F;zbdsora&#x2F;control02.ctl</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">恢复对应数据文件至db11，并启动db11-zbdsora到mount状态，应用APPLY模式</span><br><span class="line"></span><br><span class="line">SQL&gt; startup mount;</span><br><span class="line">SQL&gt; alter database recover managed standby database disconnect from session;</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">启动db11-zbdsora至OPEN状态，并应用APPLY REDO模式</span><br><span class="line"></span><br><span class="line">SQL&gt; alter database recover managed standby database cancel;</span><br><span class="line">SQL&gt; alter database open;</span><br><span class="line">SQL&gt; alter database recover managed standby database disconnect from session;</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">6.开启和关闭DataGuard的流程</span><br><span class="line">6.1.关闭</span><br><span class="line">关闭主库</span><br><span class="line"></span><br><span class="line">SQL&gt; shutdown immediate</span><br><span class="line">1</span><br><span class="line">关闭主库监听</span><br><span class="line"></span><br><span class="line">lsnrctl stop</span><br><span class="line">1</span><br><span class="line">查询备库是否正在执行重做应用或实时应用。如果MRP0或MRP进程存在，则备库正在应用重做。</span><br><span class="line"></span><br><span class="line">SQL&gt; select process, status from v$managed_standby;</span><br><span class="line">1</span><br><span class="line">如果重做应用程序正在运行，停止备库的Redo日志的应用</span><br><span class="line"></span><br><span class="line">SQL&gt; alter database recover managed standby database cancel;</span><br><span class="line">1</span><br><span class="line">关闭备库</span><br><span class="line"></span><br><span class="line">SQL&gt; shutdown immediate</span><br><span class="line">1</span><br><span class="line">关闭备库监听</span><br><span class="line"></span><br><span class="line">lsnrctl stop</span><br><span class="line">1</span><br><span class="line">6.2.开启</span><br><span class="line">启动备库监听</span><br><span class="line"></span><br><span class="line">lsnrctl start</span><br><span class="line">1</span><br><span class="line">启动备库到mount状态</span><br><span class="line"></span><br><span class="line">SQL&gt; startup mount;</span><br><span class="line">1</span><br><span class="line">开启备库的Redo日志应用</span><br><span class="line"></span><br><span class="line">SQL&gt; alter database recover managed standby database using current logfile disconnect from session;</span><br><span class="line">1</span><br><span class="line">启动主库监听</span><br><span class="line"></span><br><span class="line">lsnrctl start</span><br><span class="line">1</span><br><span class="line">启动主库</span><br><span class="line"></span><br><span class="line">SQL&gt; startup;</span><br><span class="line">1</span><br><span class="line">检查日志情况的SQL语句</span><br><span class="line"></span><br><span class="line">select al.thrd &quot;Thread&quot;, almax &quot;Last Seq Received&quot;, lhmax &quot;Last Seq Applied&quot;</span><br><span class="line"> from (select thread# thrd, max(sequence#) almax</span><br><span class="line">       from v$archived_log</span><br><span class="line">       where resetlogs_change#&#x3D;(select resetlogs_change# from v$database)</span><br><span class="line">       group by thread#) al,</span><br><span class="line">      (select thread# thrd, max(sequence#) lhmax</span><br><span class="line">       from v$log_history</span><br><span class="line">       where first_time&#x3D;(select max(first_time) from v$log_history)</span><br><span class="line">       group by thread#) lh</span><br><span class="line"> where al.thrd &#x3D; lh.thrd;</span><br></pre></td></tr></table></figure>
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+              <a href="/tags/Data-Guard/" rel="tag"># Data Guard</a>
+              <a href="/tags/%E4%B8%BB%E4%BB%8E/" rel="tag"># 主从</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husky-wu.github.io/2020/05/22/hello-world/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="HuskyWu">
-      <meta itemprop="description" content="嗷呜呜是只小明夋">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HuskyWu的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/22/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-22 11:11:31" itemprop="dateCreated datePublished" datetime="2020-05-22T11:11:31+08:00">2020-05-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/22/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -546,6 +494,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-环境介绍"><span class="nav-number">1.</span> <span class="nav-text">1.环境介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-DG部署"><span class="nav-number">2.</span> <span class="nav-text">2.DG部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-建立主库zbdsora"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.建立主库zbdsora</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-主库开启归档"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.主库开启归档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-主库添加Standby-Redo-Log"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.主库添加Standby Redo Log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-从主库创建pfile文件"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.从主库创建pfile文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-设置主库初始化参数"><span class="nav-number">2.5.</span> <span class="nav-text">2.5.设置主库初始化参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-设置备库初始化参数"><span class="nav-number">2.6.</span> <span class="nav-text">2.6.设置备库初始化参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-复制主库的密码文件到备库"><span class="nav-number">2.7.</span> <span class="nav-text">2.7.复制主库的密码文件到备库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-创建备库相应的目录结构"><span class="nav-number">2.8.</span> <span class="nav-text">2.8.创建备库相应的目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-配置主库和备库的监听"><span class="nav-number">2.9.</span> <span class="nav-text">2.9.配置主库和备库的监听###</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-10-配置主库和备库的网络服务名"><span class="nav-number">2.10.</span> <span class="nav-text">2.10.配置主库和备库的网络服务名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-11-创建备库并启动"><span class="nav-number">2.11.</span> <span class="nav-text">2.11.创建备库并启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-12-RMAN复制主库到备库"><span class="nav-number">2.12.</span> <span class="nav-text">2.12.RMAN复制主库到备库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-13-在备库开启实时日志应用"><span class="nav-number">2.13.</span> <span class="nav-text">2.13.在备库开启实时日志应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-14-主备库角色状态查询"><span class="nav-number">2.14.</span> <span class="nav-text">2.14.主备库角色状态查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-测试DG"><span class="nav-number">3.</span> <span class="nav-text">3.测试DG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-执行日志切换测试"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.执行日志切换测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-查看备库启动的DG进程"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.查看备库启动的DG进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-查看数据库的保护模式"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.查看数据库的保护模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-查看DG的日志信息"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.查看DG的日志信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Open-Read-Only-Standby数据库"><span class="nav-number">3.5.</span> <span class="nav-text">3.5.Open Read Only Standby数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-解锁scott用户并添加数据，验证是否同步"><span class="nav-number">3.6.</span> <span class="nav-text">3.6.解锁scott用户并添加数据，验证是否同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-DG三种模式"><span class="nav-number">4.</span> <span class="nav-text">4.DG三种模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-最大性能模式max-performance-默认"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.最大性能模式max performance-默认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-最大可用性模式max-availability"><span class="nav-number">4.2.</span> <span class="nav-text">4.2.最大可用性模式max availability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-最大保护模式max-protection"><span class="nav-number">4.3.</span> <span class="nav-text">4.3.最大保护模式max protection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-查询当前模式"><span class="nav-number">4.4.</span> <span class="nav-text">4.4.查询当前模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-DG切换测试"><span class="nav-number">5.</span> <span class="nav-text">5.DG切换测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-DG-switchover-切换测试"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.DG switchover 切换测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-DG-failover-切换测试"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.DG failover 切换测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-DG-failover后重建DG"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.DG failover后重建DG</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
