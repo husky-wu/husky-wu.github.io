@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>HuskyWu的博客</title>
-  <icon>https://www.gravatar.com/avatar/a3497bea8f20db0659453cc1f8a8360d</icon>
+  <icon>https://www.gravatar.com/avatar/677a3831b4f8567bbc2750dafb4fa06e</icon>
   <subtitle>Huskyの技术分享</subtitle>
   <link href="/atom.xml" rel="self"/>
   
@@ -11,7 +11,7 @@
   
   <author>
     <name>HuskyWu</name>
-    <email>15000055447@163.com</email>
+    <email>beantech@gmail.com</email>
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
