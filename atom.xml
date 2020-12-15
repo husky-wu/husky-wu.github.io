@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://husky-wu.github.io/"/>
-  <updated>2020-05-25T08:10:20.839Z</updated>
+  <updated>2020-12-15T03:19:03.557Z</updated>
   <id>https://husky-wu.github.io/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TiDB 4.0 课程学习-1.1分布式数据库发展简史</title>
+    <link href="https://husky-wu.github.io/2020/12/15/TiDB%204.0%20%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.1%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%91%E5%B1%95%E7%AE%80%E5%8F%B2/"/>
+    <id>https://husky-wu.github.io/2020/12/15/TiDB%204.0%20%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.1%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%91%E5%B1%95%E7%AE%80%E5%8F%B2/</id>
+    <published>2020-12-15T06:37:05.000Z</published>
+    <updated>2020-12-15T03:19:03.557Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="TiDB-4-0-课程学习-1-1分布式数据库发展简史"><a href="#TiDB-4-0-课程学习-1-1分布式数据库发展简史" class="headerlink" title="TiDB 4.0 课程学习-1.1分布式数据库发展简史"></a>TiDB 4.0 课程学习-1.1分布式数据库发展简史</h1><h1 id="1-1-A-Brief-History-of-Distributed-Database-（分布式数据库发展简史）"><a href="#1-1-A-Brief-History-of-Distributed-Database-（分布式数据库发展简史）" class="headerlink" title="1.1 A Brief History of Distributed Database （分布式数据库发展简史）"></a>1.1 A Brief History of Distributed Database （分布式数据库发展简史）</h1><p>OLTP</p><p>![1607999392959](TiDB 4.0 课程学习-1.1分布式数据库发展简史.assets/1607999392959.png)</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;TiDB-4-0-课程学习-1-1分布式数据库发展简史&quot;&gt;&lt;a href=&quot;#TiDB-4-0-课程学习-1-1分布式数据库发展简史&quot; class=&quot;headerlink&quot; title=&quot;TiDB 4.0 课程学习-1.1分布式数据库发展简史&quot;&gt;&lt;/a&gt;TiDB 
+      
+    
+    </summary>
+    
+    
+      <category term="TiDB" scheme="https://husky-wu.github.io/categories/TiDB/"/>
+    
+    
+      <category term="TiDB" scheme="https://husky-wu.github.io/tags/TiDB/"/>
+    
+      <category term="学习课程" scheme="https://husky-wu.github.io/tags/%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B/"/>
+    
+      <category term="分布式" scheme="https://husky-wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>Oracle-DataGuard-Rman-auxiliary搭建备库</title>
