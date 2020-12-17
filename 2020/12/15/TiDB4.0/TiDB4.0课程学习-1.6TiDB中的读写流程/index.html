@@ -221,40 +221,85 @@
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231422935.png" alt="image-20201217231422935" title="null"></p>
 <p>TiDB 中的读写流程</p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231406645.png" alt="image-20201217231406645" title="null"></p>
-<p>写在开始前</p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231500384.png" alt="image-20201217231500384" title="null"></p>
-<p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231514028.png" alt="image-20201217231514028" title="null"></p>
-<p>TiDB概览图</p>
+<p>在我们开始之前</p>
+<ul>
+<li><p>来龙去脉</p>
+</li>
+<li><p>目标</p>
+<ul>
+<li>对TiDB的整体架构有一定的了解吗</li>
+<li>理解TiDB读写请求的一般处理流程</li>
+</ul>
+</li>
+<li><p>大纲</p>
+<ul>
+<li>TiDB平台介绍</li>
+<li>TiDB中的读请求</li>
+<li>TiDB中的写请求</li>
+</ul>
+</li>
+</ul>
+<h3 id="第一部分：TiDB平台介绍"><a href="#第一部分：TiDB平台介绍" class="headerlink" title="第一部分：TiDB平台介绍"></a>第一部分：TiDB平台介绍</h3><p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231514028.png" alt="image-20201217231514028" title="null"></p>
+<p>第一部分:TiDB平台介绍</p>
+<ul>
+<li>TiDB平台介绍</li>
+<li>目标</li>
+<li>小标题<ul>
+<li>TiDB</li>
+<li>TiKV</li>
+<li>PD</li>
+</ul>
+</li>
+<li>关键点</li>
+<li>回顾目标</li>
+</ul>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231543640.png" alt="image-20201217231543640" title="null"></p>
-<p>tidb不提供负载均衡功能</p>
+<p>TiDB概览图</p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231614574.png" alt="image-20201217231614574" title="null"></p>
-<p><strong>TIDB组件功能</strong></p>
-<p>TiKV</p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231709330.png" alt="image-20201217231709330" title="null"></p>
-<p>PD</p>
-<p>高可用</p>
+<p>tidb不提供负载均衡功能</p>
+<ul>
+<li>引入TiKV<ul>
+<li>分布式键值存储引擎</li>
+<li>快照隔离</li>
+<li>Raft协议</li>
+<li>不依赖于分布式文件系统</li>
+</ul>
+</li>
+</ul>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231740663.png" alt="image-20201217231740663" title="null"></p>
-<h2 id="第二部分：TiDB读请求"><a href="#第二部分：TiDB读请求" class="headerlink" title="第二部分：TiDB读请求"></a>第二部分：TiDB读请求</h2><p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231816472.png" alt="image-20201217231816472" title="null"></p>
+<ul>
+<li><strong>TIDB组件功能</strong><ul>
+<li>PD</li>
+<li>高可用</li>
+</ul>
+</li>
+</ul>
+<h3 id="第二部分：TiDB读请求"><a href="#第二部分：TiDB读请求" class="headerlink" title="第二部分：TiDB读请求"></a>第二部分：TiDB读请求</h3><p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231816472.png" alt="image-20201217231816472" title="null"></p>
 <p>SQL 进程流</p>
+<p>TiDB读请求</p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231853548.png" alt="image-20201217231853548" title="null"></p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217231927508.png" alt="image-20201217231927508" title="null"></p>
-<p>第三部分：写请求在TIDB中的处理过程</p>
-<p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217232007846.png" alt="image-20201217232007846" title="null"></p>
-<p>写请求在TIDB中的处理过程</p>
+<p><strong>TIDB读请求</strong></p>
+<p>1.客户端建立到TiDB的连接并向TiDB发送请求<br>2.TiDB从requesl获取SQL<br>3.TIDB解析和编译SQL，制定和优化查询计划<br>4.TiDB从PD获得startts<br>5.TiDB获取表的元数据，并将查询计划传递给一系列执行者<br>6.TiDB通过gRPC将协处理器请求发送给TikV<br>7.TiKV接收请求，搜索数据，并将结果发送给TiDB<br>8.TiDB从TikV接收所有数据并处理结果<br>9.TiDB将结果发送给客户端</p>
+<h3 id="第三部分：写请求在TIDB中的处理过程"><a href="#第三部分：写请求在TIDB中的处理过程" class="headerlink" title="第三部分：写请求在TIDB中的处理过程"></a>第三部分：写请求在TIDB中的处理过程</h3><p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217232007846.png" alt="image-20201217232007846" title="null"></p>
 <p><img src="../TiDB4.0%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0-1.6TiDB%E4%B8%AD%E7%9A%84%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/image-20201217232019691.png" alt="image-20201217232019691" title="null"></p>
+<p><strong>写请求在TIDB中的处理过程</strong></p>
+<p>1.客户端建立到TiDB的连接并向TiDB发送请求<br>2.TIDB从请求中获取SQL。<br>3.TIDB解析和编译SQL，生成和优化查询plar<br>4.TiDB从PD获得startts<br>5.TIDB获取表的元数据，并将查询计划转换为一系列执行程序<br>6.TiDB提交请求<br>7.根据percolator,TiDB将在提交阶段获得committs(2PC)。<br>8.将结果发送给<br>9.TiDB发送结果到客户端</p>
 
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
         <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
     
-    <a class="pull-left" href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/" style="float: left;">
-        ← TiDB4.0课程学习-1.1分布式数据库发展简史
+    <a class="pull-left" href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.3TiDB发展简史/" style="float: left;">
+        ← TiDB4.0课程学习-1.3TiDB发展简史
     </a>
     
     
-    <a class="pull-right" href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.3TiDB发展简史/">
-        TiDB4.0课程学习-1.3TiDB发展简史 →
+    <a class="pull-right" href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.7TiDB典型应用场景及用户案例/">
+        TiDB4.0课程学习-1.7TiDB 典型应用场景及用户案例 →
     </a>
     
 </nav>
