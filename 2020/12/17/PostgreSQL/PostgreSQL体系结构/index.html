@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>PostgreSQL体系结构 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(5)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2020-12-17T05:46:54.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+</span>
+                <h1>PostgreSQL体系结构</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p><strong>一、引言</strong></p>
+<hr>
+<p>PostgreSQL是最像Oracle的开源数据库，我们可以拿<a href="https://cloud.tencent.com/product/cdb?from=10680" target="_blank" rel="noopener">MySQL</a>和Oracle来比较学习它的体系结构，比较容易理解。本文会讨论pg的如下结构：</p>
+<ul>
+<li>日志文件</li>
+<li>参数文件</li>
+<li>控制文件</li>
+<li>数据文件</li>
+<li>redo日志（WAL）</li>
+<li>后台进程</li>
+</ul>
+<p>PostgreSQL的主要结构如下：</p>
+<p><img src="../PostgreSQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/image-20201217134920305.png" alt="image-20201217134920305" title="null"></p>
+<p><img src="../PostgreSQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/image-20201217134934853.png" alt="image-20201217134934853" title="null"></p>
+<p><strong>二、日志文件</strong></p>
+<hr>
+<p><strong>2.1 日志文件种类</strong></p>
+<p>1）$PGDATA/log 运行日志(pg10之前为$PGDATA/pg_log) </p>
+<p>2）$PGDATA/pg_wal 重做日志(pg10之前为$PGDATA/pg_xlog) </p>
+<p>3）$PGDATA/pg_xact 事务提交日志(pg10之前为$PGDATA/pg_clog) </p>
+<p>4）服务器日志，可以在启动的时候指定，比如pg_ctl start -l ./alert.log</p>
+<p><strong>2.2 运行日志</strong></p>
+<p>2.2.1 运行日志参数</p>
+<p>运行日志主要相关的参数如下，默认没有开启的话没有log目录，开启后会自动生成。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">可选值/说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">log_destination = ‘csvlog’</td>
+<td align="left"># stderr, csvlog, syslog, and eventlog ,csvlog requires logging_collector to be on一般选择这个，可以将csv日志导入数据库中查看</td>
+</tr>
+<tr>
+<td align="left">logging_collector=on</td>
+<td align="left"># Enable capturing of stderr and csvlog into log files选scv格式的日志必须设置这个参数on，修改需要重启</td>
+</tr>
+<tr>
+<td align="left">log_directory = ‘log’</td>
+<td align="left">日志输出目录</td>
+</tr>
+<tr>
+<td align="left">log_filename=’postgresql-%Y-%m-%d_%H%M%S.log</td>
+<td align="left">日志文件名字格式</td>
+</tr>
+<tr>
+<td align="left">log_file_mode=0600</td>
+<td align="left"># creation mode for log files 日志文件权限</td>
+</tr>
+<tr>
+<td align="left">log_truncate_on_rotation = on</td>
+<td align="left">设置重用日志</td>
+</tr>
+<tr>
+<td align="left">log_rotation_age = 1d</td>
+<td align="left">多长时间重用日志</td>
+</tr>
+<tr>
+<td align="left">log_rotation_size = 10MB</td>
+<td align="left">日志达到多大重用</td>
+</tr>
+<tr>
+<td align="left">log_min_messages=warning</td>
+<td align="left">#debug5,debug4,debug3,debug2,debug1,info,notice,warning,error,log,fatal,panic</td>
+</tr>
+<tr>
+<td align="left">log_min_duration_statement = 60</td>
+<td align="left">慢sql记录（超过多长时间的sql）</td>
+</tr>
+<tr>
+<td align="left">log_checkpoints = on</td>
+<td align="left">记录checkpoint操作</td>
+</tr>
+<tr>
+<td align="left">log_connections = on</td>
+<td align="left">记录会话连接操作</td>
+</tr>
+<tr>
+<td align="left">log_disconnections = on</td>
+<td align="left">记录会话断开操作</td>
+</tr>
+<tr>
+<td align="left">log_duration = on</td>
+<td align="left">记录sql执行时间</td>
+</tr>
+<tr>
+<td align="left">log_lock_waits=on</td>
+<td align="left"># log lock waits &gt;= deadlock_timeout 记录时间长的阻塞</td>
+</tr>
+<tr>
+<td align="left">log_statement=’ddl’</td>
+<td align="left"># none, ddl, mod, all 记录ddl</td>
+</tr>
+</tbody></table>
+<p>2.2.2 csv日志入库</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE pg_log</span><br><span class="line">(</span><br><span class="line">  log_time timestamp(<span class="number">3</span>) <span class="keyword">with</span> time zone,</span><br><span class="line">  user_name text,</span><br><span class="line">  database_name text,</span><br><span class="line">  process_id integer,</span><br><span class="line">  connection_from text,</span><br><span class="line">  session_id text,</span><br><span class="line">  session_line_num bigint,</span><br><span class="line">  command_tag text,</span><br><span class="line">  session_start_time timestamp <span class="keyword">with</span> time zone,</span><br><span class="line">  virtual_transaction_id text,</span><br><span class="line">  transaction_id bigint,</span><br><span class="line">  error_severity text,</span><br><span class="line">  sql_state_code text,</span><br><span class="line">  message text,</span><br><span class="line">  detail text,</span><br><span class="line">  hint text,</span><br><span class="line">  internal_query text,</span><br><span class="line">  internal_query_pos integer,</span><br><span class="line">  context text,</span><br><span class="line">  query text,</span><br><span class="line">  query_pos integer,</span><br><span class="line">  location text,</span><br><span class="line">  application_name text,</span><br><span class="line">  PRIMARY KEY (session_id, session_line_num)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">&lt; pg@cs-db /oracle/soft/data/log <span class="number">16</span>:<span class="number">12</span> --&gt; pwd</span><br><span class="line">/oracle/soft/data/log</span><br><span class="line">&lt; pg@cs-db /oracle/soft/data/log <span class="number">16</span>:<span class="number">12</span> --&gt; </span><br><span class="line">&lt; pg@cs-db /oracle/soft/data/log <span class="number">16</span>:<span class="number">12</span> --&gt; ls -rtl</span><br><span class="line">total <span class="number">8</span></span><br><span class="line">-rw------- <span class="number">1</span> pg pg <span class="number">168</span> Nov <span class="number">10</span> <span class="number">16</span>:<span class="number">08</span> postgresql<span class="number">-16.</span>log</span><br><span class="line">-rw------- <span class="number">1</span> pg pg <span class="number">502</span> Nov <span class="number">10</span> <span class="number">16</span>:<span class="number">08</span> postgresql<span class="number">-16.</span>csv</span><br><span class="line">&lt; pg@cs-db /oracle/soft/data/log <span class="number">16</span>:<span class="number">12</span> --&gt; pwd</span><br><span class="line">/oracle/soft/data/log</span><br><span class="line">&lt; pg@cs-db /oracle/soft/data/log <span class="number">16</span>:<span class="number">12</span> --&gt; psql</span><br><span class="line">psql (<span class="number">11</span>beta3)</span><br><span class="line">Type <span class="string">"help"</span> <span class="keyword">for</span> help.</span><br><span class="line"></span><br><span class="line">li=# copy pg_log from '/oracle/soft/data/log/postgresql-16.csv' with csv;</span><br><span class="line">COPY <span class="number">3</span></span><br><span class="line">li=#</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以用sql来查看了。</p>
+<p><strong>2.3 pg_wal 见六</strong></p>
+<p><strong>2.4 事务日志pg_xact</strong></p>
+<p>pg_xact是事务提交日志，记录了事务的元数据。默认开启。内容一般不能直接读。</p>
+<p><strong>2.5 服务器日志</strong></p>
+<p>如果用pg_ctl启动的时候没有指定-l参数来指定服务器日志，错误可能会输出到cmd前台。服务器日志记录了数据库的重要信息，一个服务器日志的内容如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[postgres@whf307 log]$ more alert.log</span><br><span class="line"><span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">14</span>:<span class="number">11</span>:<span class="number">36.718</span> CST [<span class="number">14660</span>] LOG:  listening on IPv4 address <span class="string">"0.0.0.0"</span>, port <span class="number">5432</span></span><br><span class="line"><span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">14</span>:<span class="number">11</span>:<span class="number">36.718</span> CST [<span class="number">14660</span>] LOG:  listening on IPv6 address <span class="string">"::"</span>, port <span class="number">5432</span></span><br><span class="line"><span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">14</span>:<span class="number">11</span>:<span class="number">36.720</span> CST [<span class="number">14660</span>] LOG:  listening on Unix socket <span class="string">"/data/.s.PGSQL.5432"</span></span><br><span class="line"><span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">14</span>:<span class="number">11</span>:<span class="number">36.729</span> CST [<span class="number">14660</span>] LOG:  redirecting log output to logging collector process</span><br><span class="line"><span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">14</span>:<span class="number">11</span>:<span class="number">36.729</span> CST [<span class="number">14660</span>] HINT:  Future log output will appear <span class="keyword">in</span> directory <span class="string">"log"</span>.</span><br></pre></td></tr></table></figure>
+
+<p>lsof或许可以过滤出在写的日志文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -c postgres| grep REG | grep -v /usr | grep -v /dev | grep -v /SYS</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、参数文件</strong></p>
+<hr>
+<p><strong>3.1 postgresql.conf</strong></p>
+<p>pg的主要参数文件，有很详细的说明和注释，和Oracle的pfile，MySQL的my.cnf类似。默认在$PGDATA下。很多参数修改后都需要重启。9.6之后支持了alter system来修改，修改后的会报存在<strong>$PGDATA/postgresql.auto.conf下</strong>，可以reload或者 restart来使之生效。</p>
+<p>主要的参数如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">可选值/说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">listen_addresses=’*’</td>
+<td align="left">监听客户端的地址，默认是本地的，需要修改为*或者0.0.0.0</td>
+</tr>
+<tr>
+<td align="left">port = 5432</td>
+<td align="left">pg端口，默认是5432</td>
+</tr>
+<tr>
+<td align="left">max_connections = 2000</td>
+<td align="left">最大连接数，默认100</td>
+</tr>
+<tr>
+<td align="left">unix_socket_directories</td>
+<td align="left">socket文件的位置，默认在/tmp下面</td>
+</tr>
+<tr>
+<td align="left">shared_buffers</td>
+<td align="left">数据缓存区，类型Oracle的buffer cache。建议值 1/4主机内存</td>
+</tr>
+<tr>
+<td align="left">maintenance_work_mem</td>
+<td align="left">维护工作内存，用于vacuum,create index,reindex等。建议值(1/4 主机内存)/autovacuum_max_workers</td>
+</tr>
+<tr>
+<td align="left">max_worker_processes</td>
+<td align="left">总worker数</td>
+</tr>
+<tr>
+<td align="left">max_parallel_workers_per_gather</td>
+<td align="left">单条QUERY中，每个node最多允许开启的并行计算WORKER数</td>
+</tr>
+<tr>
+<td align="left">wal_level</td>
+<td align="left">wal级别，11 默认是replica了</td>
+</tr>
+<tr>
+<td align="left">wal_buffers</td>
+<td align="left">类似Oracle的log buffer</td>
+</tr>
+<tr>
+<td align="left">checkpoint_timeout</td>
+<td align="left">checkpoint时间间隔</td>
+</tr>
+<tr>
+<td align="left">max_wal_size</td>
+<td align="left">控制wal的数量</td>
+</tr>
+<tr>
+<td align="left">min_wal_size</td>
+<td align="left">控制wal的数量</td>
+</tr>
+<tr>
+<td align="left">archive_command</td>
+<td align="left">开归档，比如 ‘test ! -f /disk1/digoal/arch/%f &amp;&amp; cp %p /disk1/digoal/arch/%f’</td>
+</tr>
+<tr>
+<td align="left">autovacuum</td>
+<td align="left">开启自动vacuum</td>
+</tr>
+</tbody></table>
+<p><strong>3.2 pg_hba.conf</strong></p>
+<p>这个是黑白名单的设置。文件里有详细的参数说明，默认参数如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># TYPE  DATABASE        USER            ADDRESS                 METHOD</span><br><span class="line"># "local" is for Unix domain socket connections only</span><br><span class="line">local   all             all                                     trust</span><br><span class="line"># IPv4 local connections:</span><br><span class="line">host    all             all             <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/<span class="number">32</span>            trust</span><br><span class="line"># IPv6 local connections:</span><br><span class="line">host    all             all             ::<span class="number">1</span>/<span class="number">128</span>                 trust</span><br><span class="line"># Allow replication connections from localhost, by a user with the</span><br><span class="line"># replication privilege.</span><br><span class="line">local   replication     all                                     trust</span><br><span class="line">host    replication     all             <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/<span class="number">32</span>            trust</span><br><span class="line">host    replication     all             ::<span class="number">1</span>/<span class="number">128</span>                 trust</span><br><span class="line"># local      DATABASE  USER  METHOD  [OPTIONS]</span><br><span class="line"># host       DATABASE  USER  ADDRESS  METHOD  [OPTIONS]</span><br><span class="line"># hostssl    DATABASE  USER  ADDRESS  METHOD  [OPTIONS]</span><br><span class="line"># hostnossl  DATABASE  USER  ADDRESS  METHOD  [OPTIONS]</span><br></pre></td></tr></table></figure>
+
+<p><strong>type</strong> 列有local，host，hostssl，hostnossl四种。local是本地认证 <strong>database</strong> 可以是all，或者指定的数据库 <strong>user</strong>列可以是all，或者具体的用户 <strong>address</strong> 可以是ip或者网段 <strong>method</strong>比较重要，有”trust”, “reject”, “md5”, “password”, “scram-sha-256”, # “gss”, “sspi”, “ident”, “peer”, “pam”, “ldap”, “radius” or “cert”这么多可选。trust是免密登录；reject是黑名单拒绝；md5是加密的密码；password是没有加密的密码；ident是Linux下PostgreSQL默认的local认证方式，凡是能正确登录服务器的操作系统用户（注：不是数据库用户）就能使用本用户映射的数据库用户不需密码登录数据库</p>
+<p><strong>3.3 pg_ident.conf</strong></p>
+<p>pg_ident.con是用户映射配置文件。结合pg_hba.connf中，method为ident可以用特定的操作系统用户和指定的数据库用户登录数据库。如下： pg_ident.conf如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># MAPNAME    SYSTEM-USERNAME    PG-USERNAME</span><br><span class="line">mapll　　　　      test                     sa</span><br></pre></td></tr></table></figure>
+
+<p>pg_hba.conf如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># TYPE  DATABASE  USER  CIDR-ADDRESS  METHOD</span><br><span class="line">local    all      all        ident  map=mapll</span><br></pre></td></tr></table></figure>
+
+<p><strong>四、控制文件</strong></p>
+<hr>
+<p><strong>4.1 控制文件位置</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$PGDATA/global/pg_control</span><br></pre></td></tr></table></figure>
+
+<p>控制文件在数据库目录的global目录下。控制文件记录了数据库的重要信息。</p>
+<p><strong>4.2 查看控制文件</strong></p>
+<p>pg_controldata可以查看控制文件的内容</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">[postgres@whf307 global]$ pg_controldata  $PGDATA</span><br><span class="line">pg_control version number:            <span class="number">1100</span></span><br><span class="line">Catalog version number:               <span class="number">201809051</span></span><br><span class="line">Database system identifier:           6684270596680436587  #dbid</span><br><span class="line">Database cluster state:               in production        # primary</span><br><span class="line">pg_control last modified:             Thu <span class="number">16</span> May <span class="number">2019</span> <span class="number">02</span>:<span class="number">26</span>:<span class="number">37</span> PM CST</span><br><span class="line">Latest checkpoint location:           <span class="number">0</span>/<span class="number">48812</span>A0</span><br><span class="line">Latest checkpoint<span class="string">'s REDO location:    0/4881268                #redo 位置</span></span><br><span class="line">Latest checkpoint's REDO WAL file:    000000010000000000000001 #wal文件号</span><br><span class="line">Latest checkpoint<span class="string">'s TimeLineID:       1</span></span><br><span class="line"><span class="string">Latest checkpoint'</span>s PrevTimeLineID:   <span class="number">1</span></span><br><span class="line">Latest checkpoint<span class="string">'s full_page_writes: on</span></span><br><span class="line">Latest checkpoint's NextXID:          0:572          #下一个事务id</span><br><span class="line">Latest checkpoint<span class="string">'s NextOID:          16388          #下一个OID</span></span><br><span class="line"><span class="string">Latest checkpoint'</span>s NextMultiXactId:  <span class="number">1</span></span><br><span class="line">Latest checkpoint<span class="string">'s NextMultiOffset:  0</span></span><br><span class="line"><span class="string">Latest checkpoint'</span>s oldestXID:        <span class="number">561</span></span><br><span class="line">Latest checkpoint<span class="string">'s oldestXID'</span>s DB:   <span class="number">1</span></span><br><span class="line">Latest checkpoint<span class="string">'s oldestActiveXID:  572</span></span><br><span class="line"><span class="string">Latest checkpoint'</span>s oldestMultiXid:   <span class="number">1</span></span><br><span class="line">Latest checkpoint<span class="string">'s oldestMulti'</span>s DB: <span class="number">1</span></span><br><span class="line">Latest checkpoint<span class="string">'s oldestCommitTsXid:0</span></span><br><span class="line"><span class="string">Latest checkpoint'</span>s newestCommitTsXid:<span class="number">0</span></span><br><span class="line">Time <span class="keyword">of</span> latest checkpoint:            Thu <span class="number">16</span> May <span class="number">2019</span> <span class="number">02</span>:<span class="number">26</span>:<span class="number">36</span> PM CST</span><br><span class="line">Fake LSN counter <span class="keyword">for</span> unlogged rels:   <span class="number">0</span>/<span class="number">1</span></span><br><span class="line">Minimum recovery ending location:     <span class="number">0</span>/<span class="number">0</span></span><br><span class="line">Min recovery ending loc<span class="string">'s timeline:   0</span></span><br><span class="line"><span class="string">Backup start location:                0/0</span></span><br><span class="line"><span class="string">Backup end location:                  0/0</span></span><br><span class="line"><span class="string">End-of-backup record required:        no</span></span><br><span class="line"><span class="string">wal_level setting:                    replica   #wal级别</span></span><br><span class="line"><span class="string">wal_log_hints setting:                off</span></span><br><span class="line"><span class="string">max_connections setting:              100       #最大连接数</span></span><br><span class="line"><span class="string">max_worker_processes setting:         8</span></span><br><span class="line"><span class="string">max_prepared_xacts setting:           0</span></span><br><span class="line"><span class="string">max_locks_per_xact setting:           64</span></span><br><span class="line"><span class="string">track_commit_timestamp setting:       off</span></span><br><span class="line"><span class="string">Maximum data alignment:               8</span></span><br><span class="line"><span class="string">Database block size:                  8192    #数据块大小</span></span><br><span class="line"><span class="string">Blocks per segment of large relation: 131072</span></span><br><span class="line"><span class="string">WAL block size:                       8192    #wal 数据块大小</span></span><br><span class="line"><span class="string">Bytes per WAL segment:                67108864  #单个wal大小</span></span><br><span class="line"><span class="string">Maximum length of identifiers:        64</span></span><br><span class="line"><span class="string">Maximum columns in an index:          32</span></span><br><span class="line"><span class="string">Maximum size of a TOAST chunk:        1996</span></span><br><span class="line"><span class="string">Size of a large-object chunk:         2048</span></span><br><span class="line"><span class="string">Date/time type storage:               64-bit integers</span></span><br><span class="line"><span class="string">Float4 argument passing:              by value</span></span><br><span class="line"><span class="string">Float8 argument passing:              by value</span></span><br><span class="line"><span class="string">Data page checksum version:           1</span></span><br><span class="line"><span class="string">Mock authentication nonce:            f01b78f5a88882f2f1811bbbc637cc4766d57d39831139a6b3e881d76272d892</span></span><br><span class="line"><span class="string">[postgres@whf307 global]$</span></span><br></pre></td></tr></table></figure>
+
+<p>controlfile记录了数据库运行的一些信息，比如数据库id，是否open，wal的位置，checkpoint的位置，等等。controlfile是很重要的文件，数据库部署和调整。</p>
+<p><strong>五、数据文件</strong></p>
+<hr>
+<p><strong>5.1 page</strong></p>
+<p>pg中，每个索引和表都是一个单独的文件，pg中叫做page。默认是每个大于1G的page会被分割pg_class.relfilenode.1这样的文件。page的大小在initdb的时候指定（–with-segsize）。</p>
+<p><strong>5.2 page物理位置</strong></p>
+<p>page的物理位置在$PGDATA/BASE/DATABASE_OID/PG_CLASS.RELFILENODE</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mydb=# select relfilenode from pg_class where relname='t1';</span><br><span class="line"> relfilenode </span><br><span class="line">-------------</span><br><span class="line">       <span class="number">16385</span></span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line"></span><br><span class="line">mydb=# select pg_relation_filepath('t1');</span><br><span class="line"> pg_relation_filepath </span><br><span class="line">----------------------</span><br><span class="line"> base/<span class="number">16384</span>/<span class="number">16385</span></span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line"></span><br><span class="line">mydb=# show data_directory;</span><br><span class="line"> data_directory </span><br><span class="line">----------------</span><br><span class="line"> /data</span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line"></span><br><span class="line">mydb=# \q</span><br><span class="line">[postgres@whf307 global]$ ls -rtl /data/base/<span class="number">16384</span>/<span class="number">16385</span></span><br><span class="line">-rw------- <span class="number">1</span> postgres postgres <span class="number">8192</span> May <span class="number">16</span> <span class="number">14</span>:<span class="number">26</span> /data/base/<span class="number">16384</span>/<span class="number">16385</span></span><br><span class="line">[postgres@whf307 global]$</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，pg_class.relfilenode类似dba_objects.data_object_id，truncate表之后relfilenode会变。对应的物理文件名字也会变。</p>
+<p><strong>六、WAL日志</strong></p>
+<hr>
+<p><strong>6.1 wal位置</strong></p>
+<p>wal在$PGDATA/pg_wal下。10之前为pg_xlog</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[postgres@whf307 data]$ cd pg_wal</span><br><span class="line">[postgres@whf307 pg_wal]$ </span><br><span class="line">[postgres@whf307 pg_wal]$ ls -rtl</span><br><span class="line">total <span class="number">65536</span></span><br><span class="line">drwx------ <span class="number">2</span> postgres postgres        <span class="number">6</span> Apr <span class="number">27</span> <span class="number">02</span>:<span class="number">23</span> archive_status</span><br><span class="line">-rw------- <span class="number">1</span> postgres postgres <span class="number">67108864</span> May <span class="number">16</span> <span class="number">15</span>:<span class="number">56</span> <span class="number">000000010000000000000001</span></span><br><span class="line">[postgres@whf307 pg_wal]$</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.2 wal命名格式</strong></p>
+<p>文件名称为16进制的24个字符组成，每8个字符一组，每组的意义如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00000001</span> <span class="number">00000000</span> <span class="number">00000001</span></span><br><span class="line">-------- -------- -------- </span><br><span class="line">时间线     逻辑id    物理id</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.3 查看wal时间</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">postgres=# select pg_walfile_name(pg_current_wal_lsn());</span><br><span class="line">     pg_walfile_name      </span><br><span class="line">--------------------------</span><br><span class="line"> <span class="number">000000010000000000000001</span></span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line"></span><br><span class="line">postgres=#</span><br><span class="line"></span><br><span class="line">postgres=# select * from pg_ls_waldir() order by modification asc;</span><br><span class="line">           name           |   size   |      modification      </span><br><span class="line">--------------------------+----------+------------------------</span><br><span class="line"> <span class="number">000000010000000000000001</span> | <span class="number">67108864</span> | <span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">15</span>:<span class="number">56</span>:<span class="number">32</span>+<span class="number">08</span></span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line">postgres=#</span><br></pre></td></tr></table></figure>
+
+<p>6.4 切换wal</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">postgres=# select pg_switch_wal();</span><br><span class="line"> pg_switch_wal </span><br><span class="line">---------------</span><br><span class="line"> <span class="number">0</span>/<span class="number">48814E8</span></span><br><span class="line">(<span class="number">1</span> row)</span><br><span class="line">postgres=# select * from pg_ls_waldir() order by modification asc;</span><br><span class="line">           name           |   size   |      modification      </span><br><span class="line">--------------------------+----------+------------------------</span><br><span class="line"> <span class="number">000000010000000000000001</span> | <span class="number">67108864</span> | <span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">16</span>:<span class="number">12</span>:<span class="number">29</span>+<span class="number">08</span></span><br><span class="line"> <span class="number">000000010000000000000002</span> | <span class="number">67108864</span> | <span class="number">2019</span><span class="number">-05</span><span class="number">-16</span> <span class="number">16</span>:<span class="number">12</span>:<span class="number">30</span>+<span class="number">08</span></span><br><span class="line">(<span class="number">2</span> rows)</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.5 pg_waldump查看wal</strong></p>
+<p><img src="../PostgreSQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/image-20201217135025164.png" alt="image-20201217135025164" title="null"></p>
+<p>pg_waldump可以查看wal的具体内容</p>
+<p><strong>七、后台进程</strong></p>
+<hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">postgres <span class="number">15309</span>     <span class="number">1</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> pts/<span class="number">0</span>    <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /pg/pg11/bin/postgres</span><br><span class="line">postgres <span class="number">15310</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: logger   </span><br><span class="line">postgres <span class="number">15312</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: checkpointer  </span><br><span class="line">postgres <span class="number">15313</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: background writer  </span><br><span class="line">postgres <span class="number">15314</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: walwriter  </span><br><span class="line">postgres <span class="number">15315</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: autovacuum launcher  </span><br><span class="line">postgres <span class="number">15316</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: stats collector  </span><br><span class="line">postgres <span class="number">15317</span> <span class="number">15309</span>  <span class="number">0</span> <span class="number">15</span>:<span class="number">51</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> postgres: logical replication launcher</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>postgres 主进程</li>
+<li>logger 日志进程</li>
+<li>checkpointer checkpoint进程</li>
+<li>background writer 数据文件写进程</li>
+<li>walwriter wal写进程</li>
+<li>autovacuum launcher autovacuum进程</li>
+<li>stats collector 统计信息收集进程</li>
+</ul>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    
+    <a class="pull-right" href="/2020/12/17/PostgreSQL/PostgreSQL安装/">
+        PostgreSQL安装 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>
