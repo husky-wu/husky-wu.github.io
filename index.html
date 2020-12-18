@@ -93,6 +93,8 @@
         		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
             	<ul class="sb-submenu">
 				  	
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(3)</small></a></li>
+				    
 				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(1)</small></a></li>
 				    
 				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
@@ -272,7 +274,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
-                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
+                    <h3><a href="/2020/12/18/MySQL/MySQL体系结构基础/">MySQL体系结构及存储引擎</a></h3>
                     <span>
                         <span class="post-meta">
       <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
@@ -290,12 +292,13 @@
                 <div class="col-md-8">
                     <p>
                       
-                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
+                        MySQL体系结构
+连接者：不同语言的代码程序和mysql的交互（SQL交互）1、连接池 管理、缓冲用户的连接，线程处理等需要缓存的需求2、管理服务和工具组件 系统管理和控制工具，例如备份恢复、Mysql复制、集群等3、sql接口 接受用户的SQL命令，并且返回用户需要查询的结果4、查询解析器 SQL命令传递到解析器的时候会被解析器验证和解析(权限、语法结构)5、查询优化器 SQL语句在查询之前会使用查询优化器对查询进行优化select
                       
                     </p>
                     
                     <p class="pull-right readMore">
-                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
+                        <a href="/2020/12/18/MySQL/MySQL体系结构基础/">Read More...</a>
                     </p>
                     
                 </div>
@@ -351,7 +354,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
-                    <h3><a href="/2020/12/18/MySQL/MySQL体系结构基础/">MySQL体系结构及存储引擎</a></h3>
+                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
                     <span>
                         <span class="post-meta">
       <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
@@ -369,13 +372,12 @@
                 <div class="col-md-8">
                     <p>
                       
-                        MySQL体系结构
-连接者：不同语言的代码程序和mysql的交互（SQL交互）1、连接池 管理、缓冲用户的连接，线程处理等需要缓存的需求2、管理服务和工具组件 系统管理和控制工具，例如备份恢复、Mysql复制、集群等3、sql接口 接受用户的SQL命令，并且返回用户需要查询的结果4、查询解析器 SQL命令传递到解析器的时候会被解析器验证和解析(权限、语法结构)5、查询优化器 SQL语句在查询之前会使用查询优化器对查询进行优化select
+                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
                       
                     </p>
                     
                     <p class="pull-right readMore">
-                        <a href="/2020/12/18/MySQL/MySQL体系结构基础/">Read More...</a>
+                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
                     </p>
                     
                 </div>
