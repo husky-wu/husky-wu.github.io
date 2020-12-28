@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>OracleDG概念与进程解析 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2020-12-19T03:56:50.000Z" itemprop="datePublished">
+          2020-12-19
+      </time>
+    
+    
+    | 
+    <a href='/tags/Oracle/'>Oracle</a>
+    
+    
+</span>
+                <h1>OracleDG概念与进程解析</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>RAC，Data Gurad，Stream 是Oracle高可用性体系中的三种工具，每个工具即可以独立应用，也可以相互配合。他们各自的侧重点不同，适用场景也不同。</p>
+<p>RAC它的强项在于<strong>解决单点故障和负载均衡</strong>，因此RAC方案常用于7*24的核心系统，但RAC方案中的数据只有一份，尽管可以通过RAID等机制可以避免存储故障，但是数据本身是没有冗余的，容易形成单点故障。</p>
+<p>Data Gurad通过冗余数据来<strong>提供数据保护</strong>，Data Gurad 通过日志同步机制保证冗余数据和主数据之前的同步，这种同步可以是实时，延时，同步，异步多种形式。Data Gurad常用于异地容灾和小企业的高可用性方案，虽然可以在Standby机器上执行只读查询，从而分散Primary数据库的性能压力，但是Data Gurad决不是性能解决方案。</p>
+<p>Stream是以Oracle Advanced Queue为基础实现的<strong>数据同步</strong>，提供了多种级别的<strong>灵活配置</strong>，并且Oracle提供了丰富的API等开发支持，Stream更适用在应用层面的数据共享。</p>
+<h3 id="一．-Data-Guard-架构"><a href="#一．-Data-Guard-架构" class="headerlink" title="一． Data Guard 架构"></a>一． Data Guard 架构</h3><p>DG架构可以按照功能分成3个部分：</p>
+<p>1） 日志发送（Redo Send）</p>
+<p>2） 日志接收（Redo Receive）</p>
+<p>3） 日志应用（Redo Apply）</p>
+<p>\1. 日志发送（Redo Send）</p>
+<p>Primary Database运行过程中，会源源不断地产生Redo日志，这些日志需要发送到Standy Database。这个发送动作可以由Primary Database的LGWR或者ARCH进程完成，不同的归档目的地可以使用不同的方法，但是对于一个目的地，只能选用一种方法。选择哪个进程对数据保护能力和系统可用性有很大区别。 </p>
+<p>1.1 使用ARCH 进程</p>
+<p>1）Primary Database不断产生Redo Log，这些日志被LGWR进程写到联机日志。</p>
+<p>2）当一组联机日志被写满后，会发生日志切换（Log Switch）并且会触发本地归档，本地归档位置是采用LOG_ARCHIVE_DEST_1=’LOCATION=/path’这种格式定义的。</p>
+<p>如：alter system set log_archive_dest_1 = ‘LOCATION=/u01/arch’ scope=both;</p>
+<p>3）完成本地归档后，联机日志就可以被覆盖重用。</p>
+<p>4）ARCH 进程通过Net把归档日志发送给Standby Database的RFS（Remote File Server）进程。</p>
+<p>5）Standby Database端的RFS进程把接收的日志写入到归档日志。</p>
+<p>6）Standby Database端的MRP(Managed Recovery Process)进程（Redo Apply）或者LSP 进程（SQL Apply）在Standby Database上应用这些日志，进而同步数据。</p>
+<p>用ARCH模式传输不写入备机的重做日志（Standby Redologs），直接保存成归档文件存放于Standby端。</p>
+<p>说明：</p>
+<p>逻辑Standby接收后将其转换成SQL语句，在Standby数据库上执行SQL语句实现同步，这种方式叫SQL Apply。</p>
+<p>物理Standby接收完Primary数据库生成的REDO数据后，以介质恢复的方式实现同步，这种方式也叫Redo Apply。</p>
+<p>注意：创建逻辑Standby数据库要先创建一个物理Standby数据库，然后再将其转换成逻辑Standby数据库。</p>
+<p>使用ARCH进程传递最大问题在于： Primary Database只有在发生归档时才会发送日志到Standby Database。如果Primary Database异常宕机，联机日志中的Redo内容就会丢失，因此使用ARCH进程无法避免数据丢失的问题，要想避免数据丢失，就必须使用LGWR，而使用LGWR 又分SYNC（同步）和ASYNC（异步）两种方式。</p>
+<p>在缺省方式下，Primary Database使用的是ARCH进程，参数设置如下：</p>
+<p>alter system set log_archive_dest_2 = ‘SERVICE=ST’ scope=both;</p>
+<p>1.2 使用LGWR 进程的SYNC 方式</p>
+<p>1）Primary Database 产生的Redo 日志要同时写道日志文件和网络。也就是说LGWR进程把日志写到本地日志文件的同时还要发送给本地的LNSn进程（LGWR Network Server Process），再由LNSn（LGWR Network Server process）进程把日志通过网络发送给远程的目的地，每个远程目的地对应一个LNS进程，多个LNS进程能够并行工作。</p>
+<p>2）LGWR 必须等待写入本地日志文件操作和通过LNSn进程的网络传送都成功，Primary Database上的事务才能提交，这也是SYNC的含义所在。</p>
+<p>3）Standby Database的RFS进程把接收到的日志写入到Standby Redo Log日志中。</p>
+<p>4）Primary Database的日志切换也会触发Standby Database上的日志切换，即Standby Database对Standby RedoLog的归档，然后触发Standby Database的MRP或者LSP进程恢复归档日志。</p>
+<p>因为Primary Database 的Redo是实时传递的，于是Standby Database端可以使用两种恢复方法： </p>
+<p>实时恢复（Real-Time Apply）：只要RFS把日志写入Standby Redo Log就会立即进行恢复；</p>
+<p>归档恢复：在完成对Standby RedoLog归档才触发恢复。</p>
+<p> Primary Database默认使用ARCH进程，如果使用LGWR进程必须明确指定。使用LGWR SYNC方式时，可以同时使用NET_TIMEOUT参数，这个参数单位是秒，代表如果多长时间内网络发送没有响应，LGWR 进程会抛出错误。示例如下：</p>
+<p>alter system set log_archive_dest_2 = ‘SERVICE=ST LGWR SYNC NET_TIMEOUT=30’ scope=both;</p>
+<p>1.3 使用LGWR进程的ASYNC 方式</p>
+<p>使用LGWR SYNC方法的可能问题在于，如果日志发送给Standby Database过程失败，LGWR进程就会报错。也就是说Primary Database的LGWR 进程依赖于网络状况，有时这种要求可能过于苛刻，这时就可以使用LGWR ASYNC方式。 它的工作机制如下：</p>
+<p>1） Primary Database 一段产生Redo 日志后，LGWR 把日志同时提交给日志文件和本地LNS 进程，但是LGWR进程只需成功写入日志文件就可以，不必等待LNSn进程的网络传送成功。</p>
+<p>2） LNSn进程异步地把日志内容发送到Standby Database。多个LNSn进程可以并发发送。</p>
+<p>3） Primary Database的Online Redo Log 写满后发生Log Switch触发归档操作，也触发Standby Database对Standby Redo Log 的归档；然后触发MRP或者LSP 进程恢复归档日志。</p>
+<p>因为LGWR进程不会等待LNSn进程的响应结果，所以配置LGWR ASYNC方式时不需要NET_TIMEOUT参数。示例如下：</p>
+<p>alter system set log_archive_dest_2 = ‘SERVICE=ST LGWR ASYNC ‘ scope=both;</p>
+<p>\2. 日志接收（Redo Receive）</p>
+<p>Standby Database的RFS（Remote File Server）进程接收到日志后，就把日志写到Standby Redo Log或者Archived Log文件中，具体写入哪个文件，取决于Primary的日志传送方式和Standby database的位置。如果写到Standby Redo Log文件中，则当Primary Database发生日志切换时，也会触发Standby Database上的Standby Redo Log的日志切换，并把这个Standby Redo Log归档。如果是写到Archived Log，那么这个动作本身也可以看作是个归档操作。</p>
+<p>在日志接收中，需要注意的是归档日志会被放在什么位置：</p>
+<p>1） 如果配置了STANDBY_ARCHIVE_DEST参数，则使用该参数指定的目录。</p>
+<p>2） 如果某个LOG_ARCHIVE_DEST_n参数明确定义了VALID_FOR=(STANDBY_LOGFILE,*)选项，则使用这个参数指定的目录。</p>
+<p>3） 如果数据库的COMPATIBLE参数大于等于10.0，则选取任意一个LOG_ARCHIVE_DEST_n的值。</p>
+<p>4） 如果STANDBY_ARCHIVE_DEST和LOG_ARCHIVE_DEST_n参数都没有配置，使用缺省的STANDBY_ARCHIVE_DEST参数值缺省值是$ORACLE_HOME/dbs/arc.</p>
+<p>\3. 日志应用（Redo Apply）</p>
+<p>日志应用服务，就是在Standby Database上重演Primary Database日志，从而实现两个数据库的数据同步。根据Standby Database重演日志方式的不同，可分为物理Standby（Physical Standby）和逻辑Standby（Logical Standby）。</p>
+<p>Physical Standby使用的是Media Recovery 技术，在数据块级别进行恢复，这种方式没有数据类型的限制，可以保证两个数据库完全一致。Physical Standby数据库只能在Mount 状态下进行恢复，也可以是打开，但只能已只读方式打开，并且打开时不能执行恢复操作。</p>
+<p>Logical Standby 使用的是Logminer 技术，通过把日志内容还原成SQL 语句，然后SQL引擎执行这些语句，Logminer Standby不支持所有数据类型，可以在视图DBA_LOGSTDBY_UNSUPPORTED 中查看不支持的数据类型，如果使用了这种数据类型，则不能保证数据库完全一致。Logical Standby数据库可以在恢复的同时进行读写操作。</p>
+<p>Standby数据库的相关进程读取接收到的REDO数据（可能来自于Standby端的归档文件，也可能来自于Standby Redologs），再将其写入Standby数据库。保存之后数据又是怎么生成的呢？两种方式：物理Standby通过REDO应用，逻辑Standby通过SQL应用</p>
+<p>根据Redo Apply发生的时间可以分成两种： </p>
+<p>一种是实时应用（Real-Time Apply）， 这种方式必须Standby Redo Log，每当日志被写入Standby Redo Log时，就会触发恢复，使用这种方式的好处在与可以减少数据库切换（Switchover 或者Failover）的时间，因为切换时间主要用在剩余日志的恢复上。 </p>
+<p>另一种是归档时应用，这种方式在Primary Database发生日志切换，触发Standby Database 归档操作，归档完成后触发恢复。 这也是默认的恢复方式。</p>
+<p>  非实时日志应用</p>
+<p><img src="../OracleDG%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%BF%9B%E7%A8%8B%E8%A7%A3%E6%9E%90/1526366j2766t27clfeeut.png" alt="img" title="null"></p>
+<p>实时日志应用</p>
+<p><img src="../OracleDG%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%BF%9B%E7%A8%8B%E8%A7%A3%E6%9E%90/152740j244fzfdj3hjaw04.png" alt="img" title="null"></p>
+<p>如果是Physical Standby，可以使用下面命令启用Real-Time：</p>
+<p>Alter database recover managed standby database using current logfile;</p>
+<p>如果是Logical Standby，可以使用下面命令启用Real-Time：</p>
+<p>Alter database start logical standby apply immediate;</p>
+<p>查看是否使用Real-Time apply：</p>
+<p>Select recovery_mode from v$archive_dest_status;</p>
+<p>SQL&gt; set wrap off<br>SQL&gt; select process,status,thread#,sequence#,client_pid from v$managed_standby;</p>
+<p>PROCESS  STATUS     THREAD# SEQUENCE#    CLIENT_PID</p>
+<hr>
+<p>ARCH   CONNECTED       0     0                 240<br>ARCH   CONNECTED       0     0                196<br>ARCH   CONNECTED       0     0                1944<br>ARCH   CONNECTED       0     0                3956<br>MRP0   WAIT_FOR_LOG     1   30843              N/A<br>RFS    RECEIVING          1   30838            2620<br>RFS    RECEIVING          1   30837            2612<br>RFS    RECEIVING          1   30833            2652<br>RFS    ATTACHED          1   30841             2628<br>RFS    ATTACHED          1   30835             2604<br>RFS    ATTACHED          1   30842            2608</p>
+<p>已选择11行。 </p>
+<h3 id="二．-数据保护模式"><a href="#二．-数据保护模式" class="headerlink" title="二． 数据保护模式"></a>二． 数据保护模式</h3><p>Data Guard 允许定义3钟数据保护模式，分别是最大保护（Maximum Protection），最大可用（Maximum Availability）和 最大性能（Maximum Performance）。</p>
+<p>\1. 最大保护（Maximum Protection）</p>
+<p>这种模式能够确保绝无数据丢失。要实现这一步当然是有代价的，它要求所有的事务在提交前其REDO不仅被写入到本地的Online Redologs，还要同时写入到Standby数据库的Standby Redologs，并确认REDO数据至少在一个Standby数据库中可用（如果有多个的话），然后才会在Primary数据库上提交。如果出现了什么故障导致Standby数据库不可用的话（比如网络中断），Primary数据库会被Shutdown，以防止数据丢失。</p>
+<p>使用这种方式要求Standby Database必须配置Standby RedoLog，而Primary Database必须使用LGWR，SYNC，AFFIRM方式归档到Standby Database.</p>
+<p>\2. 最高可用性（Maximum availability）</p>
+<p>这种模式在不影响Primary数据库可用前提下，提供最高级别的数据保护策略。其实现方式与最大保护模式类似，也是要求本地事务在提交前必须至少写入一台Standby数据库的Standby Redologs中，不过与最大保护模式不同的是，如果出现故障导致Standby数据库无法访问，Primary数据库并不会被Shutdown，而是自动转为最高性能模式，等Standby数据库恢复正常之后，Primary数据库又会自动转换成最高可用性模式。</p>
+<p>这种方式虽然会尽量避免数据丢失，但不能绝对保证数据完全一致。这种方式要求Standby Database 必须配置Standby Redo Log，而Primary Database必须使用LGWR，SYNC，AFFIRM 方式归档到Standby Database.</p>
+<p>\3. 最高性能（Maximum performance）</p>
+<p>缺省模式。 这种模式在不影响Primary数据库性能前提下，提供最高级别的数据保护策略。事务可以随时提交，当前Primary数据库的REDO数据至少需要写入一个Standby数据库，不过这种写入可以是不同步的。如果网络条件理想的话，这种模式能够提供类似最高可用性的数据保护，而仅对Primary数据库的性能有轻微影响。这也是创建Standby数据库时，系统的默认保护模式。</p>
+<p>这种方式可以使用LGWR ASYNC 或者 ARCH 进程实现，Standby Database也不要求使用Standby Redo Log。</p>
+<p>\4. 修改数据保护模式步骤</p>
+<p>1）关闭数据库，重启到Mount 状态，如果是RAC，需要关闭所有实例，然后只启动一个实例到mount状态。</p>
+<p>2）修改模式：</p>
+<p>语法：ALTER DATABASE SET STANDBY DATABASE TO MAXIMIZE {PROTECTION | AVAILABILITY | PERFORMANCE}; </p>
+<p>如：SQL&gt;ALTER DATABASE SET STANDBY DATABASE TO MAXIMIZE PROTECTION;</p>
+<p>3) 打开数据库： alter database open;</p>
+<p>4) 确认修改数据保护模式：</p>
+<p>SQL&gt;select protection_mode,protection_level from v$database; </p>
+<h3 id="三．-自动裂缝检测和解决"><a href="#三．-自动裂缝检测和解决" class="headerlink" title="三． 自动裂缝检测和解决"></a>三． 自动裂缝检测和解决</h3><p>当Primary Database的某些日志没有成功发送到Standby Database，这时候发生了归档裂缝（Archive Gap）。</p>
+<p>缺失的这些日志就是裂缝（Gap）。Data Guard能够自动检测，解决归档裂缝，不需要DBA的介入。这需要配置FAL_CLIENT，FAL_SERVER 这两个参数（FAL: Fetch Archive Log）。</p>
+<p>从FAL 这个名字可以看出，这个过程是Standby Database主动发起的“取”日志的过程，Standby Database 就是FAL_CLIENT. 它是从FAL_SERVER中取这些Gap， 10g中，这个FAL_SERVER可以是Primary Database， 也可以是其他的Standby Database。</p>
+<p>如：FAL_SERVER=’PR1,ST1,ST2’;</p>
+<p>FAL_CLIENT和FAL_SERVER两个参数都是Oracle Net Name。FAL_CLIENT 通过网络向FAL_SERVER发送请求，FAL_SERVER通过网络向FAL_CLIENT发送缺失的日志。 但是这两个连接不一定是一个连接。 因此FAL_CLIENT向FAL_SERVER发送请求时，会携带FAL_CLIENT参数值，用来告诉FAL_SERVER应该向哪里发送缺少的日志。 这个参数值也是一个Oracle Net Name，这个Name是在FAL_SERVER上定义的，用来指向FAL_CLIENT.</p>
+<p>当然，除了自动地日志缺失解决，DBA 也可以手工解决。 具体操作步骤如下：</p>
+<p>1） 查看是否有日志GAP： </p>
+<p>SQL&gt; SELECT UNIQUE THREAD#, MAX(SEQUENCE#) OVER(PARTITION BY THREAD#) LAST FROM V$ARCHIVED_LOG; </p>
+<p>SQL&gt; SELECT THREAD#, LOW_SEQUENCE#, HIGH_SEQUENCE# FROM V$ARCHIVE_GAP; </p>
+<p>2） 如果有，则拷贝过来</p>
+<p>3） 手工的注册这些日志： </p>
+<p>SQL&gt; ALTER DATABASE REGISTER LOGFILE ‘路径’; </p>
+<h3 id="四．-指定日志发送对象"><a href="#四．-指定日志发送对象" class="headerlink" title="四． 指定日志发送对象"></a>四． 指定日志发送对象</h3><p>1．VALID_FOR属性指定传输及接收对象</p>
+<p>LOG_ARCHIVE_DEST_n参数中的VALID_FOR属性，用来指定传输的内容。从字面理解VALID_FOR就是基于那谁有效，该属性有两个参数值需要指定：REDO_LOG_TYPE和DATABASE_ROLE，我们基本上可以将其理解为：发送指定角色生成的指定类型的日志文件，该参数的主要目的是为了确保，一旦发生角色切换操作后数据库的正常运转。</p>
+<p>其中，REDO_LOG_TYPE和DATABASE_ROLE两个参数可供选择的参数值如下：</p>
+<p>REDO_LOG_TYPE：可设置为ONLINE_LOGFILE、STANDBY_LOGFILE、ALL_LOGFILES。 </p>
+<p>DATABASE_ROLE：可设置为PRIMARY_ROLE、STANDBY_ROLE、ALL_ROLES。 </p>
+<p>注意：VALID_FOR参数默认值是：VALID_FOR=（ALL_LOGFILES,ALL_ROLES）。 </p>
+<p>推荐手动设置该参数而不要使用默认值，在某些情况下默认的参数值不一定合适，如逻辑Standby在默认情况下就处于OPEN READ WRITE模式，不仅有REDO数据而且还包含多种日志文件（Online Redologs、Archived Redologs及Standby Redologs）。</p>
+<p>默认情况下，逻辑Standby数据库生成的归档文件和接收到的归档文件在相同的路径下，这既不便于管理，也极有可能带来一些隐患。建议对每个LOG_ARCHIVE_DEST_n参数设置合适的VALID_FOR属性。本地生成的归档文件和接收到的归档文件最好分别保存于不同路径下。</p>
+<p>2．通过DB_UNIQUE_NAME属性指定数据库</p>
+<p>DB_UNIQUE_NAME属性是10g版本新增加的一个关键字，在之前版本并没有这一说法。该属性的作用是指定唯一的Oracle数据库名称，也正因有了DB_UNIQUE_NAME，REDO数据在传输过程中才能确认传输到DBA希望被传输到的数据库上。</p>
+<p>当然要确保REDO数据被传输到指定服务器，除了在LOG_ARCHIVE_DEST_n参数中指定正确DB_UNIQUE_NAME属性之外，还有一个初始化参数LOG_ARCHIVE_CONFIG也需要进行正确的配置。该参数除了指定Data Guard环境中的唯一数据库名外，还包括几个属性，用来控制REDO数据的传输和接收：</p>
+<p>SEND：允许数据库发送数据到远端。</p>
+<p>RECEIVE：允许Standby接收来自其他数据库的数据。</p>
+<p>NOSEND,NORECEIVE：自然就是禁止喽。</p>
+<p>例如，设置Primary数据库不接收任何归档数据，可以做如下的设置：</p>
+<p>LOG_ARCHIVE_CONFIG=’NORECEIVE,DG_CONFIG= (PRI,ST) ‘ </p>
+<p>如果做了如上的设置，如果该服务器发生了角色切换，那它也没有接收REDO数据的能力。</p>
+<h3 id="五．-Data-Guard环境应配置的初始化参数"><a href="#五．-Data-Guard环境应配置的初始化参数" class="headerlink" title="五． Data Guard环境应配置的初始化参数"></a>五． Data Guard环境应配置的初始化参数</h3><table>
+<thead>
+<tr>
+<th>下列参数为Primary角色相关的初始化参数</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DB_NAME</td>
+<td>注意保持同一个Data Guard中所有数据库DB_NAME相同例如：DB_NAME=Dave</td>
+</tr>
+<tr>
+<td>DB_UNIQUE_NAME</td>
+<td>为每一个数据库指定一个唯一的名称，该参数一经指定不会再发生变化，除非DBA主动修改它例如：DB_UNIQUE_NAME=DavePre</td>
+</tr>
+<tr>
+<td>LOG_ARCHIVE_CONFIG</td>
+<td>该参数用来控制从远端数据库接收或发送REDO数据，通过DG_CONFIG属性罗列同一个Data Guard中所有DB_UNIQUE_NAME（含Primary数据库和Standby数据库），以逗号分隔，SEND/NOSEND属性控制是否可以发送，RECEIVE/NORECEIVE属性控制是否能够接收例如：LOG_ARCHIVE_CONFIG=’DG_CONFIG=(DavePre,DaveDG)’</td>
+</tr>
+<tr>
+<td>LOG_ARCHIVE_DEST_n</td>
+<td>归档文件的生成路径。该参数非常重要，并且属性和子参数也特别多(可以直接查询Oracle官方文档。Data Guard白皮书第14章专门介绍了该参数各属性及子参数的功能和设置)。例如：LOG_ARCHIVE_DEST_1=’LOCATION=l:/oracle/oradata/Dave VALID_FOR=(ALL_LOGFILES,ALL_ROLES) DB_UNIQUE_NAME=DavePre’</td>
+</tr>
+<tr>
+<td>LOG_ARCHIVE_DEST_STATE_n</td>
+<td>是否允许REDO传输服务传输REDO数据到指定的路径。该参数共拥有4个属性值，功能各不相同。</td>
+</tr>
+<tr>
+<td>REMOTE_LOGIN_PASSWORDFILE</td>
+<td>推荐设置参数值为EXCLUSIVE或者SHARED，注意保证相同Data Guard配置中所有DB服务器SYS密码相同</td>
+</tr>
+<tr>
+<td>以下参数为与Standby角色相关的参数（建议在Primary数据库的初始化参数中也进行设置，这样即使发  生角色切换，新的Standby也能直接正常运行）</td>
+<td></td>
+</tr>
+<tr>
+<td>FAL_SERVER</td>
+<td>指定一个Net服务名，该参数值对应的数据库应为Primary角色。当本地数据库为Standby角色时，如果发现存在归档中断的情况，该参数用来指定获取中断的归档文件的服务器例如：FAL_SERVER=DavePre提示：FAL是Fetch Archived Log的缩写FAL_SERVER参数支持多个参数值的哟，相互间以逗号分隔</td>
+</tr>
+<tr>
+<td>FAL_CLIENT</td>
+<td>又指定一个Net服务名，该参数对应数据库应为Standby角色。当本地数据库以Primary角色运行时，向参数值中指定的站点发送中断的归档文件例如：FAL_CLIENT=DaveDGFAL_CLIENT参数也支持多个参数值，相互间以逗号分隔。</td>
+</tr>
+<tr>
+<td>DB_FILE_NAME_CONVERT</td>
+<td>Standby数据库的数据文件路径与Primary数据库数据文件路径不一致时，可以通过设置DB_FILE_NAME_CONVERT参数的方式让其自动转换。该参数值应该成对出现，前面的值表示转换前的形式，后面的值表示转换后的形式例如：DB_FILE_NAME_CONVERT=’f:/oradata/DavePre’,’l:/oradata/DaveDG’</td>
+</tr>
+<tr>
+<td>LOG_FILE_NAME_CONVERT</td>
+<td>使用方式与上相同，只不过LOG_FILE_NAME_CONVERT专用来转换日志文件路径例如：LOG_FILE_NAME_CONVERT=’f:/oradata/DavePre’,’l:/oradata/DaveDG’</td>
+</tr>
+<tr>
+<td>STANDBY_FILE_MANAGEMENT</td>
+<td>如果Primary数据库数据文件发生修改（如新建、重命名等）则按照本参数的设置在Standby数据库中作相应修改。设为AUTO表示自动管理。设为MANUAL表示需要手工管理例如：STANDBY_FILE_MANAGEMENT=AUTO</td>
+</tr>
+</tbody></table>
+<p>对于归档失败的处理，LOG_ARCHIVE_DEST_n参数有几个属性，可以用来控制归档过程中出现故障时应该采取的措施。</p>
+<p>1．REOPEN 指定时间后再次尝试归档</p>
+<p>使用REOPEN=seconds（默认为300秒）属性，在指定时间重复尝试向归档目的地进行归档操作，如果该参数值设置为0，则一旦失败就不会再尝试重新连接并发送，直到下次REDO数据再被归档时会重新尝试。</p>
+<p>例如，设置REOPEN为100秒：</p>
+<p>LOG_ARCHIVE_DEST_2=’SERVICE=DavePrimary LGWR ASYNC REOPEN=100’ </p>
+<p>2．ALTERNATE 指定替补的归档目的地</p>
+<p>ALTERNATE属性定义一个替补的归档目的地，所谓替补就是一旦主归档目的地因各种原因无法使用，则临时向ALTERNATE属性中指定的路径写。</p>
+<p>例如：</p>
+<p>LOG_ARCHIVE_DEST_1=’LOCATION=/disk1 ALTERNATE=LOG_ARCHIVE_DEST_2’ </p>
+<p>LOG_ARCHIVE_DEST_STATE_1=ENABLE </p>
+<p>LOG_ARCHIVE_DEST_2=’LOCATION=/disk2’ </p>
+<p>LOG_ARCHIVE_DEST_STATE_2=ALTERNATE </p>
+<p>上述参数设置归档路径为/disk1，当/disk1路径下无法成功归档时，自动尝试向/disk2路径下归档文件。</p>
+<p>从功能上来看，REOPEN与ALTERNATE是有一定重复的，不过需要注意一点，REOPEN属性比ALTERNATE属性的优先级要高，如果你指定REOPEN属性的值&gt;0，则LGWR（或ARCn）进程会首先尝试向主归档目的地写入，直到达到最大重试次数，如果仍然写入失败，才会向ALTERNATE属性指定的路径写。</p>
+<p>3．MAX_FAILURE 控制失败尝试次数</p>
+<p>用REOPEN指定失败后重新尝试的时间周期，MAX_FAILURE则控制失败尝试的次数。</p>
+<p>例如，设置LOG_ARCHIVE_DEST_1在本地归档文件时，如果遇到错误，则每隔100秒尝试一次，共尝试不超过3次，设置如下：</p>
+<p>LOG_ARCHIVE_DEST_1=’LOCATION=E:/ora10g/oradata/jsspdg/ REOPEN=100 MAX_FAILURE=3’ </p>
+<h3 id="六．-物理Standby-和逻辑Standby-的区别"><a href="#六．-物理Standby-和逻辑Standby-的区别" class="headerlink" title="六． 物理Standby 和逻辑Standby 的区别"></a>六． 物理Standby 和逻辑Standby 的区别</h3><p>Standby数据库类型分为两类：物理Standby和逻辑Standby。</p>
+<p>1．物理Standby</p>
+<p>我们知道物理Standby与Primary数据库完全一模一样，DG通过REDO应用来维护物理Standby数据库。</p>
+<p>通常在物理Standby没有执行REDO应用操作的时候，可以将物理Standby数据库以READ ONLY模式打开，如果数据库中指定了Flashback Area的话，甚至还可以被临时性的置为READ WRITE模式，操作完之后再通过Flashback Database特性恢复回READ WRITE前的状态，以便继续接收Primary端发送的REDO并应用。</p>
+<p>REDO应用。物理Standby通过REDO应用来保持与Primary数据库的一致性，所谓的REDO应用，实质是通过Oracle的恢复机制，应用归档文件（或Standby Redologs文件）中的REDO数据。恢复操作属于块对块的应用。如果正在执行REDO应用的操作，Oracle数据库就不能被Open。</p>
+<p>READ ONLY模式打开。以READ ONLY模式打开后，可以在Standby数据库执行查询或备份等操作（变相减轻Primary数据库压力）。此时Standby数据库仍然能够继续接收Primary数据库发送的REDO数据，不过并不会应用，直到Standby数据库重新恢复REDO应用。</p>
+<p>也就是说在READ ONLY模式下不能执行REDO应用，REDO应用时数据库肯定处于未打开状态。如果需要的话，你可以在两种状态间转换，如先应用REDO，然后将数据库置为READ ONLY状态，需要与Primary同步时再次执行REDO应用命令，切换回REDO应用状态。</p>
+<p>提 示： Oracle 11g版本中增强物理Standby的应用功能，在11g版本中，物理Standby可以在OPEN READ ONLY模式下继续应用REDO数据，这就极大地提升了物理Standby数据库的应用场合。</p>
+<p>READ WRITE模式打开。如果以READ WRITE模式打开，那么Standby数据库将暂停从Primary数据库接收REDO数据，并且暂时失去灾难保护的功能。当然，以READ WRITE模式打开也并非一无是处，如你可能需要临时调试一些数据，但又不方便在正式库中操作，那就可以临时将Standby数据库置为READ WRITE模式，操作完之后将数据库闪回到操作前的状态（闪回之后，Data Guard会自动同步，不需要重建物理Standby，不过如果从另一个方向看，没有启动闪回，那就回不到READ WRITE前的状态了）。</p>
+<p>物理Standby特点如下：</p>
+<p>（1）灾难恢复及高可用性。物理Standby提供了一个健全、高效的灾难恢复，以及高可用性的解决方案。更加易于管理switchover/failover角色转换及在更短的计划内或计划外停机时间。</p>
+<p>（2）数据保护。使用物理Standby数据库，DG能够确保即使面对无法预料的灾害也能够不丢失数据。前面也提到物理Standby是基于块对块的复制，因此与对象、语句无关，Primary数据库上有什么，物理Standby数据库端也会有什么。</p>
+<p>（3）分担Primary数据库压力。通过将一些备份任务、仅查询的需求转移到物理Standby数据库，可以有效节省Primary数据库的CPU及I/O资源。</p>
+<p>（4）提升性能。物理Standby所使用的REDO应用技术使用最底层的恢复机制，这种机制能够绕过SQL级代码层，因此效率最高。</p>
+<p>2．逻辑Standby</p>
+<p>逻辑Standby也要通过Primary数据库（或其备份，或其复制库，如物理Standby）创建，因此在创建之初与物理Standby数据库类似。不过由于逻辑Standby通过SQL应用的方式应用REDO数据，因此逻辑Standby的物理文件结构，甚至数据的逻辑结构都可以与Primary不一致。</p>
+<p>与物理Standby不同，逻辑Standby正常情况下是以READ WRITE模式打开，用户可以在任何时候访问逻辑Standby数据库，就是说逻辑Standby是在OPEN状态执行SQL应用。同样有利也有弊，由于SQL应用自身特点，逻辑Standby对于某些数据类型及一些DDL/DML语句会有操作上的限制。可以在视图DBA_LOGSTDBY_UNSUPPORTED 中查看不支持的数据类型，如果使用了这种数据类型，则不能保证数据库完全一致。</p>
+<p>逻辑Standby 的读写打开可以使它做报表系统，这样减轻系统的压力。</p>
+<p>除了上述物理Standby中提到的类似灾难恢复、高可用性及数据保护等特点之外，逻辑Standby还有下列一些特点：</p>
+<p>（1）有效地利用备机的硬件资源。除灾难恢复外，逻辑Standby数据库还可用于其他业务需求。如通过在Standby数据库创建额外的索引、物化视图等提高查询性能并满足特定业务需要；又如创建新的SCHEMA（该SCHEMA在Primary数据库端并不存在），然后在这些SCHEMA中执行那些不适于在Primary数据库端执行的DDL或者DML操作等。</p>
+<p>（2）分担Primary数据库压力。逻辑Standby数据库可以在保持与Primary同步时仍然置于打开状态，这使得逻辑Standby数据库能够同时用于数据保护和报表操作，从而将主数据库从报表和查询任务中解脱出来，节约宝贵的 CPU和I/O资源。</p>
+<p>（3）平滑升级。可以通过逻辑Standby来实现如跨版本升级，为数据库打补丁等操作。应该说应用的空间很大，而带来的风险却很小（前提是如果你拥有足够的技术实力。另外虽然物理Standby也能够实现一些升级操作，但如果跨平台的话恐怕就力不从心了，所以此项没有作为物理Standby的特点列出），我个人认为这是一种值得可行的在线的滚动的平滑的升级方式，如果你的应用支持创建逻辑Standby的话。</p>
+<h3 id="七．-Log应用服务（Log-Apply-Services）"><a href="#七．-Log应用服务（Log-Apply-Services）" class="headerlink" title="七． Log应用服务（Log Apply Services）"></a>七． Log应用服务（Log Apply Services）</h3><p>Data Guard通过应用REDO维持Primary数据库与各Standby数据库之间的一致性，在后台默默无闻地支撑着的就是传说中的Log应用服务。Log应用服务又分以下两种方式：</p>
+<p>REDO应用：物理Standby数据库专用，通过介质恢复的方式保持与Primary数据库的同步。</p>
+<p>SQL应用：逻辑Standby数据库专用，核心是通过LogMiner分析出SQL语句在Standby端执行。</p>
+<p>因此物理Standby在应用REDO数据时必须是MOUNT状态，而逻辑Standby则是以READ WRITE模式打开并应用REDO数据，不过被维护的对象默认处于只读状态，无法在逻辑Standby端直接修改。</p>
+<p>7.1 Log应用服务配置选项</p>
+<p>默认情况下，Log应用服务会等待单个归档文件全部接收之后再启动应用，如果Standby数据库配置了Standby Redologs，就可以打开实时应用（Real-Time Apply），这样Data Guard就不需要再等待接收完归档文件，只要RFS进程将REDO数据写入Standby Redologs，即可通过MRP/LSP实时写向Standby数据库。</p>
+<p>7.1.1．REDO数据实时应用</p>
+<p>启动实时应用的优势在于，REDO数据不需要等待归档完成，接收到即可被应用，这样执行角色切换时，操作能够执行得更快，因为日志是被即时应用的。</p>
+<p>要启动实时应用也简单，前提是Standby数据库端配置了Standby Redologs。</p>
+<p>物理Standby要启用实时应用，要在启动REDO应用的语句后附加USING CURRENT LOGFIE子句，例如：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE ; </p>
+<p>逻辑Standby要启用实时应用，只需要在启动REDO应用的语句后附加IMMEDIATE子句即可，例如：</p>
+<p>SQL&gt; ALTER DATABASE START LOGICAL STANDBY APPLY IMMEDIATE; </p>
+<p>7.1.2．REDO数据延迟应用</p>
+<p>有实时就有延迟，某些情况下你可能不希望Standby数据库与Primary太过同步，那就可以在Primary数据库端发送REDO数据的相应LOG_ARCHIVE_DEST_n参数中指定DELAY属性（单位为分钟，如果指定了DELAY属性，但没有指定值，则默认是30分钟）。</p>
+<p>注意：该属性并不是说延迟发送REDO数据到Standby，而是指明归档到Standby后，开始应用的时间。</p>
+<p>例如：设置LOG_ARCHIVE_DEST_3的DELAY属性为15分钟：</p>
+<p>SQL&gt; ALTER SYSTEM SET LOG_ARCHIVE_DEST_3=’SERVICE=DavePrimary ARCH VALID_ FOR= </p>
+<p>(ONLINE_LOGFILES, PRIMARY_ROLE) DB_UNIQUE_NAME=Dave DELAY=15’; </p>
+<p>不过，如果DBA在启动REDO应用时指定了实时应用，那么即使在LOG_ ARCHIVE_DEST_n参数中指定了DELAY属性，Standby数据库也会忽略DELAY属性。</p>
+<p>另外，Standby端还可以在启动REDO应用时，通过附加NODELAY子句的方式，取消延迟应用。</p>
+<p>物理Standby可以通过下列语句取消延迟应用：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE NODELAY; </p>
+<p>逻辑Standby可以通过下列语句取消延迟应用：</p>
+<p>SQL&gt; ALTER DATABASE START LOGICAL STANDBY APPLY NODELAY; </p>
+<p>一般设置延迟应用的需求都是基于容错方面的考虑，如Primary数据库端由于误操作，数据被意外修改或删除，只要Standby数据库尚未应用这些修改，你就可以快速从Standby数据库中恢复这部分数据。不过自Oracle从9i版本开始提供FLASHBACK特性之后，对于误操作使用FLASHBACK特性进行恢复，显然更加方便快捷，因此DELAY方式延迟应用已经非常少见了。</p>
+<p>7.2 应用REDO数据到Standby数据库</p>
+<p>7.2.1．物理Standby应用REDO数据</p>
+<p>物理Standby启动REDO应用，数据库要处于MOUNT状态或是OPEN READ ONLY状态，启动REDO应用的命令相信大家已经非常熟悉了。</p>
+<p>前台应用：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE; </p>
+<p>语句执行完成后，不会将控制权返回到命令行窗口，除非你手动中止应用。在这种情况下如果还需要对数据库进行操作，只能新开一个命令行连接，在Oracle 8i刚推出Standby特性时（那时不叫Data Guard），只提供了这种方式。</p>
+<p>后台应用：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT; </p>
+<p>这是现在比较通用的方式，语句执行完后，控制权自动返回到当前的命令行模式，REDO应用以后台进程运行。</p>
+<p>启动实时应用，附加USING CURRENT LOGFILE子句即可：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE; </p>
+<p>如果要停止REDO应用，执行下列语句即可：</p>
+<p>SQL&gt; ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL; </p>
+<p>7.2.2．逻辑Standby应用REDO数据</p>
+<p>SQL应用的原理是将接收到的REDO数据转换成SQL语句在逻辑Standby数据库端执行，因此逻辑Standby需要启动至OPEN状态。</p>
+<p>（1）启动SQL应用。逻辑Standby数据库启动SQL应用没有前、后台运行之说，语句执行完之后，控制权就会自动返回当前命令行窗口。</p>
+<p>要启动SQL应用，直接执行下列语句即可：</p>
+<p>SQL&gt; ALTER DATABASE START LOGICAL STANDBY APPLY; </p>
+<p>如果要启动实时应用，附加IMMEDIATE子句即可，例如：</p>
+<p>SQL&gt; ALTER DATABASE START LOGICAL STANDBY APPLY IMMEDIATE; </p>
+<p>（2）停止SQL应用，如：</p>
+<p>SQL&gt; ALTER DATABASE STOP LOGICAL STANDBY APPLY; </p>
+<p>由于是执行SQL语句的方式应用REDO数据，因此上述语句的执行需要等待当前执行的SQL触发的事务结束，才能真正停止REDO应用的状态。</p>
+<p>如果不考虑事务执行情况，马上停止REDO应用，可以通过下列的语句来完成：</p>
+<p>SQL&gt; ALTER DATABASE ABORT LOGICAL STANDBY APPLY; </p>
+<h3 id="–核心进程介绍"><a href="#–核心进程介绍" class="headerlink" title="–核心进程介绍"></a>–核心进程介绍</h3><p><strong>RFS：remote file server。</strong><br>该进程是standby库接受来自primary库lgwr进程触发的redo信息并且写入到standby redo log中。RFS进程无疑是要和其他进程配合的，也就是传输的进程。那这里就需要上篇的知识了，我们知道触发同步可能由ARCH或者是LGWR进程触发的，两者是不同的。如果是LGWR进程触发，那10g前的话也是由LGWR进程负责传输redo信息，RFS进程负责接收redo信息写入standby redo log中，10g之后则由LNSn进程完成；如果是ARCH进程触发，也就是归档日志传输的话，那就是由ARCH进程负责传输，RFS进程负责接收，然后写入指定的归档位置，然后再应用的。那这里不同的设置也决定了参数LOG_ARCHIVE_DEST_n的不同设置。详细见下。</p>
+<p><strong>LNSn：</strong>LGWR触发以后真正负责传输的进程，包括初始化网络I/O等一些列功能。</p>
+<p><strong>MRP：</strong>managed recovery process，简单来说就是物理standby是通过这个进程来实现数据的同步的，直接通过standby redo log或者是归档日志（取决于模式不同）来进行的一个数据恢复。</p>
+<p><strong>LSP：</strong>logical standby process：逻辑standby的方式，和上面的一样，只不过当中多了一步将redo信息转换成sql语句再恢复。也可以从这里看出逻辑standby和物理standby的不同。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2020/12/28/自动运维平台/自动运维平台/" style="float: left;">
+        ← 自动运维平台
+    </a>
+    
+    
+    <a class="pull-right" href="/2020/12/19/MySQL/数据库建表-SQL-索引规范/">
+        数据库建表-SQL-索引规范 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

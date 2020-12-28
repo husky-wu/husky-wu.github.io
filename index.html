@@ -95,11 +95,13 @@
 				  	
 				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(3)</small></a></li>
 				    
-				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(1)</small></a></li>
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
 				    
 				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
 				    
 				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
 				    
 				</ul>
         	</li>
@@ -230,6 +232,99 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2020/12/28/自动运维平台/自动运维平台/">自动运维平台</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-28T02:10:27.000Z" itemprop="datePublished">
+          2020-12-28
+      </time>
+    
+    
+    | 
+    <a href='/tags/自动运维平台/'>自动运维平台</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        
+
+
+工具名称
+官方网址
+git地址
+
+
+
+Inception+Yearing
+http://python.yearning.io/
+https://github.com/cookieY/inception-document
+
+
+Archery
+https://archerydms.com/
+https://github.com/hhyo/Archery
+
+
+soar
+
+https://github.com/XiaoMi/soar/bl
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/28/自动运维平台/自动运维平台/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/19/Oracle/OracleDG概念与进程解析/">OracleDG概念与进程解析</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-19T03:56:50.000Z" itemprop="datePublished">
+          2020-12-19
+      </time>
+    
+    
+    | 
+    <a href='/tags/Oracle/'>Oracle</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        RAC，Data Gurad，Stream 是Oracle高可用性体系中的三种工具，每个工具即可以独立应用，也可以相互配合。他们各自的侧重点不同，适用场景也不同。
+RAC它的强项在于解决单点故障和负载均衡，因此RAC方案常用于7*24的核心系统，但RAC方案中的数据只有一份，尽管可以通过RAID等机制可以避免存储故障，但是数据本身是没有冗余的，容易形成单点故障。
+Data Gurad通过冗余数据来提供数据保护，Data Gurad 通过
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/19/Oracle/OracleDG概念与进程解析/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/19/MySQL/数据库建表-SQL-索引规范/">数据库建表-SQL-索引规范</a></h3>
                     <span>
                         <span class="post-meta">
@@ -274,7 +369,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
-                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
+                    <h3><a href="/2020/12/18/MySQL/MySQL体系结构基础/">MySQL体系结构及存储引擎</a></h3>
                     <span>
                         <span class="post-meta">
       <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
@@ -292,12 +387,13 @@
                 <div class="col-md-8">
                     <p>
                       
-                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
+                        MySQL体系结构
+连接者：不同语言的代码程序和mysql的交互（SQL交互）1、连接池 管理、缓冲用户的连接，线程处理等需要缓存的需求2、管理服务和工具组件 系统管理和控制工具，例如备份恢复、Mysql复制、集群等3、sql接口 接受用户的SQL命令，并且返回用户需要查询的结果4、查询解析器 SQL命令传递到解析器的时候会被解析器验证和解析(权限、语法结构)5、查询优化器 SQL语句在查询之前会使用查询优化器对查询进行优化select
                       
                     </p>
                     
                     <p class="pull-right readMore">
-                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
+                        <a href="/2020/12/18/MySQL/MySQL体系结构基础/">Read More...</a>
                     </p>
                     
                 </div>
@@ -353,7 +449,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
-                    <h3><a href="/2020/12/18/MySQL/MySQL体系结构基础/">MySQL体系结构及存储引擎</a></h3>
+                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
                     <span>
                         <span class="post-meta">
       <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
@@ -371,13 +467,12 @@
                 <div class="col-md-8">
                     <p>
                       
-                        MySQL体系结构
-连接者：不同语言的代码程序和mysql的交互（SQL交互）1、连接池 管理、缓冲用户的连接，线程处理等需要缓存的需求2、管理服务和工具组件 系统管理和控制工具，例如备份恢复、Mysql复制、集群等3、sql接口 接受用户的SQL命令，并且返回用户需要查询的结果4、查询解析器 SQL命令传递到解析器的时候会被解析器验证和解析(权限、语法结构)5、查询优化器 SQL语句在查询之前会使用查询优化器对查询进行优化select
+                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
                       
                     </p>
                     
                     <p class="pull-right readMore">
-                        <a href="/2020/12/18/MySQL/MySQL体系结构基础/">Read More...</a>
+                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
                     </p>
                     
                 </div>
@@ -563,95 +658,6 @@ gcc: 4.1.2
                     
                     <p class="pull-right readMore">
                         <a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">PostgreSQL备份恢复</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-17T03:06:59.000Z" itemprop="datePublished">
-          2020-12-17
-      </time>
-    
-    
-    | 
-    <a href='/tags/备份恢复/'>备份恢复</a>,
-    
-    <a href='/tags/postgresql/'>postgresql</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        逻辑备份恢复1.逻辑备份1.1登录数据库服务器
-2.逻辑恢复物理备份恢复1.物理备份2.物理恢复
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">hexo-markdown图片路径设置-通用</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-16T09:10:57.000Z" itemprop="datePublished">
-          2020-12-16
-      </time>
-    
-    
-    | 
-    <a href='/tags/hexo/'>hexo</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        [toc]
-一、Markdown图像（截图/复制图）路径设置
-工具：Typora
-官网：https://typora.io/
-
-1.文件-偏好设置
-2.偏好设置-图像
-如上图，插入图片时：复制到指定路径
-路径填写：./${filename}
-勾选以下3项功能
-
- 对本地位置的图片应用上述规则
- 对网络位置的图片应用上述规则
- 优先使用相对路径
-
-3.关闭偏好设置
-4.将截图复制到markdown中可以看到图片路径为如下格式：![图片文件
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">Read More...</a>
                     </p>
                     
                 </div>
