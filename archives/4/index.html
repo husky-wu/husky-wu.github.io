@@ -95,7 +95,7 @@
 				  	
 				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
 				    
-				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(4)</small></a></li>
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
 				    
 				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
 				    
@@ -110,6 +110,8 @@
 				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
 				    
 				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
 				    
 				</ul>
         	</li>
@@ -240,6 +242,417 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">PostgreSQL安装</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-17T03:32:49.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+    
+    | 
+    <a href='/tags/Postgresql/'>Postgresql</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        0.编译环境
+
+Linux: CentOS 5.5
+gcc: 4.1.2
+
+\1. 安装PostgreSQL
+1) 解压postgresql-9.1.7.tar.bz2
+#tar jxvf postgresql-9.1.7.tar.bz2
+ 
+2) 进入解压后的postgresql-9.1.7目录
+#cd postgresql-9.1.7
+
+3) 编译postgresql源码
+#./configure –prefix=/opt/pgsq
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">PostgreSQL备份恢复</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-17T03:06:59.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+    
+    | 
+    <a href='/tags/Postgresql/'>Postgresql</a>,
+    
+    <a href='/tags/备份恢复/'>备份恢复</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        逻辑备份恢复1.逻辑备份1.1登录数据库服务器
+2.逻辑恢复物理备份恢复1.物理备份2.物理恢复
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">hexo-markdown图片路径设置-通用</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-16T09:10:57.000Z" itemprop="datePublished">
+          2020-12-16
+      </time>
+    
+    
+    | 
+    <a href='/tags/hexo/'>hexo</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        [toc]
+一、Markdown图像（截图/复制图）路径设置
+工具：Typora
+官网：https://typora.io/
+
+1.文件-偏好设置
+2.偏好设置-图像
+如上图，插入图片时：复制到指定路径
+路径填写：./${filename}
+勾选以下3项功能
+
+ 对本地位置的图片应用上述规则
+ 对网络位置的图片应用上述规则
+ 优先使用相对路径
+
+3.关闭偏好设置
+4.将截图复制到markdown中可以看到图片路径为如下格式：![图片文件
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/16/hexo/hexo引入fancybox优化图片视频查看效果/">hexo引入fancybox优化图片视频查看效果</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-16T08:05:24.000Z" itemprop="datePublished">
+          2020-12-16
+      </time>
+    
+    
+    | 
+    <a href='/tags/hexo/'>hexo</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        
+sakura
+
+
+
+
+一、fancybox介绍在我们平常阅读博文时，常遇到：图片太小，字看不清的情况不怕，fancybox可以将你的图片放大！强大的相册功能！原理：给所有图片加一层a标签，并链接图片地址到蒙版层面上
+简单源码：（多图）
+123456789101112131415161718192021222324252627282930313233&lt;！DOCTYPE html&gt;&lt;html&gt;&lt;head&gt
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/16/hexo/hexo引入fancybox优化图片视频查看效果/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">TiDB4.0课程学习-1.1分布式数据库发展简史</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        TiDB4.0课程学习-1.1分布式数据库发展简史1.1 A Brief History of Distributed Database （分布式数据库发展简史）本课程简要介绍了从 20 世纪到 21 世纪分布式数据库的发展历史
+学习目标： 帮助学员了解分布式数据库的发展历史
+关键知识点： 分布式数据库历史，NoSQL 和 NewSQL，OLTP 和 HTAP，新技术
+讲师：冯立元 老师
+
+20世纪初：
+
+数据库业态环境 以 OLTP为
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.2HTAP数据库简介/">TiDB4.0课程学习-1.2HTAP 数据库简介</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        TiDB4.0课程学习-1.2HTAP 数据库简介1.2 What’s an HTAP Database? （HTAP 数据库简介）1.2 Why HTAP Matters（HTAP 数据库简介）
+本课程简要介绍了 HTAP 意义，技术难点，TiDB 如何实现 HTAP 以及相关的应用场景。
+学习目标： 帮助学员熟悉 HTAP 领域
+关键知识点： HTAP意义；设计原则以及应用场景
+
+
+为什么需要HTAP
+
+1.什么是HTAP
+
+
+
+
+
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.2HTAP数据库简介/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.3TiDB发展简史/">TiDB4.0课程学习-1.3TiDB发展简史</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        TiDB4.0课程学习-1.3TiDB发展简史1.3 A Brief History About the TiDB database platform（TiDB 发展简史）本课程简要介绍了 TiDB 的发展历史。自从 v1.0.0 GA 开始，TiDB 做到了：可以从计算和存储两个层面的无限扩展，兼容了 MySQL 的语法和协议，强一致的真分布式事务。到今天，TiDB 可以称为一个真正的 HTAP 系统，不需要 ETL 工具进行数据转换
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.3TiDB发展简史/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.6TiDB中的读写流程/">TiDB4.0课程学习-1.6TiDB中的读写流程</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        1.6 Read and Write data in the TiDB database platform（TiDB 中的读写流程）本课程主要包括 TiDB 架构的简单介绍、各个组件的作用，以及读写请求在 TiDB 中的过程
+学习目标： 对 TiDB 整体架构以及读写路程有大概的了解
+关键知识点： TiDB 架构；读写流程
+讲师：沈刚
+
+TiDB 中的读写流程
+
+
+在我们开始之前
+
+来龙去脉
+
+目标
+
+对TiDB的整体架构有一定的了解吗
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.6TiDB中的读写流程/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-2.1TiDB的适用场景/">TiDB4.0课程学习-2.1TiDB 的适用场景</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        2.1 When to use TiDB platform（TiDB 的适用场景）本节课程主要介绍了 TiDB 的一些典型使用场景，介绍了 TiDB 在 OLTP 类型的场景中使用，在实时 HTAP 场景中的使用，借助 TiSpark 使 Spark 能够读取 TiDB 的数据，进一步加强数据整合以及TiDB 不适用的场景。
+学习目标： 熟悉 TiDB 的一些典型使用场景，并且能大致的判断哪些场景适合 TiDB，哪些不适合
+关键知识点：
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-2.1TiDB的适用场景/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.7TiDB典型应用场景及用户案例/">TiDB4.0课程学习-1.7TiDB 典型应用场景及用户案例</a></h3>
                     <span>
                         <span class="post-meta">
@@ -277,80 +690,9 @@
             </div>
         </div>
         
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/05/25/Oracle/Oracle-DataGuard-Rman-auxiliary搭建备库/">Oracle-DataGuard-Rman-auxiliary搭建备库</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-05-25T06:37:05.000Z" itemprop="datePublished">
-          2020-05-25
-      </time>
-    
-    
-    | 
-    <a href='/tags/Oracle/'>Oracle</a>,
-    
-    <a href='/tags/Data-Guard/'>Data Guard</a>,
-    
-    <a href='/tags/主从/'>主从</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        1.环境介绍百货–数据库服务器
-
-
-
-实例名称
-IP
-账户
-密码
-db_name
-db_unique_name
-service_name
-
-
-
-zbds-baihuo-DB01
-172.16.35.141
-zyadmin
-**
-zbdsora
-zbdsora
-zbdsora
-
-
-zbds-baihuo-DB02
-172.16.35.140
-zyadmin
-**
-zbdsora
-zbdsora_std
-zbdsora_std
-
-
-2.DG
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/05/25/Oracle/Oracle-DataGuard-Rman-auxiliary搭建备库/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
         <nav class="pagination" role="pagination">
           <a class="pull-left" href="/archives/3/">← Newer Posts</a>
-          
+          <a class="pull-right" href="/archives/5/">Older Posts →</a>
         </nav>
     </div>
 </section>

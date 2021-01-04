@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>MySQL加锁过程详解-08-初步理解MySQL的gap锁 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-04T05:59:47.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                <h1>MySQL加锁过程详解-08-初步理解MySQL的gap锁</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<h1 id="初步理解MySQL的gap锁"><a href="#初步理解MySQL的gap锁" class="headerlink" title="初步理解MySQL的gap锁"></a>初步理解MySQL的gap锁</h1><p>初识MySQL的gap，觉得这个设计比较独特，和其他数据库的做法不太一样，所以整理一个简单的memo（虽然关于gap锁，相关资料已经很多了）</p>
+<h2 id="1-什么是gap"><a href="#1-什么是gap" class="headerlink" title="1. 什么是gap"></a>1. 什么是gap</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A place <span class="keyword">in</span> an InnoDB <span class="keyword">index</span> data structure <span class="keyword">where</span> <span class="built_in">new</span> <span class="keyword">values</span> could be inserted.</span><br></pre></td></tr></table></figure>
+
+<p>说白了<strong>gap就是索引树中插入新记录的空隙</strong>。相应的gap lock就是加在gap上的锁，还有一个next-key锁，是记录+记录前面的gap的组合的锁。</p>
+<h2 id="2-gap锁或next-key锁的作用"><a href="#2-gap锁或next-key锁的作用" class="headerlink" title="2. gap锁或next-key锁的作用"></a>2. gap锁或next-key锁的作用</h2><p><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html</a></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">To</span> prevent phantoms, InnoDB uses an algorithm <span class="keyword">called</span> next-key locking that combines <span class="keyword">index</span>-<span class="keyword">row</span> </span><br><span class="line">locking <span class="keyword">with</span> gap locking. InnoDB performs <span class="keyword">row</span>-<span class="keyword">level</span> locking <span class="keyword">in</span> such a way that <span class="keyword">when</span> it searches</span><br><span class="line"> <span class="keyword">or</span> scans a <span class="keyword">table</span> <span class="keyword">index</span>, it sets shared <span class="keyword">or</span> <span class="keyword">exclusive</span> locks <span class="keyword">on</span> the <span class="keyword">index</span> records it encounters. </span><br><span class="line">Thus, the <span class="keyword">row</span>-<span class="keyword">level</span> locks are actually <span class="keyword">index</span>-<span class="type">record</span> locks. <span class="keyword">In</span> addition, a next-key <span class="keyword">lock</span> <span class="keyword">on</span> </span><br><span class="line">an <span class="keyword">index</span> <span class="type">record</span> <span class="keyword">also</span> affects the “gap” <span class="keyword">before</span> that <span class="keyword">index</span> <span class="type">record</span>. That <span class="keyword">is</span>, a next-key <span class="keyword">lock</span> <span class="keyword">is</span> </span><br><span class="line">an <span class="keyword">index</span>-<span class="type">record</span> <span class="keyword">lock</span> plus a gap <span class="keyword">lock</span> <span class="keyword">on</span> the gap <span class="keyword">preceding</span> the <span class="keyword">index</span> <span class="type">record</span>. <span class="keyword">If</span> one <span class="keyword">session</span> has </span><br><span class="line">a shared <span class="keyword">or</span> <span class="keyword">exclusive</span> <span class="keyword">lock</span> <span class="keyword">on</span> <span class="type">record</span> R <span class="keyword">in</span> an <span class="keyword">index</span>, another <span class="keyword">session</span> cannot <span class="keyword">insert</span> a <span class="built_in">new</span> <span class="keyword">index</span> </span><br><span class="line"><span class="type">record</span> <span class="keyword">in</span> the gap immediately <span class="keyword">before</span> R <span class="keyword">in</span> the <span class="keyword">index</span> <span class="keyword">order</span>.</span><br></pre></td></tr></table></figure>
+
+<p>简单讲就是防止幻读。<strong>通过锁阻止特定条件的新记录的插入，因为插入时也要获取gap锁(Insert Intention Locks)。</strong></p>
+<h2 id="3-什么时候会取得gap-lock或nextkey-lock"><a href="#3-什么时候会取得gap-lock或nextkey-lock" class="headerlink" title="3. 什么时候会取得gap lock或nextkey lock"></a>3. 什么时候会取得gap lock或nextkey lock</h2><p><strong>这和隔离级别有关,只在REPEATABLE READ或以上的隔离级别下的特定操作才会取得gap lock或nextkey lock。</strong></p>
+<p><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html</a></p>
+<p><strong>2.1 REPEATABLE READ</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">... For consistent reads, there is an important difference from the READ COMMITTED isolation level:</span><br><span class="line"> All consistent reads within the same transaction read the snapshot established by the first read. ...</span><br><span class="line"></span><br><span class="line">For locking reads (<span class="keyword">SELECT</span> <span class="keyword">with</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span> <span class="keyword">or</span> <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span>), <span class="keyword">UPDATE</span>, <span class="keyword">and</span> <span class="keyword">DELETE</span> statements, </span><br><span class="line">locking depends <span class="keyword">on</span> whether the <span class="keyword">statement</span> uses a <span class="keyword">unique</span> <span class="keyword">index</span> <span class="keyword">with</span> a <span class="keyword">unique</span> <span class="keyword">search</span> condition, </span><br><span class="line"><span class="keyword">or</span> a <span class="keyword">range</span>-<span class="keyword">type</span> <span class="keyword">search</span> condition. <span class="keyword">For</span> a <span class="keyword">unique</span> <span class="keyword">index</span> <span class="keyword">with</span> a <span class="keyword">unique</span> <span class="keyword">search</span> condition, </span><br><span class="line"><span class="keyword">InnoDB</span> locks <span class="keyword">only</span> the <span class="keyword">index</span> <span class="built_in">record</span> <span class="keyword">found</span>, <span class="keyword">not</span> the gap <span class="keyword">before</span> it. <span class="keyword">For</span> other <span class="keyword">search</span> conditions, </span><br><span class="line"><span class="keyword">InnoDB</span> locks the <span class="keyword">index</span> <span class="keyword">range</span> scanned, <span class="keyword">using</span> gap locks <span class="keyword">or</span> <span class="keyword">next</span>-<span class="keyword">key</span> locks <span class="keyword">to</span> <span class="keyword">block</span> insertions </span><br><span class="line"><span class="keyword">by</span> other sessions <span class="keyword">into</span> the gaps covered <span class="keyword">by</span> the range.</span><br></pre></td></tr></table></figure>
+
+<p><strong>locking reads，UPDATE和DELETE时，除了对唯一索引的唯一搜索外都会获取gap锁或next-key锁。即锁住其扫描的范围。</strong></p>
+<p>下面对<strong>非唯一索引</strong>做个测试。</p>
+<p>表定义如下:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show create table tb2;</span><br><span class="line">+-------+------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Table | Create Table                                                                                                                                   |</span><br><span class="line">+-------+------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| tb2   | CREATE TABLE `tb2` (</span><br><span class="line">  `id` int(11)<span class="built_in"> DEFAULT </span><span class="literal">NULL</span>,</span><br><span class="line">  `c1` int(11)<span class="built_in"> DEFAULT </span><span class="literal">NULL</span>,</span><br><span class="line">  KEY `tb2_idx1` (`id`)</span><br><span class="line">) <span class="attribute">ENGINE</span>=InnoDB<span class="built_in"> DEFAULT </span><span class="attribute">CHARSET</span>=utf8mb4 |</span><br><span class="line">+-------+------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">1 row <span class="keyword">in</span> <span class="builtin-name">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>注意id只是索引，不是主键</p>
+<p>表中有3条记录： 10,20,30。</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from tb2;</span><br><span class="line"><span class="code">+------+</span>------+</span><br><span class="line">| id   | c1   |</span><br><span class="line"><span class="code">+------+</span>------+</span><br><span class="line">|   10 |    0 |</span><br><span class="line">|   20 |    0 |</span><br><span class="line">|   30 |    0 |</span><br><span class="line"><span class="code">+------+</span>------+</span><br><span class="line">3 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>在REPEATABLE READ下，更新一条记录不提交，然后看看能阻塞另外的会话哪些操作。</p>
+<p><strong>SESSION 1:</strong></p>
+<p>SESSION 1中更新id=20的记录</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; update tb2 <span class="keyword">set</span> c1=<span class="number">2</span> where id=<span class="number">20</span>;</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.04</span> sec)</span><br><span class="line">Rows matched: <span class="number">1</span>  Changed: <span class="number">1</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>SESSION 2:</strong></p>
+<p>SESSION 2中，执行插入操作，发现[10,30)范围不能插入数据。</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">mysql&gt; insert into tb2 values(9,4);</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into tb2 values(10,4);</span><br><span class="line"><span class="keyword">ERROR </span>1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br><span class="line">mysql&gt; insert into tb2 values(19,4);</span><br><span class="line"><span class="keyword">ERROR </span>1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br><span class="line">mysql&gt; insert into tb2 values(20,4);</span><br><span class="line"><span class="keyword">ERROR </span>1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br><span class="line">mysql&gt; insert into tb2 values(21,4);</span><br><span class="line"><span class="keyword">ERROR </span>1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br><span class="line">mysql&gt; insert into tb2 values(29,4);</span><br><span class="line"><span class="keyword">ERROR </span>1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br><span class="line">mysql&gt; insert into tb2 values(30,4);</span><br><span class="line">Query OK, 1 row affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">mysql&gt; update tb2 <span class="keyword">set</span> c1=<span class="number">4</span> where id=<span class="number">10</span>;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">Rows matched: <span class="number">1</span>  Changed: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; update tb2 <span class="keyword">set</span> c1=<span class="number">4</span> where id=<span class="number">20</span>;</span><br><span class="line">ERROR <span class="number">1205</span> (HY000): Lock wait timeout exceeded; <span class="keyword">try</span> restarting transaction</span><br><span class="line">mysql&gt; update tb2 <span class="keyword">set</span> c1=<span class="number">4</span> where id=<span class="number">30</span>;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">Rows matched: <span class="number">2</span>  Changed: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果SESSION 1的表扫描没有用到索引，那么gap或next-key锁住的范围是整个表，即任何值都不能插入。</p>
+<p><strong>2.2 READ COMMITTED</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">For locking reads (<span class="keyword">SELECT</span> <span class="keyword">with</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span> <span class="keyword">or</span> <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span>), <span class="keyword">UPDATE</span> statements, </span><br><span class="line"><span class="keyword">and</span> <span class="keyword">DELETE</span> statements, <span class="keyword">InnoDB</span> locks <span class="keyword">only</span> <span class="keyword">index</span> <span class="keyword">records</span>, <span class="keyword">not</span> the gaps <span class="keyword">before</span> them,</span><br><span class="line"> <span class="keyword">and</span> thus permits the free insertion <span class="keyword">of</span> <span class="keyword">new</span> <span class="keyword">records</span> <span class="keyword">next</span> <span class="keyword">to</span> <span class="keyword">locked</span> records.</span><br></pre></td></tr></table></figure>
+
+<p>只会锁住已有记录，不会加gap锁。</p>
+<p><strong>2.3 SERIALIZABLE</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">This level is like REPEATABLE READ, but InnoDB implicitly converts all plain </span><br><span class="line"><span class="keyword">SELECT</span> statements <span class="keyword">to</span> <span class="keyword">SELECT</span> ... <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span> <span class="keyword">if</span> autocommit <span class="keyword">is</span> disabled.</span><br></pre></td></tr></table></figure>
+
+<p>和REPEATABLE READ的主要区别在于把普通的SELECT变成SELECT … LOCK IN SHARE MODE，即对普通的select都会获取gap锁或next-key锁。</p>
+<h2 id="4-REPEATABLE-READ和幻读"><a href="#4-REPEATABLE-READ和幻读" class="headerlink" title="4. REPEATABLE READ和幻读"></a>4. REPEATABLE READ和幻读</h2><p>在“consistent-read”时，REPEATABLE READ下看到是事务开始时的快照，即使其它事务插入了新行通常也是看不到的，所以在常见的场合可以避免幻读。 但是，”locking read”或更新，删除时是会看到已提交的修改的，包括新插入的行。</p>
+<p><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-consistent-read.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-consistent-read.html</a></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">If you want <span class="built_in">to</span> see <span class="keyword">the</span> “freshest” state <span class="keyword">of</span> <span class="keyword">the</span> database, use either <span class="keyword">the</span> READ COMMITTED </span><br><span class="line">isolation level <span class="keyword">or</span> <span class="keyword">a</span> locking <span class="built_in">read</span>:</span><br></pre></td></tr></table></figure>
+
+<p>下面看一个例子</p>
+<p><strong>SESSION 1:</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; START TRANSACTION;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">mysql&gt; select id,c1 from tb1 where id=1;</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">| id | c1   |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">|  1 |  100 |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>SESSION 2:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update tb1 <span class="keyword">set</span> c1=<span class="number">101</span> where id =<span class="number">1</span>;</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.03</span> sec)</span><br><span class="line">Rows matched: <span class="number">1</span>  Changed: <span class="number">1</span>  Warnings: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>SESSION 1:</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select id,c1 from tb1 where id=1 LOCK IN SHARE MODE;</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">| id | c1   |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">|  1 |  101 |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select id,c1 from tb1 where id=1;</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">| id | c1   |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">|  1 |  100 |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; update tb1 set c1=c1+1000 where id=1;</span><br><span class="line">Query OK, 1 row affected (0.02 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; select id,c1 from tb1 where id=1;</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">| id | c1   |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">|  1 | 1101 |</span><br><span class="line"><span class="code">+----+</span>------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>上面update的行为违反了REPEATABLE READ的承诺，看到了事务开始后其它事务的并发更新。这对应用开发需要特别注意，这种情况下其它数据库通常都是报错的。</p>
+<h2 id="5-其它"><a href="#5-其它" class="headerlink" title="5. 其它"></a>5. 其它</h2><p>RR和RC相比还有一个重要的区别，RC下，扫描过但不匹配的记录不会加锁，或者是先加锁再释放，即semi-consistent read。但RR下扫描过记录都要加锁。这个差别对有全表扫描的更新的场景影响极大。详细参考<a href="http://hedengcheng.com/?p=771，关于MySQL的加锁处理，这篇文章讲得很透彻！" target="_blank" rel="noopener">http://hedengcheng.com/?p=771，关于MySQL的加锁处理，这篇文章讲得很透彻！</a></p>
+<h2 id="6-参考"><a href="#6-参考" class="headerlink" title="6. 参考"></a>6. 参考</h2><ul>
+<li><a href="http://hedengcheng.com/?p=771" target="_blank" rel="noopener">http://hedengcheng.com/?p=771</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-consistent-read.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-consistent-read.html</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html</a></li>
+<li><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html" target="_blank" rel="noopener">http://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html</a></li>
+<li><a href="http://blog.chinaunix.net/uid-20726500-id-3902528.html" target="_blank" rel="noopener">http://blog.chinaunix.net/uid-20726500-id-3902528.html</a></li>
+<li><a href="http://blog.itpub.net/22664653/viewspace-750824/" target="_blank" rel="noopener">http://blog.itpub.net/22664653/viewspace-750824/</a></li>
+<li><a href="http://www.bitscn.com/pdb/mysql/201405/227973.html" target="_blank" rel="noopener">http://www.bitscn.com/pdb/mysql/201405/227973.html</a></li>
+</ul>
+<p><strong>注：转载自 博客园 crazyYong：<a href="https://www.cnblogs.com/crazylqy/p/7689447.html" target="_blank" rel="noopener">https://www.cnblogs.com/crazylqy/p/7689447.html</a></strong></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-09-理解innodb的锁-record-gap-next-key-lock/" style="float: left;">
+        ← MySQL加锁过程详解-09-理解innodb的锁(record,gap,next-key-lock)
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-07-数据库隔离级别-2-实际案例/">
+        MySQL加锁过程详解-07-数据库隔离级别(2)-实际案例 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-04T05:57:58.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                <h1>MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<h2 id="select-for-update-lock-in-share-mode-对事务并发性影响"><a href="#select-for-update-lock-in-share-mode-对事务并发性影响" class="headerlink" title="select for update/lock in share mode 对事务并发性影响"></a>select for update/lock in share mode 对事务并发性影响</h2><h3 id="事务并发性理解"><a href="#事务并发性理解" class="headerlink" title="事务并发性理解"></a>事务并发性理解</h3><p>事务并发性，粗略的理解就是单位时间内能够执行的事务数量，常见的单位是 TPS（ transactions per second）.</p>
+<p>那在数据量和业务操作量一定的情况下，常见的提高事务并发性主要考虑的有哪几点呢？</p>
+<p><strong>1.提高服务器的处理能力，让事务的处理时间变短。</strong></p>
+<p>这样不仅加快了这个事务的执行时间，也降低了其他等待该事务执行的事务执行时间。</p>
+<p><strong>2.尽量将事务涉及到的 sql 操作语句控制在合理范围，换句话说就是不要让一个事务包含的操作太多或者太少。</strong></p>
+<p>在业务繁忙情况下，如果单个事务操作的表或者行数据太多，其他的事务可能都在等待该事务 commit或者 rollback，这样会导致整体上的 TPS 降低。但是，如果每个 sql 语句都是一个事务也是不太现实的。一来，有些业务本身需要多个sql语句来构成一个事务（比如汇款这种多个表的操作）；二来，每个 sql 都需要commit，如果在 mysql 里 innodb_flush_log_at_trx_commit=1 的情况下，会导致 redo log 的刷新过于频繁，也不利于整体事务数量的提高（IO限制也是需要考虑的重要因素）。</p>
+<p><strong>3.在操作的时候，尽量控制锁的粒度，能用小的锁粒度就尽量用锁的粒度，用完锁资源后要记得立即释放，避免后面的事务等待。</strong></p>
+<p><strong>但是有些情况下，</strong>由于业务需要，或者为了保证数据的一致性的时候，必须要增加锁的粒度，这个时候就是下面所说的几种情况。</p>
+<h3 id="select-for-update-理解"><a href="#select-for-update-理解" class="headerlink" title="select for update 理解"></a>select for update 理解</h3><p>select col from t where where_clause for update 的目的是在执行这个 select 查询语句的时候，会将对应的索引访问条目进行上排他锁（X 锁），也就是说这个语句对应的锁就相当于update带来的效果。</p>
+<p>那这种语法为什么会存在呢？肯定是有需要这种方式的存在啦！！请看下面的案例描述：</p>
+<p><strong>案例1：</strong></p>
+<p>前提条件：</p>
+<p>mysql 隔离级别 <strong>repeatable-read</strong> ,</p>
+<p>事务1：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">建表：</span><br><span class="line">CREATE TABLE `lockt` (</span><br><span class="line">  `id` int(11) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  `col1` int(11)<span class="built_in"> DEFAULT </span><span class="literal">NULL</span>,</span><br><span class="line">  `col2` int(11)<span class="built_in"> DEFAULT </span><span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `col1_ind` (`col1`),</span><br><span class="line">  KEY `col2_ind` (`col2`)</span><br><span class="line">) <span class="attribute">ENGINE</span>=InnoDB<span class="built_in"> DEFAULT </span><span class="attribute">CHARSET</span>=utf8</span><br><span class="line"></span><br><span class="line">插入数据 。。。。。</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="builtin-name">set</span> <span class="attribute">autocommit</span>=0;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> lockt;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | col1 | col2 |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |   14 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line">+----+------+------+</span><br><span class="line">6 rows <span class="keyword">in</span> <span class="builtin-name">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>然后另外一个事务2 进行了下面的操作：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> lockt;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | col1 | col2 |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  <span class="number">1</span> |    <span class="number">1</span> |    <span class="number">1</span> |</span><br><span class="line">|  <span class="number">2</span> |    <span class="number">2</span> |    <span class="number">3</span> |</span><br><span class="line">|  <span class="number">5</span> |    <span class="number">5</span> |    <span class="number">5</span> |</span><br><span class="line">|  <span class="number">6</span> |    <span class="number">6</span> |    <span class="number">9</span> |</span><br><span class="line">|  <span class="number">7</span> |    <span class="number">7</span> |   <span class="number">14</span> |</span><br><span class="line">|  <span class="number">8</span> |    <span class="number">8</span> |   <span class="number">20</span> |</span><br><span class="line">+----+------+------+</span><br><span class="line"><span class="number">6</span> rows <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; update lockt <span class="keyword">set</span>  col2= <span class="number">144</span>  where col2=<span class="number">14</span>;  </span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.01</span> sec)</span><br><span class="line">Rows matched: <span class="number">1</span>  Changed: <span class="number">1</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p><strong>结果：</strong>可以看到事务2 将col2=14 的列改为了 col2=144.</p>
+<p>可是事务1继续执行的时候根本没有觉察到 lockt 发生了变化，请看 事务1 继续后面的操作：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from lockt;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |   14 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">6 rows in set (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; update lockt set  col2=col2*2  where col2=14;    </span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">Rows matched: 0  Changed: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from lockt;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |  144 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">6 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p><strong>结果：</strong> 事务1 明明查看到的存在 col2=12 的行数据，可是 update 后，竟然不仅没有改为他想要的col2=28 的值，反而变成了 col2=144 ！！！！</p>
+<p>这在有些业务情况下是不允许的，因为有些业务希望我通过 <strong>select * from lockt;</strong> 查询到的数据是此时数据库里面真正存储的最新数据，并且不允许其他的事务来修改只允许我来修改。（<strong>这个要求很霸气，但是我喜欢。。</strong>）</p>
+<p>这种情况就是很牛逼的情况了。具体的细节请参考下面的<strong>案例2：</strong></p>
+<p>案例2：</p>
+<p>mysql 条件和案例1 一样。</p>
+<p><strong>事务1操作:</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; begin;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from lockt where col2=20 for update;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p><strong>事务2 操作：</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from lockt;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |  144 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">6 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; update lockt set  col2=222  where col2=20;</span><br></pre></td></tr></table></figure>
+
+<p>注意： 事务2 在执行 update lockt set col2=222 where col2=20; 的时候，会发现 sql 语句被 block住了，为什么会发现这种情况呢？</p>
+<p>因为事务1 的 select * from lockt where col2=20 for update; 语句会将 col2=20 这个索引的入口给锁住了，（其实有些时候是范围的索引条目也被锁住了，暂时不讨论。），那么事务2虽然看到了所有的数据，但是想去修改 col2=20 的行数据的时候， 事务1 只能说 “不可能也不允许”。</p>
+<p>后面只有事务1 commit或者rollback 以后，事务2 的才能够修改 col2=20 的这个行数据。</p>
+<p><strong>总结：</strong></p>
+<p>这就是 select for update 的使用场景，为了避免自己看到的数据并不是数据库存储的最新数据并且看到的数据只能由自己修改，需要用 for update 来限制。</p>
+<h3 id="select-lock-in-share-mode-理解"><a href="#select-lock-in-share-mode-理解" class="headerlink" title="select lock in share mode 理解"></a>select lock in share mode 理解</h3><p>如果看了前面的 select *** for update ，就可以很好的理解 select lock in share mode ，in share mode 子句的作用就是将查找到的数据加上一个 share 锁，这个就是表示其他的事务只能对这些数据进行简单的select 操作，并不能够进行 DML 操作。</p>
+<p>那它和 for update 在引用场景上究竟有什么实质上的区别呢？</p>
+<p>lock in share mode 没有 for update 那么霸道，所以它有时候也会遇到问题，请看案例3</p>
+<p>案例3：</p>
+<p>mysql 环境和案例1 类似</p>
+<p>事务1：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from lockt;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |  144 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">6 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from lockt where col2=20 lock in share mode;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>事务2 接着开始操作</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from lockt;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  1 |    1 |    1 |</span><br><span class="line">|  2 |    2 |    3 |</span><br><span class="line">|  5 |    5 |    5 |</span><br><span class="line">|  6 |    6 |    9 |</span><br><span class="line">|  7 |    7 |  144 |</span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">6 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from lockt where col2=20 lock in share mode;</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">| id | col1 | col2 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">|  8 |    8 |   20 |</span><br><span class="line"><span class="code">+----+</span>------<span class="code">+------+</span></span><br><span class="line">1 row in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>后面的比较蛋疼的一幕出现了，当 事务1 想更新 col2=20 的时候，他发现 block 住了。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update lockt <span class="builtin-name">set</span> <span class="attribute">col2</span>=22 where <span class="attribute">col2</span>=20;</span><br></pre></td></tr></table></figure>
+
+<p>解释：因为事务1 和事务2 都对该行上了一个 share 锁，事务1 以为就只有自己一个人上了 S 锁，所以当事务一想修改的时候发现没法修改，这种情况下，事务1 需要使用 for update 子句来进行约束了，而不是使用 for share 来使用。</p>
+<p><strong>意向锁作用</strong></p>
+<p>下文之知乎大神观点：<a href="https://www.zhihu.com/question/51513268" target="_blank" rel="noopener">https://www.zhihu.com/question/51513268</a> </p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/copycode.gif" alt="复制代码" title="null"></a></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">innodb的意向锁有什么作用？</span><br><span class="line">mysql官网上对于意向锁的解释中有这么一句话</span><br><span class="line">“The main purpose <span class="keyword">of</span> IX <span class="keyword">and</span> <span class="keyword">IS</span> locks <span class="keyword">is</span> <span class="keyword">to</span> <span class="keyword">show</span> that someone <span class="keyword">is</span> locking a <span class="keyword">row</span>, <span class="keyword">or</span> going <span class="keyword">to</span> <span class="keyword">lock</span> a <span class="keyword">row</span> <span class="keyword">in</span> the <span class="keyword">table</span>.”</span><br><span class="line">意思是说加意向锁的目的是为了表明某个事务正在锁定一行或者将要锁定一行。</span><br><span class="line">那么，意向锁的作用就是“表明”加锁的意图，可是为什么要表明这个 意图呢？</span><br><span class="line">如果仅仅锁定一行仅仅需要加一个锁，那么就直接加锁就好了，这里要表明加锁意图的原因是因为要锁定一行不仅仅是要加一个锁，而是要做一系列操作吗？</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">作者：尹发条地精</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">我最近也在看这个，我说一下我的理解</span><br><span class="line">①在mysql中有表锁，<span class="keyword">LOCK</span> <span class="keyword">TABLE</span> my_tabl_name <span class="keyword">READ</span>;  用读锁锁表，会阻塞其他事务修改表数据。<span class="keyword">LOCK</span> <span class="keyword">TABLE</span> my_table_name <span class="keyword">WRITe</span>; 用写锁锁表，会阻塞其他事务读和写。</span><br><span class="line">②Innodb引擎又支持行锁，行锁分为共享锁，一个事务对一行的共享只读锁。排它锁，一个事务对一行的排他读写锁。</span><br><span class="line">③这两中类型的锁共存的问题考虑这个例子：</span><br><span class="line">事务A锁住了表中的一行，让这一行只能读，不能写。之后，事务B申请整个表的写锁。如果事务B申请成功，那么理论上它就能修改表中的任意一行，这与A持有的行锁是冲突的。</span><br><span class="line">数据库需要避免这种冲突，就是说要让B的申请被阻塞，直到A释放了行锁。</span><br><span class="line"></span><br><span class="line">数据库要怎么判断这个冲突呢？</span><br><span class="line">step1：判断表是否已被其他事务用表锁锁表</span><br><span class="line">step2：判断表中的每一行是否已被行锁锁住。</span><br><span class="line">注意step2，这样的判断方法效率实在不高，因为需要遍历整个表。</span><br><span class="line">于是就有了意向锁。在意向锁存在的情况下，事务A必须先申请表的意向共享锁，成功后再申请一行的行锁。在意向锁存在的情况下，</span><br><span class="line">上面的判断可以改成</span><br><span class="line">step1：不变</span><br><span class="line">step2：发现表上有意向共享锁，说明表中有些行被共享行锁锁住了，因此，事务B申请表的写锁会被阻塞。</span><br><span class="line"></span><br><span class="line">注意：申请意向锁的动作是数据库完成的，就是说，事务A申请一行的行锁的时候，数据库会自动先开始申请表的意向锁，不需要我们程序员使用代码来申请。</span><br><span class="line"></span><br><span class="line">总结：为了实现多粒度锁机制（白话：为了表锁和行锁都能用）</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/copycode.gif" alt="复制代码" title="null"></a></p>
+<h3 id="可能用到的情景和对性能的影响"><a href="#可能用到的情景和对性能的影响" class="headerlink" title="可能用到的情景和对性能的影响"></a>可能用到的情景和对性能的影响</h3><p><strong>使用情景：</strong></p>
+<p>\1. select *** for update 的使用场景</p>
+<p>为了让自己查到的数据确保是最新数据，并且查到后的数据只允许自己来修改的时候，需要用到 for update 子句。</p>
+<p>\2. select *** lock in share mode 使用场景</p>
+<p>为了确保自己查到的数据没有被其他的事务正在修改，也就是说确保查到的数据是最新的数据，并且不允许其他人来修改数据。但是自己不一定能够修改数据（比如a,b都拿了锁，a更改了数据，因为b还拿着锁，a提交不了，直到超时），因为有可能其他的事务也对这些数据 使用了 in share mode 的方式上了 S 锁。</p>
+<p><strong>性能影响：</strong></p>
+<p>select for update 语句，相当于一个 update 语句。在业务繁忙的情况下，如果事务没有及时的commit或者rollback 可能会造成其他事务长时间的等待，从而影响数据库的并发使用效率。</p>
+<p>select lock in share mode 语句是一个给查找的数据上一个共享锁（S 锁）的功能，它允许其他的事务也对该数据上 S锁，但是不能够允许对该数据进行修改。如果不及时的commit 或者rollback 也可能会造成大量的事务等待。</p>
+<p>for update 和 lock in share mode 的区别：前一个上的是排他锁（X 锁），一旦一个事务获取了这个锁，其他的事务是没法在这些数据上执行 for update ；后一个是共享锁，多个事务可以同时的对相同数据执行 lock in share mode。</p>
+<p>-—————————————————————————————————————————————————————————</p>
+<p>例子实验</p>
+<p>1.lock in share mode死锁情况</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;</td>
+<td></td>
+</tr>
+<tr>
+<td>SET AUTOCOMMIT=0;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>BEGIN</td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>SELECT * FROM test</td>
+<td>SELECT * FROM test</td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111840872-1105337469.png" alt="img" title="null"></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111842356-1636185387.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>SELECT * FROM test WHERE a=’1’ LOCK IN SHARE MODE;</td>
+<td>SELECT * FROM test WHERE a=’1’ LOCK IN SHARE MODE;</td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111847965-561733952.png" alt="img" title="null"></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111849356-62133572.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>UPDATE test SET b=111 WHERE a=’1’ <img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111854919-1673283464.png" alt="img" title="null"></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE test SET b=222 WHERE a=’1’</td>
+</tr>
+<tr>
+<td></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111900278-1364757494.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111908153-197277786.png" alt="img" title="null"></td>
+<td>B死锁了，释放掉了s锁，所以a就成功了</td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE test SET b=222 WHERE a=’1’</td>
+</tr>
+<tr>
+<td></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111912825-1622843393.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>COMMIT</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>A提交后B才更新成功，因为死锁后B丢了锁，A才成功<img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111918122-70439956.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>SELECT * FROM test</td>
+<td></td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111923590-1573623926.png" alt="img" title="null"></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM test</td>
+</tr>
+<tr>
+<td></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111930075-1881588364.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td></td>
+<td>COMMIT</td>
+</tr>
+<tr>
+<td>SELECT * FROM test</td>
+<td>SELECT * FROM test</td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111934825-256775924.png" alt="img" title="null"></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930111936606-1281292661.png" alt="img" title="null"></td>
+</tr>
+</tbody></table>
+<p>例子2 for update锁</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;</td>
+<td></td>
+</tr>
+<tr>
+<td>SET AUTOCOMMIT=0;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>BEGIN</td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>SELECT * FROM test</td>
+<td>SELECT * FROM test</td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930112455450-1958545029.png" alt="img" title="null"></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930112456794-2039567749.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>SELECT * FROM test WHERE a=’1’ FOR UPDATE;</td>
+<td></td>
+</tr>
+<tr>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930112501700-1654496949.png" alt="img" title="null"></td>
+<td>SELECT * FROM test WHERE a=’1’ FOR UPDATE;</td>
+</tr>
+<tr>
+<td></td>
+<td><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-04-selectforupdate%E5%85%B1%E4%BA%AB%E8%AF%BB%E9%94%81%E5%AF%B9%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%BD%B1%E5%93%8D/464291-20170930112504684-2077931864.png" alt="img" title="null"></td>
+</tr>
+<tr>
+<td>COMMIT</td>
+<td>COMMIT</td>
+</tr>
+<tr>
+<td>ForUpdate只能一个人拿到锁，是x（排他）锁</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>注：转载自 博客园 crazyYong：<a href="https://www.cnblogs.com/crazylqy/p/7614245.html" target="_blank" rel="noopener">https://www.cnblogs.com/crazylqy/p/7614245.html</a></strong></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-05-innodb多版本并发控制原理详解/" style="float: left;">
+        ← MySQL加锁过程详解-05-innodb多版本并发控制原理详解
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-03-关于幻读理解/">
+        MySQL加锁过程详解-03-关于幻读理解 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>MySQL加锁过程详解-05-innodb多版本并发控制原理详解 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-04T05:58:19.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                <h1>MySQL加锁过程详解-05-innodb多版本并发控制原理详解</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>多版本并发控制技术已经被广泛运用于各大数据库系统中,如Oracle，MS SQL Server 2005+, Postgresql, Firebird, Maria等等,开源数据库MYSQL中流行的INNODB引擎也采用了类似的并发控制技术.本文就将结合实例来解析不同事务隔离等级下INNODB的MVCC实现原理.</p>
+<p><strong>1 MVCC概述</strong></p>
+<p><strong>1.1 MVCC简介</strong></p>
+<p>MVCC (Multiversion Concurrency Control),即多版本并发控制技术,它使得大部分支持行锁的事务引擎,不再单纯的使用行锁来进行数据库的并发控制,取而代之的是,把数据库的行锁与行的多个版本结合起来,只需要很小的开销,就可以实现非锁定读,从而大大提高数据库系统的并发性能.</p>
+<p><strong>1.2 实现原理</strong></p>
+<p>MVCC可以提供基于某个时间点的快照,使得对于事务看来,总是可以提供与事务开始时刻相一致的数据,而不管这个事务执行的时间有多长.所以在不同的事务看来,同一时刻看到的相同行的数据可能是不一样的,即一个行可能有多个版本.是否听起来不可思议呢?</p>
+<p>原来,为了实现mvcc, innodb对每一行都加上了两个隐含的列,其中一列存储行被更新的”时间”,另外一列存储行被删除的”时间”. 但是innodb存储的并不是绝对的时间,而是与时间对应的数据库系统的版本号,每当一个事务开始的时候,innodb都会给这个事务分配一个递增的版本号,所以版本号也可以被认为是事务号.对于每一个”查询”语句,innodb都会把这个查询语句的版本号同这个查询语句遇到的行的版本号进行对比,然后结合不同的事务隔离等级,来决定是否返回该行.</p>
+<p>下面分别以select、delete、 insert、 update语句来说明:</p>
+<p>1) SELECT</p>
+<p>对于select语句，只有同时满足了下面两个条件的行，才能被返回:</p>
+<p>•行的被修改版本号小于或者等于该事务号</p>
+<p>•行的被删除版本号要么没有被定义,要么大于事务的版本号:行的删除版本号如果没有被定义,说明该行没有被删除过;如果删除版本号大于当前事务的事务号,说明该行是被该事务后面启动的事务删除的,由于是repeatable read隔离等级,后开始的事务对数据的影响不应该被先开始的事务看见,所以该行应该被返回.</p>
+<p>2) INSERT</p>
+<p>对新插入的行,行的更新版本被修改为该事务的事务号</p>
+<p>3) DELETE</p>
+<p>对于删除,innodb直接把该行的被删除版本号设置为当前的事务号,相当于标记为删除,而不是实际删除</p>
+<p>4) UPDATE</p>
+<p>在更新行的时候,innodb会把原来的行复制一份到回滚段中,并把当前的事务号作为该行的更新版本</p>
+<p><strong>1.3 MVCC的优缺点</strong></p>
+<p>上述策略的结果就是,在读取数据的时候,innodb几乎不用获得任何锁, 每个查询都通过版本检查,只获得自己需要的数据版本,从而大大提高了系统的并发度.</p>
+<p>这种策略的缺点是,为了实现多版本,innodb必须对每行增加相应的字段来存储版本信息,同时需要维护每一行的版本信息,而且在检索行的时候,需要进行版本的比较,因而降低了查询的效率;innodb还必须定期清理不再需要的行版本,及时回收空间,这也增加了一些开销</p>
+<p><strong>2 INNODB支持的事务隔离等级</strong></p>
+<p>INNODB支持并实现了ISO标准的4个事务隔离等级,即 READ-UNCOMMITTED, READ-COMMITTED, REPEATABLE-READ, SERIALIZABLE.</p>
+<p>1) READ UNCOMMITTED (可以读未提交的): 查询可以读取到其他事务正在修改的数据,即使其他事务的修改还没有提交.这种隔离等级无法避免脏读.</p>
+<p>2) READ COMMITTED(只可以读已经提交的):其他事务对数据库的修改,只要已经提交,其修改的结果就是可见的,与这两个事务开始的先后顺序无关.这种隔离等级避免了脏读,但是无法实现可重复读,甚至有可能产生幻读.</p>
+<p>3) REPEATABLE READ(可重复读):比read committed更进了一步,它只能读取在它开始之前已经提交的事务对数据库的修改,在它开始以后,所有其他事务对数据库的修改对它来说均不可见.从而实现了可重复读,但是仍有可能幻读</p>
+<p>4) SERIALIZABLE(可串行化):这是事务隔离等级的最高级别.其实现原理就是对于所有的query,即使是查询,也会加上读锁,避免其他事务对数据的修改.所以它成功的避免了幻读.但是代价是,数据库系统的并发处理能力大大降低,所以它不会被用到生产系统中.</p>
+<p>我们对MVCC和标准事务隔离等级有所了解以后,再结合实例来看看其具体表现吧.</p>
+<p><strong>3</strong> 不同事务隔离等级下的MVCC实现</p>
+<p>MVCC由于其实现原理,只支持read committed和repeatable read隔离等级,下面分别举例详细说明:</p>
+<p>每次开始之前,都先执行如下的语句:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> mydb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> mydb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="string">`emp`</span> ( <span class="string">`empno`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">not</span> <span class="literal">null</span> auto_increment, <span class="string">`ename`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">null</span>, Primary <span class="keyword">key</span> (empno)) <span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">default</span> <span class="keyword">charset</span>=gbk;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="number">100</span>, <span class="string">"yuxiangang"</span>) ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="number">200</span>,<span class="string">"2zhaoyinggang"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span>(<span class="number">300</span>,<span class="string">"3yihongbin"</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.1 read committed隔离等级</strong></p>
+<p>说明:session 1和session 2表示访问同一个数据库的两个不同的会话.行号用来代表不同的语句执行的时间点.</p>
+<table>
+<thead>
+<tr>
+<th>行号</th>
+<th>session 1</th>
+<th>session 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>set transaction isolation level read committed;</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>start transaction;</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1yuxiangang ||  200 | 2zhaoyinggang ||  300 | 3yihongbin |+——-+——-+</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>set transaction isolation level read committed;</td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+<td>start transaction;</td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+<td>update emp set ename=1 where empno=100; delete from emp where empno=200;</td>
+</tr>
+<tr>
+<td>说明: 修改一行,然后删除一行,但是事务不提交.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1yuxiangang ||  200 | 2zhaoyinggang ||  300 | 3yihongbin |+——-+——-+</td>
+<td></td>
+</tr>
+<tr>
+<td>说明:会话2的事务没有提交,所以会话1看不到会话2的事务对数据库数据的修改.但是实际上修改已经发生,会话1获取的被修改或者删除的数据,都来自于回滚段.这是通过MVCC来实现的.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td></td>
+<td>commit;</td>
+</tr>
+<tr>
+<td>说明: 会话2提交</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  300 | 3yihongbin |+——-+——-+</td>
+<td></td>
+</tr>
+<tr>
+<td>说明:当事务2提交以后,由于会话1采用的是read committed隔离等级,所以会话2的提交马上会被会话1的事务看见.对于会话1来说,第一次执行select * from emp where empno&gt;=100;与第二次执行该语句,两次看到的结果不一样,第一次读看到了3行,第二次只看到了2行,就像发生了幻觉,称之为幻读;第一次看到100对应的ename为1yuxiangang,第二次看到的100对应的是1,两次获取的数据内容不一样,称之为不可重复读.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>3.2 <strong>repeatable read隔离等级</strong></p>
+<p>注意:先执行开头的所有sql语句.</p>
+<table>
+<thead>
+<tr>
+<th>行号</th>
+<th>session 1</th>
+<th>session 2</th>
+<th>session 3</th>
+<th>session 4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>set transaction isolation level repeatable read;</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>start transaction;</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1yuxiangang ||  200 | 2zhaoyinggang ||  300 | 3yihongbin |+——-+——-+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td></td>
+<td></td>
+<td>set @@session.autocommit=1;</td>
+</tr>
+<tr>
+<td>说明: 这里让会话4可以自动提交,便于观察它对前面3个会话的影响</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>update emp set ename=1 where empno=100; insert into emp values(400,”4chj”);</td>
+</tr>
+<tr>
+<td>说明: 会话4先更新一行数据,然后插入一行数据,并自动提交</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为: +——-+——-+| empno | ename |+——-+——-+|  100 | 1yuxiangang ||  200 | 2zhaoyinggang ||  300 | 3yihongbin |+——-+——-+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>说明: 会话1执行查询,两次查询得到的结果一样.它看不到会话4对数据库的修改,虽然会话4的事务已经提交.这是因为会话4的事务是在会话1的事务之后才开始.从这里也可以看出,repeatable read实现了可重复读</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+<td>set transaction isolation level repeatable read;start transaction;</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2zhaoyinggang ||  300 | 3yihongbin ||  400 | 4chj |+——-+——-+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>说明: 会话2是在会话4之后开始的,所以它看到了会话4对数据库的修改.同时可以看到,相同的查询语句,不同的事务来执行的时候,得到的结果不一样.会话2与会话3执行相同的查询就得到不一样的结果.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td></td>
+<td></td>
+<td></td>
+<td>update emp set ename=2 where empno=200;</td>
+</tr>
+<tr>
+<td>9</td>
+<td></td>
+<td></td>
+<td>set transaction isolation level repeatable read;start transaction;</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td></td>
+<td></td>
+<td>select * from emp where empno&gt;=100;查询的结果为: +——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4chj |+——-+——-+</td>
+<td></td>
+</tr>
+<tr>
+<td>说明: 同样,这个会话查询到的结果与会话1和会话2的结果也不一样.而且会话3看到了会话4对数据库的修改.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td></td>
+<td></td>
+<td></td>
+<td>update emp set ename=4 where empno=400;</td>
+</tr>
+<tr>
+<td>12</td>
+<td></td>
+<td></td>
+<td></td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+</tr>
+<tr>
+<td>说明: 事务总是可以看到自身对数据库数据的修改,尽管别的事务可能看不到这种修改</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>13</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1yuxiangang ||  200 | 2zhaoyinggang ||  300 | 3yihongbin |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2zhaoyinggang ||  300 | 3yihongbin ||  400 | 4chj |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4chj |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+</tr>
+<tr>
+<td>说明: 从上面的结果可以很清晰的看到:会话1,2,3,4执行相同的语句,即使是在同一时刻,他们看到的数据都可能不一样:对于empno为100的行,有 100 1yuxiangang 和 100  1两个版本;对于empno为200的行,有 200  2zhaoyinggang 和200  2两个版本…,而每一行数据都可能存在多个版本,那么这些行组合起来得到的结果集的版本就更是不计其数,这就是数据库多版本的由来.MVCC就是通过事务发生的不同的时间点,与数据行的版本来进行对比,从而取回与事务开始的时间点相一致的数据,<strong>来实现非阻塞的一致读.</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>14</td>
+<td>commit;</td>
+<td>commit;</td>
+<td>commit;</td>
+<td>commit;</td>
+</tr>
+<tr>
+<td>15</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+<td>select * from emp where empno&gt;=100; 查询的结果为:+——-+——-+| empno | ename |+——-+——-+|  100 | 1   ||  200 | 2   ||  300 | 3yihongbin ||  400 | 4   |+——-+——-+</td>
+</tr>
+<tr>
+<td>说明: 当所有事务都提交后,他们看到的结果都是一样的</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>4 相关的Q&amp;A</p>
+<p><strong>4.1 为什么select count(*)在myisam表上很快,而在Innodb的表上很慢?</strong></p>
+<p>因为innodb采用了MVCC技术,对于相同的行,可能同时存在多个版本,innodb必须根据查询的时间来过滤掉一些行,才能得出结果,必然要执行全表扫描,而全表扫描是非常耗时的.对于myisam的表,任何行都只有一个版本,mysql甚至不需要扫描就可以直接返回精确的统计结果,我们用explain也可以看到,对于myisam的表,执行select count(*)的时候,mysql显示” Select tables optimized away”,查询直接被优化了;而对于innodb的表,可能是全表扫描,也可能是”using index”,总之,速度肯定会比myisam的表慢很多.</p>
+<p><strong>4.2 我的数据库只是频繁更新,没有插入新数据,但是为什么表空间占用会越来越大?</strong></p>
+<p>如果你在数据库中执行了大事务, innodb就会把被修改数据的前映像存放到称为回滚段的公共表空间中,而且对于索引和表中的行的多个版本,如果innodb来不及purge,或者这些行因为要提供一致读而不能被purge,就会占用越来越多的空间,甚至有可能短时间撑爆你的硬盘.所以应用程序中需要合理控制事务的大小.</p>
+<p><strong>4.3 能禁用MVCC吗?</strong></p>
+<p>禁用MVCC可以降低innodb引擎的开销,而同时innodb又可以支持外键约束,可以实现自动恢复.MVCC本身不支持read uncommitted等级,所以可以通过设置transaction_isolation = read uncommitted 来禁用MVCC.但是任何改变innodb默认隔离等级的操作,都会起到innodb_locks_unsafe_for_binlog=off类似的效果,这会导致诸如insert into t select * from t_src 之类的语句不再给源表t_src加锁,也不再使用innodb的间隙锁,从而产生幻读,直接导致binlog中记录的sql语句不能正确的串行化,从而主从数据库的数据不再一致,而且基于binlog的增量备份也不再有效.所以除非不需要记录binlog,否则别这么做.当然我们可以这样做来优化从库的性能,因为从库不需要记录binlog.</p>
+<p><strong>4.4 何时使用char类型,何时使用varchar类型的列?</strong></p>
+<p>在使用myisam引擎的情况下,定长表虽然可能占用较多的存储空间,但是它会加快检索和全表扫描的速度,此时适合选用char的列,而对于表中的变长的列,可以采用分表的方法把变长的列拆分出去,提高定长表的检索性能.而如果使用的是innodb的引擎,由于innodb的mvcc策略的实施,char数据类型相对于varchar类型几乎没有任何优势,反而varchar列可能节省更多的存储空间,建议使用varchar数据类型.</p>
+<p><strong>注：转载自 博客园 crazyYong：<a href="https://www.cnblogs.com/crazylqy/p/7610831.html" target="_blank" rel="noopener">https://www.cnblogs.com/crazylqy/p/7610831.html</a></strong></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-06-数据库隔离级别-1/" style="float: left;">
+        ← MySQL加锁过程详解-06-数据库隔离级别(1)
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响/">
+        MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

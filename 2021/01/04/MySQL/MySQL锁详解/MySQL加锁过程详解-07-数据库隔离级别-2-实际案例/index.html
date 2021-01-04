@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>MySQL加锁过程详解-07-数据库隔离级别(2)-实际案例 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-04T05:59:24.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                <h1>MySQL加锁过程详解-07-数据库隔离级别(2)-实际案例</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>SQL标准定义了4种隔离级别，包括了一些具体规则，用来限定事务内外的哪些改变是可见的，哪些是不可见的。</p>
+<p>低级别的隔离级一般支持更高的并发处理，并拥有更低的系统开销。</p>
+<p>首先，我们使用 test 数据库，新建 tx 表，并且如图所示打开两个窗口来操作同一个数据库：</p>
+<p><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/821187-20160811160643512-422866874.png" alt="img" title="null"></p>
+<hr>
+<h3 id="第1级别：Read-Uncommitted-读取未提交内容"><a href="#第1级别：Read-Uncommitted-读取未提交内容" class="headerlink" title="第1级别：Read Uncommitted(读取未提交内容)"></a>第1级别：Read Uncommitted(读取未提交内容)</h3><p>(1)所有事务都可以看到其他未提交事务的执行结果<br>(2)本隔离级别很少用于实际应用，因为它的性能也不比其他级别好多少<br>(3)该级别引发的问题是——脏读(Dirty Read)：读取到了未提交的数据</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/copycode.gif" alt="复制代码" title="null"></a></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#首先，修改隔离级别set tx<span class="emphasis">_isolation='READ-UNCOMMITTED';</span></span><br><span class="line"><span class="emphasis">select @@tx_</span>isolation;</span><br><span class="line"><span class="code">+------------------+</span></span><br><span class="line">| @@tx<span class="emphasis">_isolation   |</span></span><br><span class="line"><span class="emphasis">+------------------+</span></span><br><span class="line"><span class="emphasis">| READ-UNCOMMITTED |</span></span><br><span class="line"><span class="emphasis">+------------------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：启动一个事务</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务B：也启动一个事务(那么两个事务交叉了)       在事务B中执行更新语句，且不提交</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">update tx set num=10 where id=1;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：那么这时候事务A能看到这个更新了的数据吗?</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |   ---&gt;可以看到！说明我们读到了事务B还没有提交的数据</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务B：事务B回滚,仍然未提交</span></span><br><span class="line"><span class="emphasis">rollback;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：在事务A里面看到的也是B没有提交的数据</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |      ---&gt;脏读意味着我在这个事务中(A中)，事务B虽然没有提交，但它任何一条数据变化，我都可以看到！</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/copycode.gif" alt="复制代码" title="null"></a></p>
+<hr>
+<h3 id="第2级别：Read-Committed-读取提交内容"><a href="#第2级别：Read-Committed-读取提交内容" class="headerlink" title="第2级别：Read Committed(读取提交内容)"></a><strong>第2级别：Read Committed(读取提交内容)</strong></h3><p>(1)这是大多数数据库系统的默认隔离级别（但不是MySQL默认的）<br>(2)它满足了隔离的简单定义：一个事务只能看见已经提交事务所做的改变<br>(3)这种隔离级别出现的问题是——不可重复读(Nonrepeatable Read)：不可重复读意味着我们在同一个事务中执行完全相同的select语句时可能看到不一样的结果。<br>   |——&gt;导致这种情况的原因可能有：(1)有一个交叉的事务有新的commit，导致了数据的改变;(2)一个数据库被多个实例操作时,同一事务的其他实例在该实例处理其间可能会有新的commit</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/copycode.gif" alt="复制代码" title="null"></a></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">#首先修改隔离级别set tx<span class="emphasis">_isolation='read-committed';</span></span><br><span class="line"><span class="emphasis">select @@tx_</span>isolation;</span><br><span class="line"><span class="code">+----------------+</span></span><br><span class="line">| @@tx<span class="emphasis">_isolation |</span></span><br><span class="line"><span class="emphasis">+----------------+</span></span><br><span class="line"><span class="emphasis">| READ-COMMITTED |</span></span><br><span class="line"><span class="emphasis">+----------------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：启动一个事务</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务B：也启动一个事务(那么两个事务交叉了)       在这事务中更新数据，且未提交</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">update tx set num=10 where id=1;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：这个时候我们在事务A中能看到数据的变化吗?</span></span><br><span class="line"><span class="emphasis">select * from tx; ---------------&gt;</span></span><br><span class="line"><span class="emphasis">+------+------+                |</span></span><br><span class="line"><span class="emphasis">| id   | num  |                |</span></span><br><span class="line"><span class="emphasis">+------+------+                |</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |---&gt;并不能看到！  |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |                |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |                |</span></span><br><span class="line"><span class="emphasis">+------+------+                |——&gt;相同的select语句，结果却不一样</span></span><br><span class="line"><span class="emphasis">                               |</span></span><br><span class="line"><span class="emphasis">#事务B：如果提交了事务B呢?         |</span></span><br><span class="line"><span class="emphasis">commit;                        |</span></span><br><span class="line"><span class="emphasis">                               |</span></span><br><span class="line"><span class="emphasis">#事务A:                         |</span></span><br><span class="line"><span class="emphasis">select * from tx; ---------------&gt;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |---&gt;因为事务B已经提交了，所以在A中我们看到了数据变化</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/copycode.gif" alt="复制代码" title="null"></a></p>
+<hr>
+<h3 id="第3级别：Repeatable-Read-可重读"><a href="#第3级别：Repeatable-Read-可重读" class="headerlink" title="第3级别：Repeatable Read(可重读)"></a>第3级别：Repeatable Read(可重读)</h3><p>(1)这是MySQL的默认事务隔离级别<br>(2)它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行<br>(3)此级别可能出现的问题——幻读(Phantom Read)：当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影” 行<br>(4)InnoDB和Falcon存储引擎通过多版本并发控制(MVCC，Multiversion Concurrency Control)机制解决了幻读</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/copycode.gif" alt="复制代码" title="null"></a></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">#首先，更改隔离级别set tx<span class="emphasis">_isolation='repeatable-read';</span></span><br><span class="line"><span class="emphasis">select @@tx_</span>isolation;</span><br><span class="line"><span class="code">+-----------------+</span></span><br><span class="line">| @@tx<span class="emphasis">_isolation  |</span></span><br><span class="line"><span class="emphasis">+-----------------+</span></span><br><span class="line"><span class="emphasis">| REPEATABLE-READ |</span></span><br><span class="line"><span class="emphasis">+-----------------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：启动一个事务</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务B：开启一个新事务(那么这两个事务交叉了)       在事务B中更新数据，并提交</span></span><br><span class="line"><span class="emphasis">start transaction;</span></span><br><span class="line"><span class="emphasis">update tx set num=10 where id=1;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">commit;</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：这时候即使事务B已经提交了,但A能不能看到数据变化？</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |    1 | ---&gt;还是看不到的！(这个级别2不一样，也说明级别3解决了不可重复读问题)</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">#事务A：只有当事务A也提交了，它才能够看到数据变化</span></span><br><span class="line"><span class="emphasis">commit;</span></span><br><span class="line"><span class="emphasis">select * from tx;</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">| id   | num  |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br><span class="line"><span class="emphasis">|    1 |   10 |</span></span><br><span class="line"><span class="emphasis">|    2 |    2 |</span></span><br><span class="line"><span class="emphasis">|    3 |    3 |</span></span><br><span class="line"><span class="emphasis">+------+------+</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="第4级别：Serializable-可串行化"><a href="#第4级别：Serializable-可串行化" class="headerlink" title="第4级别：Serializable(可串行化)"></a>第4级别：Serializable(可串行化)</h3><p>(1)这是最高的隔离级别<br>(2)它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简言之,它是在每个读的数据行上加上共享锁。<br>(3)在这个级别，可能导致大量的超时现象和锁竞争</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#首先修改隔离界别set tx_isolation='serializable';</span></span><br><span class="line"><span class="keyword">select</span> @@tx_isolation;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| @@tx_isolation |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| SERIALIZABLE   |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#事务A：开启一个新事务</span></span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">#事务B：在A没有commit之前，这个交叉事务是不能更改数据的</span></span><br><span class="line"><span class="keyword">start</span> <span class="keyword">transaction</span>;</span><br><span class="line"><span class="keyword">insert</span> tx <span class="keyword">values</span>(<span class="string">'4'</span>,<span class="string">'4'</span>);</span><br><span class="line">ERROR 1205 (HY000): <span class="keyword">Lock</span> <span class="keyword">wait</span> <span class="keyword">timeout</span> exceeded; try restarting transaction</span><br><span class="line"><span class="keyword">update</span> tx <span class="keyword">set</span> <span class="keyword">num</span>=<span class="number">10</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;</span><br><span class="line">ERROR 1205 (HY000): <span class="keyword">Lock</span> <span class="keyword">wait</span> <span class="keyword">timeout</span> exceeded; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>​      <img src="../MySQL%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3-07-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB-2-%E5%AE%9E%E9%99%85%E6%A1%88%E4%BE%8B/821187-20160811171241606-133220585.jpg" alt="img" title="null"></p>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a><strong>参考文章</strong></h3><p>​      <a href="http://xm-king.iteye.com/blog/770721" target="_blank" rel="noopener">Mysql事务隔离级别详解</a></p>
+<p><a href="http://www.cnblogs.com/snsdzjlz320/p/5761387.html" target="_blank" rel="noopener">http://www.cnblogs.com/snsdzjlz320/p/5761387.html</a></p>
+<p>在MYSQL的事务引擎中，INNODB是使用范围最广的。它默认的事务隔离级别是REPEATABLE READ(可重复读），在标准的事务隔离级别定义下，REPEATABLE READ是不能防止幻读产生的。INNODB使用了2种技术手段（MVCC AND GAP LOCK)实现了防止幻读的发生。</p>
+<p>以上的iso定义的数据库隔离级别，mysql实现了基本定义，但和他有点不一样，比如mysql重复读避免的幻读</p>
+<p><strong>注：转载自 博客园 crazyYong：<a href="https://www.cnblogs.com/crazylqy/p/7516066.html" target="_blank" rel="noopener">https://www.cnblogs.com/crazylqy/p/7516066.html</a></strong></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-08-初步理解MySQL的gap锁/" style="float: left;">
+        ← MySQL加锁过程详解-08-初步理解MySQL的gap锁
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-06-数据库隔离级别-1/">
+        MySQL加锁过程详解-06-数据库隔离级别(1) →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

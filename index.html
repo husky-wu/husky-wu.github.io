@@ -95,7 +95,7 @@
 				  	
 				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
 				    
-				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(4)</small></a></li>
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
 				    
 				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
 				    
@@ -110,6 +110,8 @@
 				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
 				    
 				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
 				    
 				</ul>
         	</li>
@@ -240,6 +242,386 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-09-理解innodb的锁-record-gap-next-key-lock/">MySQL加锁过程详解-09-理解innodb的锁(record,gap,next-key-lock)</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T06:00:33.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        Record lock单条索引记录上加锁，record lock锁住的永远是索引，而非记录本身，即使该表上没有任何索引，那么innodb会在后台创建一个隐藏的聚集主键索引，那么锁住的就是这个隐藏的聚集主键索引。所以说当一条sql没有走任何索引时，那么将会在每一条聚集索引后面加X锁，这个类似于表锁，但原理上和表锁应该是完全不同的。
+Gap lock在索引记录之间的间隙中加锁，或者是在某一条索引记录之前或者之后加锁，并不包括该索引记录本身。
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-09-理解innodb的锁-record-gap-next-key-lock/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-08-初步理解MySQL的gap锁/">MySQL加锁过程详解-08-初步理解MySQL的gap锁</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:59:47.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        初步理解MySQL的gap锁初识MySQL的gap，觉得这个设计比较独特，和其他数据库的做法不太一样，所以整理一个简单的memo（虽然关于gap锁，相关资料已经很多了）
+1. 什么是gap1A place in an InnoDB index data structure where new values could be inserted.
+
+说白了gap就是索引树中插入新记录的空隙。相应的gap lock就是加在gap上的锁，还有一
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-08-初步理解MySQL的gap锁/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-07-数据库隔离级别-2-实际案例/">MySQL加锁过程详解-07-数据库隔离级别(2)-实际案例</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:59:24.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        SQL标准定义了4种隔离级别，包括了一些具体规则，用来限定事务内外的哪些改变是可见的，哪些是不可见的。
+低级别的隔离级一般支持更高的并发处理，并拥有更低的系统开销。
+首先，我们使用 test 数据库，新建 tx 表，并且如图所示打开两个窗口来操作同一个数据库：
+
+
+第1级别：Read Uncommitted(读取未提交内容)(1)所有事务都可以看到其他未提交事务的执行结果(2)本隔离级别很少用于实际应用，因为它的性能也不比其他级别好多少
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-07-数据库隔离级别-2-实际案例/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-06-数据库隔离级别-1/">MySQL加锁过程详解-06-数据库隔离级别(1)</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:58:47.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        一、数据库事务隔离级别数据库事务的隔离级别有4个，由低到高依次为Read uncommitted 、Read committed 、Repeatable read 、Serializable ，这四个级别可以逐个解决脏读 、不可重复读 、幻读 这几类问题。
+√: 可能出现  ×: 不会出现
+
+
+
+
+脏读
+不可重复读
+幻读
+
+
+
+Read uncommitted
+√
+√
+√
+
+
+Read committed
+×
+√
+√
+
+
+Repeata
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-06-数据库隔离级别-1/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-05-innodb多版本并发控制原理详解/">MySQL加锁过程详解-05-innodb多版本并发控制原理详解</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:58:19.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        多版本并发控制技术已经被广泛运用于各大数据库系统中,如Oracle，MS SQL Server 2005+, Postgresql, Firebird, Maria等等,开源数据库MYSQL中流行的INNODB引擎也采用了类似的并发控制技术.本文就将结合实例来解析不同事务隔离等级下INNODB的MVCC实现原理.
+1 MVCC概述
+1.1 MVCC简介
+MVCC (Multiversion Concurrency Control),即多
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-05-innodb多版本并发控制原理详解/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响/">MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:57:58.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        select for update/lock in share mode 对事务并发性影响事务并发性理解事务并发性，粗略的理解就是单位时间内能够执行的事务数量，常见的单位是 TPS（ transactions per second）.
+那在数据量和业务操作量一定的情况下，常见的提高事务并发性主要考虑的有哪几点呢？
+1.提高服务器的处理能力，让事务的处理时间变短。
+这样不仅加快了这个事务的执行时间，也降低了其他等待该事务执行的事务执行时间
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-04-selectforupdate共享读锁对事务并发影响/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-03-关于幻读理解/">MySQL加锁过程详解-03-关于幻读理解</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:56:37.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        Mysql加锁过程详解（2）-关于mysql 幻读理解出现了幻读，那么不是说mysql的重复读解决了幻读的么？
+那么，InnoDB指出的可以避免幻读是怎么回事呢？
+
+http://dev.mysql.com/doc/refman/5.0/en/innodb-record-level-locks.html
+By default, InnoDB operates in REPEATABLE READ transaction isolatio
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-03-关于幻读理解/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-02-关于幻读理解/">MySQL加锁过程详解-01-关于幻读理解</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:56:23.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        首先，mysql 幻读并非是”一个事务内进行两次相同操作居然得到了不一样的结果”，因为它根本不可能发生在使用了 read view / MVCC 的 RR 隔离级别下，这种幻读的定义更适合给 Oracle，Oracle 的事务隔离只有两级，RC 和 Serializable。然后还有很多人辩解说不可重复读是针对某条记录的，幻读是针对记录集合的，这是在自我安慰么？
+这里给出 mysql 幻读的比较形象的场景：
+users： id 主键
+1
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-02-关于幻读理解/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-01-基础知识/">MySQL加锁过程详解-01-基础知识</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-04T05:51:02.000Z" itemprop="datePublished">
+          2021-01-04
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>,
+    
+    <a href='/tags/锁/'>锁</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        1、背景　　MySQL/InnoDB的加锁分析，一直是一个比较困难的话题。我在工作过程中，经常会有同事咨询这方面的问题。同时，微博上也经常会收到MySQL锁相关的私信，让我帮助解决一些死锁的问题。本文，准备就MySQL/InnoDB的加锁问题，展开较为深入的分析与讨论，主要是介绍一种思路，运用此思路，拿到任何一条SQL语句，都能完整的分析出这条语句会加什么锁？会有什么样的使用风险？甚至是分析线上的一个死锁场景，了解死锁产生的原因。
+注：
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-01-基础知识/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/数据混合存储/">数据混合存储</a></h3>
                     <span>
                         <span class="post-meta">
@@ -282,438 +664,6 @@ RAMCLOOUD内存存储
                     
                     <p class="pull-right readMore">
                         <a href="/2020/12/29/分布式文件存储系统技术与实现/数据混合存储/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/元数据管理的可扩展性/">元数据管理的可扩展性</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T06:53:35.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_641#_641
-
-
-
-动态分块
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/元数据管理的可扩展性/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/元数据管理的高可用性/">元数据管理的高可用性</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T06:32:25.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_640#_640
-
-
-主从方式
-
-
-
-
-分布式协议
-
-主从方式和分布式协议对比
-
-
-HDFS NAMENODE 共享存储
-
-盘古 元数据服务  Raft
-
-选举状态
-
-发起选举请求
-
-其他节点接收
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/元数据管理的高可用性/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-ErasureCoding/">分布式系统功能设计-ErasureCoding</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T06:01:18.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_639#_639
-ErasureCoding数据压缩存储
-
-
-
-
-劣势：当出现异常节点时，比较耗费网络节点流量
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-ErasureCoding/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-GC/">分布式系统功能设计-GC</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:57:07.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_638#_638
-
-
-
-
-
-
-
-
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-GC/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Rebalance/">分布式系统功能设计-Rebalance</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:53:57.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_637#_637
-
-
-
-
-
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Rebalance/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Replication/">分布式系统功能设计-Replication</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:47:30.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_636#_636
-
-
-如何保证数据不丢失
-
-如何及时发现磁盘错误？
-盘古中每隔15s会回报一次在从上的心跳
-当发现错误后，会去访问master获取从盘中错误文件的信息，并发起较高优先级的恢复
-复制
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Replication/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Checksum/">分布式系统功能设计-Checksum</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:38:23.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https:/developer.aliyun.com/lesson_32_635#_635
-
-数据包将会构造三元组
-放在buffer中 记录length数据长度 进行CRC校验
-
-在网络传输中由于数据包可能比较大，将会把这个数据包进行网络分包处理，
-
-每个分包都会构造这样
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-Checksum/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-QoS/">分布式系统功能设计-QoS</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:34:27.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_634?spm=5176.10731542.0.0.622d12a7NMPHbC#_634
-
-多用户共存的QoS请求
-每个用户用户组都将会标记权重
-
-
-采用轮询方式从不同用户的请求池中执行请求，以
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-QoS/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-读取流程/">分布式系统功能设计-读取流程</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T05:27:11.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_633#_633
-
-
-
-backupread解决慢节点
-
-读流程优化-规避慢节点
-间段性统计返回期望
-优先选择请求返回期望小的节点
-
-
-
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-读取流程/">Read More...</a>
                     </p>
                     
                 </div>
