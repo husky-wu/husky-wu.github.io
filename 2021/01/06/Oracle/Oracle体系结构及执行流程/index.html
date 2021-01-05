@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>Oracle体系结构及执行流程 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-05T16:58:10.000Z" itemprop="datePublished">
+          2021-01-06
+      </time>
+    
+    
+    | 
+    <a href='/tags/Oracle/'>Oracle</a>
+    
+    
+</span>
+                <h1>Oracle体系结构及执行流程</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.jpg" alt="Oracle体系结构" title="null"></p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>实例是数据库启动时初始化的一组进程和内存结构</p>
+<p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106011153401.png" alt="image-20210106011153401" title="null"></p>
+<h3 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h3><p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106011202443.png" alt="image-20210106011202443" title="null"></p>
+<h4 id="SGA-系统全局区"><a href="#SGA-系统全局区" class="headerlink" title="SGA(系统全局区)"></a>SGA(系统全局区)</h4><p>SGA是一块共享的内存区域，也是最大的一块内存区域</p>
+<p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010305467.png" alt="image-20210106010305467" title="null"></p>
+<h5 id="数据库缓冲区缓存"><a href="#数据库缓冲区缓存" class="headerlink" title="数据库缓冲区缓存"></a>数据库缓冲区缓存</h5><p>缓冲区缓存 是Oracle用来执行SQL 的工作区域，在更新数据时，用户会话不会直接去更新磁盘上的数据，而是先更新缓冲区缓存数据，以减少磁盘IO</p>
+<p>脏缓冲区 </p>
+<p>　　如果缓冲区存储的块和磁盘上的块不一致，该缓冲区就叫做“脏缓冲区”，脏缓冲区最终会由数据库写入器（DBWn）写入到磁盘中去。</p>
+<h5 id="日志缓冲区"><a href="#日志缓冲区" class="headerlink" title="日志缓冲区"></a>日志缓冲区</h5><p>日志缓冲区是一块比较小的内存区域，它是用来短期存储将写入到磁盘中的重做日志文件中的变更向量的。</p>
+<p>日志缓冲区存在的意义依然是为了减少磁盘IO，减少用户的等待时间，试想下，如果每一次用户DML操作都要进行等待重做记录被写入到磁盘中去，体验会有多差劲。</p>
+<h5 id="共享池"><a href="#共享池" class="headerlink" title="共享池"></a>共享池</h5><p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010507375.png" alt="image-20210106010507375" title="null"></p>
+<h6 id="库缓存"><a href="#库缓存" class="headerlink" title="库缓存"></a>库缓存</h6><p>库缓存这块内存区域会按已分析的格式缓存最近执行的代码，这样，同样的sql代码多次执行的时候，就不用重复地去进行代码分析，可以很大程度上提高系统性能</p>
+<h6 id="数据字典缓存"><a href="#数据字典缓存" class="headerlink" title="数据字典缓存"></a>数据字典缓存</h6><p>存储oracle中的对象定义（表，视图，同义词，索引等数据库对象），这样在分析sql代码的时候，就不用频繁去磁盘上读取数据字典中的数据了</p>
+<h6 id="PL-SQL区"><a href="#PL-SQL区" class="headerlink" title="PL/SQL区"></a>PL/SQL区</h6><p>缓存存储过程、函数、触发器等数据库对象，这些对象都存储在数据字典中，通过将其缓存到内存中，可以在重复调用的时候提高性能</p>
+<h5 id="大池"><a href="#大池" class="headerlink" title="大池"></a>大池</h5><p>大池是个可选的内存区域，前面我们提到专有服务器连接和共享服务器连接，如果数据库采用了共享服务器连接模式，则要使用到大池；RMAN(Oracle的高级备份恢复工具)备份数据也需要大池</p>
+<h5 id="Java池"><a href="#Java池" class="headerlink" title="Java池"></a>Java池</h5><p>Oracle 的很多选项使用java写的，Java池用作实例化Java对象所需的堆空间</p>
+<h5 id="流池"><a href="#流池" class="headerlink" title="流池"></a>流池</h5><p>从重做日志中提取变更记录的进程 和 应用变更记录的进程会用到流池（如实例不正常关闭，譬如断电导致实例关闭，在重启时，Oracle会自动执行实例恢复过程，在此过程需要提取重做日志记录和应用重做日志两个动作）</p>
+<h4 id="PGA-用户全局区"><a href="#PGA-用户全局区" class="headerlink" title="PGA(用户全局区)"></a>PGA(用户全局区)</h4><p>PGA是用户会话专有的内存区域，每个会话在服务器端都有一块专有的内存区域就是PGA</p>
+<p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010325159.png" alt="image-20210106010325159" title="null"></p>
+<h5 id="Private-SQL-area"><a href="#Private-SQL-area" class="headerlink" title="Private SQL area"></a>Private SQL area</h5><p>包含绑定信息、运行时的内存结构。每个发出sql语句的会话，都有一个private SQL area（私有SQL区）</p>
+<h5 id="Session-memory"><a href="#Session-memory" class="headerlink" title="Session memory"></a>Session memory</h5><p>为保存会话中的变量以及其他与会话相关的信息，而分配的内存区。</p>
+<h5 id="Cursor、SQL-Areas"><a href="#Cursor、SQL-Areas" class="headerlink" title="Cursor、SQL Areas"></a>Cursor、SQL Areas</h5><p>游标以及SQL存储区域。</p>
+<h5 id="Work-Area"><a href="#Work-Area" class="headerlink" title="Work Area"></a>Work Area</h5><p>PGA的一大部分被分配给Work Area，用来执行如下操作：</p>
+<p>a.基于操作符的排序，group by、order by、rollup和窗口函数。参数为sort_area_size  </p>
+<p>b.hash散列连接，参数为hash_area_size     </p>
+<p>c.位图合并，参数为bitmap_merge_area_size</p>
+<p>d.位图创建，参数为create_bitmap_area_size </p>
+<p>e.批量装载操作使用的写缓存</p>
+<p>当发起的指令需要排序，则在PGA中进行，如果内存不够存放排序的尺寸，则超出的部分就在临时表空间完成排序，即在磁盘中完成。</p>
+<p>下图是Oracle体系结构图，一般用户发起的请求，需要经历1区–&gt;2区–&gt;3区，或者1区–&gt;2区</p>
+<h3 id="进程结构"><a href="#进程结构" class="headerlink" title="进程结构"></a>进程结构</h3><p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010644502.png" alt="image-20210106010644502" title="null"></p>
+<h4 id="监听进程"><a href="#监听进程" class="headerlink" title="监听进程"></a>监听进程</h4><h4 id="数据库写入器（DBWn）"><a href="#数据库写入器（DBWn）" class="headerlink" title="数据库写入器（DBWn）"></a>数据库写入器（DBWn）</h4><p>DBWn的作用就是将变脏了的缓冲区从数据库缓冲区缓存中写入到磁盘中的数据文件中去</p>
+<p>DBWn是个比较懒的进程，它会尽可能少的进行写入，在以下四种情况它会执行写入：</p>
+<p>a.没有任何可用缓冲区（不得不写啊）</p>
+<p>b.脏缓冲区过多</p>
+<p>c.3秒超时（最晚3秒会执行一次写入）</p>
+<p>d.遇到检查点，即checkPoint（检查点），检查点是个Oracle事件，遇到检查点，DBWn会执行写入。比如实例有序关闭的时候会有检查点，DBWn会将所有脏缓冲区写入到磁盘上去的，这很容易理解，要保持数据文件的一致性。</p>
+<h4 id="日志写入器（LGWR）"><a href="#日志写入器（LGWR）" class="headerlink" title="日志写入器（LGWR）"></a>日志写入器（LGWR）</h4><p>日志写入器（LGWR）就是把日志缓冲区内的内容写入到磁盘的重做日志文件中去，相比数据库写入器（DBWn），日志写入器就勤快多了。</p>
+<p>以下三种情况LGWR会执行写入：</p>
+<p>a.commit时写入</p>
+<p>　　前面提过，DBWn的写入和commit没有任何关系，如果commit时数据库没有任何记录，那数据就真的丢失了，Oracle 的重做日志就是为了保证数据安全而存在的，commit时，会话会先挂起，等待LGWR将这些记录写入到磁盘上的重做日志文件中，才会通知用户提交完成。所以，LGWR在commit时执行写入，是为了确保事务永不丢失。</p>
+<p>b.日志缓冲区的占用率达到1/3。</p>
+<p>c.DBWn要写入脏缓冲区前</p>
+<p>这个写入是为了数据回滚考虑的。DBWn完全可能写入还没提交的事务（参照上面提到的写入时机）</p>
+<p>那如何保证事务回滚呢？</p>
+<p>　　首先要知道，DBWn除了写入实际的数据，还会写入撤销数据（不了解的同学可参考我的另一篇博文中对于撤销段的描述 Oracle闪回技术详解。）简单说，事务回滚需要撤销数据，在写入撤销数据前，会先写入针对撤销数据的日志记录（有点绕），若用户要进行事务回滚，就可以应用这些日志记录来构造撤销数据，然后进行回滚。</p>
+<p>我们对这两块最重要的内存区域和对应的后台进程做个总结：</p>
+<p>　　数据库缓冲区缓存和日志缓冲区都是为了提高性能，避免频繁IO而存在的。日志缓冲区相比数据库缓冲区缓存要小的多，并且不能进行自动管理，对于日志缓冲区的修改需要重启实例，数据库缓冲区缓存可进行自动管理。作用在数据库缓冲区缓存上的DBWn进程，为了避免频繁的磁盘IO导致系统性能下降，会尽可能少地执行写入，且DBWn的写入和commit操作没有任何关系；</p>
+<p>　　而作用在日志缓冲区上的LGWR进程，则会非常积极地进行写入，一般情况下，它几乎是实时地将重做日志记录转储到磁盘中去。LGWR是Oracle体系结构中最大的瓶颈之一。DML的速度不可能超过LGWR将变更向量写入磁盘的速度。</p>
+<h4 id="SMON-System-Monitor"><a href="#SMON-System-Monitor" class="headerlink" title="SMON(System Monitor)"></a>SMON(System Monitor)</h4><p>安装和打开数据库，实例恢复也是由此进程完成的</p>
+<h4 id="PMON-Process-Monitor"><a href="#PMON-Process-Monitor" class="headerlink" title="PMON(Process Monitor)"></a>PMON(Process Monitor)</h4><p>进程监视器，主要监视服务器进程。前面提到过，专有服务器体系模式下，用户进程和服务器进程是一对一的关系，如果某个会话发生异常，PMON会销毁对应的服务器进程，回滚未提交的事务，并回收会话专有的PGA内存区域。</p>
+<h4 id="CKPT-Checkpoint-Process"><a href="#CKPT-Checkpoint-Process" class="headerlink" title="CKPT(Checkpoint Process)"></a>CKPT(Checkpoint Process)</h4><p>CKPT负责发起检查点信号，手动设置检查点的语法:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>&gt; <span class="keyword">alter</span> <span class="keyword">system</span> <span class="keyword">checkpoint</span>;</span><br></pre></td></tr></table></figure>
+
+<p>　　检查点可强制DBWn写入脏缓冲区，当数据库崩溃后，由于大量脏缓冲区未写入数据文件，在重新启动时，需要由SMON进行实例恢复，实例恢复需要提取和应用重做日志记录，提取的位置就是从上次检查点发起的位置开始的（检查点之前的数据已经被强制写入到数据文件中去了），这个位置称为RBA(redo byte address)，CKPT会不断将这个位置更新到控制文件中去（以确定实例恢复需要从哪儿开始提取日志记录）。</p>
+<h4 id="MMON-Manageability-Monitor"><a href="#MMON-Manageability-Monitor" class="headerlink" title="MMON(Manageability Monitor)"></a>MMON(Manageability Monitor)</h4><p>数据库的自我监视和自我调整的支持进程。实例在运行中，会收集大量有关实例活动和性能的统计数据，这些数据会收集到SGA中，MMON定期从SGA中捕获这些统计数据，并将其写入到数据字典中，便于后续对这些快照进行分析。（默认情况，MMON每隔一个小时收集一次快照）</p>
+<h4 id="ARCn（Archiver）"><a href="#ARCn（Archiver）" class="headerlink" title="ARCn（Archiver）"></a>ARCn（Archiver）</h4><p>归档进程，这个进程是可选的，如果数据库配置为归档模式，这个进程就是必须的。所谓归档，就是将重做日志文件永久保存（生产库一般都会配置为归档模式）到归档日志文件中。归档日志文件和重做日志文件作用是一样的，只不过重做日志文件会不短被重写，而归档日志文件则保留了关于数据更改的完整的历史记录。</p>
+<h2 id="数据库（存储结构）"><a href="#数据库（存储结构）" class="headerlink" title="数据库（存储结构）"></a>数据库（存储结构）</h2><p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010946789.png" alt="image-20210106010946789" title="null"></p>
+<h3 id="物理存储结构"><a href="#物理存储结构" class="headerlink" title="物理存储结构"></a>物理存储结构</h3><p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010930120.png" alt="image-20210106010930120" title="null"></p>
+<p>所谓外部文件，意味着这些文件从严格意义上来讲并不属于Oracle数据库的一部分</p>
+<h4 id="控制文件"><a href="#控制文件" class="headerlink" title="控制文件"></a>控制文件</h4><p>控制文件虽小，但作用重大，它包含指向数据库其余部分的指针（包括重做日志文件，数据文件，归档日志文件等的位置），存储重要的序列号和时间戳，存储RMAN备份的详细信息。控制文件一旦受损，那实例会立马终止，一般对数据文件的保护采用多路复用机制，就是冗余多份在不同物理位置。</p>
+<h4 id="数据文件"><a href="#数据文件" class="headerlink" title="数据文件"></a>数据文件</h4><p>数据文件存储着实际的数据，DBWn会将数据库缓冲区中的内容写入到这类文件中去，数据文件的大小和数量是不受限制的。Oracle从10g开始，创建一个数据库至少需要两个数据文件，一个用于SYSTEM表空间，该表空间用来存储数据字典；一个用于SYSAUX表空间，这个表空间用来存储一些数据字典的辅助数据。</p>
+<p>　　数据文件由一个个的Oracle块组成，这是Oracle的I/O基础单元，与操作系统块是不同的概念，Oracle块要比操作系统块大，这当然有处于性能的一些考虑，但我们考虑这样一种情况，当用户使用操作系统命令进行数据文件的备份的时候（假设1个Oracle块=8个操作系统块），已经复制了4个操作系统块，然后CPU被DBWn抢占了，DBWn又重新对这个Oracle块进行了更新，这时，当复制命令又得到了CPU时间去复制剩余的4个块的时候，就造成了整个Oracle块的数据不一致，所以，这也是在执行这种备份（用户自行备份）的时候，需要做一些额外处理，比如将表空间置为备份模式的原因。当然，使用RMAN是不存在这样的问题的，RMAN的备份机制是肯定可以得到数据一致的块的。（这块内容作了解即可）</p>
+<p>　　对于数据文件的保护，一般可进行定期备份，或者使用RAID也可以。</p>
+<h4 id="联机重做日志文件"><a href="#联机重做日志文件" class="headerlink" title="联机重做日志文件"></a>联机重做日志文件</h4><p>重做日志按时间顺序存储应用于数据库的一连串的变更向量（包含联机重做日志文件和归档日志文件）。由SMON在数据库启动时自动执行的实例恢复 和 磁盘损坏所要求的提取备份恢复都会应用到重做日志进行相应的数据恢复</p>
+<p>　　重做日志文件也建议进行多路复用，一个数据库至少要有两组重做日志文件。一组供LGWR进行写入，日志文件是固定大小，业务高峰期会很快写满，写满之后会切换到第二组上，在配置为归档模式的数据库中，这时由归档进程（ARCn）开始将第一组的内容进行归档备份，如此循环地进行写入和归档。需要注意的是，在归档进程还未对当前组的日志归档完毕前，是不允许LGWR对其进行重写的。</p>
+<h4 id="初始化参数文件"><a href="#初始化参数文件" class="headerlink" title="初始化参数文件"></a>初始化参数文件</h4><p>这个文件存储了数据库所需的一些参数设置，比如各个内存区域的大小，可允许的最大进程数，最大会话数，控制文件的位置，数据库的名称等等，参数文件也是实例启动时首先要加载的文件</p>
+<h4 id="口令文件"><a href="#口令文件" class="headerlink" title="口令文件"></a>口令文件</h4><p>一般称为外部口令文件。一般的用户名和口令是存放在数据字典中，不会存放在这个文件中。在一些特殊场景下，比如实例还未启动，这时，我可能需要以管理员的身份登入系统去执行一些恢复或者启动操作，然而此时，数据字典由于实例还没启动是不存在的，这时就需要外部口令文件进行用户身份的验证。</p>
+<h4 id="归档重做日志文件"><a href="#归档重做日志文件" class="headerlink" title="归档重做日志文件"></a>归档重做日志文件</h4><p>ARCn将联机重做日志文件会备份归档到这类文件中去，归档日志文件保留了数据更改的完整历史信息。</p>
+<h3 id="逻辑存储结构"><a href="#逻辑存储结构" class="headerlink" title="逻辑存储结构"></a>逻辑存储结构</h3><p>Oracle将其物理结构从逻辑存储结构中抽象出来，物理机构是系统管理员能看到的，逻辑结构则是用户所能感知到的。比较典型的逻辑结构就是 “段”和”表空间”。</p>
+<p><img src="../Oracle%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/image-20210106010935141.png" alt="image-20210106010935141" title="null"></p>
+<h4 id="表空间（tablespace）"><a href="#表空间（tablespace）" class="headerlink" title="表空间（tablespace）"></a>表空间（tablespace）</h4><p>表空间从逻辑上是多个段的结合，在物理上是多个数据文件的集合，相当于在段和数据文件的对应中加入了一个中间层来解决这种多对多的关系。</p>
+<p>　　在早期的一些数据库设计中，段和数据文件是一对一的关系，一个段一个数据文件，这种设计有很多弊端，首先，段的数量是不固定的，有可能一个系统中上千张表，那就得需要上千个数据文件，系统管理员要管理这么多文件肯定会抓狂的；</p>
+<p>​    还有一种情况就是某些历史表可能特别大，大到底层系统对单个文件的限制，用一个数据文件去承载的话肯定是不行的。表空间则完美解决了这样的问题。</p>
+<h4 id="段（segment）"><a href="#段（segment）" class="headerlink" title="段（segment）"></a>段（segment）</h4><p>段就是包含所有数据的逻辑结构，比较典型的段就是”表”，称为表段，还有索引段，撤销段等等。</p>
+<h4 id="区（extend）"><a href="#区（extend）" class="headerlink" title="区（extend）"></a>区（extend）</h4><h4 id="块（block）"><a href="#块（block）" class="headerlink" title="块（block）"></a>块（block）</h4><h2 id="SQL执行流程"><a href="#SQL执行流程" class="headerlink" title="SQL执行流程"></a>SQL执行流程</h2><p>1）语法分析，分析语句的语法是否符合规范，衡量语句中各表达式的意义</p>
+<p>2）语义分析，检查语句中涉及的所有数据库对象是否存在，且用户有相应的权限</p>
+<p>3）视图转换，将涉及视图的查询语句转换为相应的对基表查询语句</p>
+<p>4）表达式转换， 将复杂的 SQL 表达式转换为较简单的等效连接表达式</p>
+<p>5）选择优化器，不同的优化器一般产生不同的“执行计划”</p>
+<p>6）选择连接方式，ORACLE有三种连接方式，对多表连接ORACLE可选择适当的连接方式</p>
+<p>7）选择连接顺序，对多表连接ORACLE选择哪一对表先连接，选择这两表中哪个表做为源数据表</p>
+<p>8）选择数据的搜索路径，根据以上条件选择合适的数据搜索路径，如是选用全表搜索还是利用索引或是其他的方式</p>
+<p>9）运行“执行计划”</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    
+    <a class="pull-right" href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-09-理解innodb的锁-record-gap-next-key-lock/">
+        MySQL加锁过程详解-09-理解innodb的锁(record,gap,next-key-lock) →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

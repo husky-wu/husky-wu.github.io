@@ -97,7 +97,7 @@
 				    
 				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
 				    
-				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
 				    
 				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
 				    
@@ -242,6 +242,60 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-写入流程/">分布式系统功能设计-写入流程</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-29T05:17:44.000Z" itemprop="datePublished">
+          2020-12-29
+      </time>
+    
+    
+    | 
+    <a href='/tags/分布式/'>分布式</a>,
+    
+    <a href='/tags/分布式存储/'>分布式存储</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        课程链接：
+https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
+https://developer.aliyun.com/lesson_32_617?spm=5176.10731542.0.0.2d7a12a7E2TEQx#_617
+
+链式写入流程
+
+
+主从模式
+
+
+异常情况-链式写入
+
+第二种处理方式
+
+异常情况-链式写入
+
+总结：
+
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/29/分布式文件存储系统技术与实现/分布式系统功能设计-写入流程/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/28/MongoDB/MongoDB体系结构/">MongoDB体系结构</a></h3>
                     <span>
                         <span class="post-meta">
@@ -381,9 +435,9 @@ Data Gurad通过冗余数据来提供数据保护，Data Gurad 通过
     | 
     <a href='/tags/MySQL/'>MySQL</a>,
     
-    <a href='/tags/数据库/'>数据库</a>,
-    
     <a href='/tags/Oracle/'>Oracle</a>,
+    
+    <a href='/tags/数据库/'>数据库</a>,
     
     <a href='/tags/SQL-server/'>SQL server</a>
     
@@ -450,6 +504,41 @@ Data Gurad通过冗余数据来提供数据保护，Data Gurad 通过
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
+          2020-12-18
+      </time>
+    
+    
+    | 
+    <a href='/tags/MySQL/'>MySQL</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/18/MySQL/MySQL常见报错/">MySQL常见报错</a></h3>
                     <span>
                         <span class="post-meta">
@@ -483,41 +572,6 @@ Data Gurad通过冗余数据来提供数据保护，Data Gurad 通过
                     
                     <p class="pull-right readMore">
                         <a href="/2020/12/18/MySQL/MySQL常见报错/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/18/MySQL/innodb存储引擎详解/">innodb存储引擎详解</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-18T07:47:57.000Z" itemprop="datePublished">
-          2020-12-18
-      </time>
-    
-    
-    | 
-    <a href='/tags/MySQL/'>MySQL</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        innodb特性：主体系结构：默认7个后台线程，4个io thread(insert buffer、log、read、write),1个master thread(优先级最高),1个锁(lock)监控线程，1个错误监控线程。可以通过show engine innodb status来查看。新版本已对默认的read thread和write thread分别增大到4个，可通过show variables like ‘innodb_io_t
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/18/MySQL/innodb存储引擎详解/">Read More...</a>
                     </p>
                     
                 </div>
@@ -607,59 +661,6 @@ https://confluence.jiagouyun.com/pages/viewpage.action?pageId=130450134
                     
                     <p class="pull-right readMore">
                         <a href="/2020/12/18/工作记录/工作记录2020/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL体系结构/">PostgreSQL体系结构</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-17T05:46:54.000Z" itemprop="datePublished">
-          2020-12-17
-      </time>
-    
-    
-    | 
-    <a href='/tags/Postgresql/'>Postgresql</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        一、引言
-
-PostgreSQL是最像Oracle的开源数据库，我们可以拿MySQL和Oracle来比较学习它的体系结构，比较容易理解。本文会讨论pg的如下结构：
-
-日志文件
-参数文件
-控制文件
-数据文件
-redo日志（WAL）
-后台进程
-
-PostgreSQL的主要结构如下：
-
-
-二、日志文件
-
-2.1 日志文件种类
-1）$PGDATA/log 运行日志(pg10之前为$PGDATA/pg_log) 
-2）$PGDATA/pg_wal
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/17/PostgreSQL/PostgreSQL体系结构/">Read More...</a>
                     </p>
                     
                 </div>

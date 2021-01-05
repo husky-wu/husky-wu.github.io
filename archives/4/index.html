@@ -97,7 +97,7 @@
 				    
 				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
 				    
-				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
 				    
 				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
 				    
@@ -242,6 +242,59 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
                 <div class="col-md-4">
+                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL体系结构/">PostgreSQL体系结构</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-17T05:46:54.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+    
+    | 
+    <a href='/tags/Postgresql/'>Postgresql</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        一、引言
+
+PostgreSQL是最像Oracle的开源数据库，我们可以拿MySQL和Oracle来比较学习它的体系结构，比较容易理解。本文会讨论pg的如下结构：
+
+日志文件
+参数文件
+控制文件
+数据文件
+redo日志（WAL）
+后台进程
+
+PostgreSQL的主要结构如下：
+
+
+二、日志文件
+
+2.1 日志文件种类
+1）$PGDATA/log 运行日志(pg10之前为$PGDATA/pg_log) 
+2）$PGDATA/pg_wal
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/17/PostgreSQL/PostgreSQL体系结构/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
                     <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">PostgreSQL安装</a></h3>
                     <span>
                         <span class="post-meta">
@@ -299,9 +352,9 @@ gcc: 4.1.2
     
     
     | 
-    <a href='/tags/Postgresql/'>Postgresql</a>,
+    <a href='/tags/备份恢复/'>备份恢复</a>,
     
-    <a href='/tags/备份恢复/'>备份恢复</a>
+    <a href='/tags/Postgresql/'>Postgresql</a>
     
     
 </span>
@@ -641,47 +694,6 @@ TiDB 中的读写流程
                     
                     <p class="pull-right readMore">
                         <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.7TiDB典型应用场景及用户案例/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-2.1TiDB的适用场景/">TiDB4.0课程学习-2.1TiDB 的适用场景</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
-          2020-12-15
-      </time>
-    
-    
-    | 
-    <a href='/tags/TiDB/'>TiDB</a>,
-    
-    <a href='/tags/学习课程/'>学习课程</a>,
-    
-    <a href='/tags/分布式/'>分布式</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        2.1 When to use TiDB platform（TiDB 的适用场景）本节课程主要介绍了 TiDB 的一些典型使用场景，介绍了 TiDB 在 OLTP 类型的场景中使用，在实时 HTAP 场景中的使用，借助 TiSpark 使 Spark 能够读取 TiDB 的数据，进一步加强数据整合以及TiDB 不适用的场景。
-学习目标： 熟悉 TiDB 的一些典型使用场景，并且能大致的判断哪些场景适合 TiDB，哪些不适合
-关键知识点：
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-2.1TiDB的适用场景/">Read More...</a>
                     </p>
                     
                 </div>

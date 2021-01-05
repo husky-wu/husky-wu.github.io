@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>Oracle之内存结构 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2020-11-05T16:58:10.000Z" itemprop="datePublished">
+          2020-11-06
+      </time>
+    
+    
+    | 
+    <a href='/tags/Oracle/'>Oracle</a>
+    
+    
+</span>
+                <h1>Oracle之内存结构</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p><strong>一、内存结构</strong></p>
+<p><a href="http://blog.itpub.net/batch.download.php?aid=28798" target="_blank" rel="noopener"><img src="../Oracle%E4%B9%8B%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/25264937_201105101501121.jpeg" alt="img" title="null"></a><br>    SGA(System Global Area)：由所有服务进程和后台进程共享；<br>    PGA(Program Global Area)：由每个服务进程、后台进程专有；每个进程都有一个PGA。</p>
+<p><strong>二、SGA</strong><br>    包含实例的数据和控制信息，包含如下内存结构：<br>    1）Database buffer cache：缓存了从磁盘上检索的数据块。<br>    2）Redo log buffer：缓存了写到磁盘之前的重做信息。<br>    3）Shared pool：缓存了各用户间可共享的各种结构。<br>    4）Large pool：一个可选的区域，用来缓存大的I/O请求，以支持并行查询、共享服务器模式以及某些备份操作。<br>    5）Java pool：保存java虚拟机中特定会话的数据与java代码。<br>    6）Streams pool：由Oracle streams使用。<br>    7）Keep buffer cache：保存buffer cache中存储的数据，使其尽时间可能长。<br>    8）Recycle buffer cache：保存buffer cache中即将过期的数据。<br>    9）nK block size buffer：为与数据库默认数据块大小不同的数据块提供缓存。用来支持表空间传输。</p>
+<pre><code>database buffer cache, shared pool, large pool, streams pool与Java pool根据当前数据库状态，自动调整；
+keep buffer cache,recycle buffer cache,nK block size buffer可以在不关闭实例情况下，动态修改。</code></pre><p><strong>三、PGA</strong><br>    每个服务进程私有的内存区域，包含如下结构：<br>    1）Private SQL area：包含绑定信息、运行时的内存结构。每个发出sql语句的会话，都有一个private SQL area（私有SQL区）<br>    2）Session memory：为保存会话中的变量以及其他与会话相关的信息，而分配的内存区。</p>
+<p><strong>四、SGA COMPONENT</strong><br><strong>(一)、Buffer Cache</strong><br>    1、DB_CACHE_SIZE<br>    　　　　通过参数DB_CACHE_SIZE可指定DB buffer cache的大小<br>    　　　　ALTER SYSTEM SET DB_CACHE_SIZE=20M scope=both;<br>    　　　　服务进程从数据文件读数据到buffer cache；DBWn从buffer cache写数据到数据文件。<br>    　　　　buffer cache的四种状态：<br>    　　　　　　　　1）pinned：当前块正在读到cache或正写到磁盘，其他会话等待访问该块。<br>    　　　　　　　　2）clean：<br>    　　　　　　　　3）free/unused：buffer内为空，为实例刚启动时的状态。<br>    　　　　　　　　4）dirty：脏数据，数据块被修改，需要被DBWn刷新到磁盘，才能执行过期处理。</p>
+<pre><code>同一个数据库中，支持多种大小的数据块缓存。通过DB_nK_CACHE_SIZE参数指定，如
+　　　　• DB_2K_CACHE_SIZE
+　　　　• DB_4K_CACHE_SIZE
+　　　　• DB_8K_CACHE_SIZE
+　　　　• DB_16K_CACHE_SIZE
+　　　　• DB_32K_CACHE_SIZE
+标准块缓存区大小由DB_CACHE_SIZE指定。如标准块为nK，则不能通过DB_nK_CACHE_SIZE来指定标准块缓存区的大小，应由DB_CACHE_SIZE指定。
+例，标准块为8K，则数据库可以设置的块缓存大小的参数如下：
+　　　　• DB_CACHE_SIZE    （指定标准块（这里为8K）的缓存区）
+　　　　• DB_2K_CACHE_SIZE    （指定块大小为2K的缓存区）
+　　　　• DB_4K_CACHE_SIZE    （指定块大小为4K的缓存区）
+　　　　• DB_16K_CACHE_SIZE    （指定块大小为16K的缓存区）
+　　　　• DB_32K_CACHE_SIZE    （指定块大小为32K的缓存区）
+
+2、多种缓冲池（buffer pool）
+　　　　1）Keep：通过db_keep_cache_size参数指定。
+　　　　该buffer内的数据可能被重用，以降低I/O操作。该池的大小要大于指定到该池的段的总和。</code></pre><p>　　　　　　 读入到keep buffer的块不需要过期操作。<br>    　　　　2）Recycle：通过db_recycle_cache_size参数指定。<br>    　　　　该池中的数据被重用机会较小，该池大小要小于分配到该池的段的总和。读入该池的块需要经常执行过期处理。<br>    　　　　3）Default：相当于一个没有Keep与Recycle池的实例的buffer cache，通过db_cache_size参数指定。</p>
+<p>​    3、为对象明确指定buffer pool<br>​    　　　　buffer_pool子句，用来为对象指定默认的buffer pool，是storage子句的一部分。<br>　　　　　　 对create与alter table、cluster、index语句有效。<br>​    　　　　如果现有对象没有明确指定buffer pool，则默认都指定为default buffer pool，大小为DB_CACHE_SIZE参数设置的值。<br>​    语法：<br>​    　　　　a.CREATE INDEX cust_idx ON tt(id) STORAGE (BUFFER_POOL KEEP);<br>​    　　　　b.ALTER TABLE oe.customers STORAGE (BUFFER_POOL RECYCLE);<br>​    　　　　c.ALTER INDEX oe.cust_lname_ix STORAGE (BUFFER_POOL KEEP);<br><strong>(二)、Share Pool</strong><br>​    1、SHARE_POOL_SIZE<br>​    　  1）Share Pool可通过SHARE_POOL_SIZE参数指定：<br>​        　　SQL&gt; alter system set shared_pool_size=20M scope=both;<br>​    　  2）Share Pool保存的信息被多个会话共享，类型包括：<br>​          a.Library Cache<br>​            Library Cache又包含共享SQL区与PL/SQL区：<br>​                a).共享SQL区保存了分析与编译过的SQL语句。<br>​                b).PL/SQL区保存了分析与编译过的PL/SQL块（过程和函数、包、触发器与匿名PL/SQL块）。<br>​          b.Data Dictionary Cache<br>​            保存了数据字典对象的定义。<br>​          c.UGA(User Global Area)<br>​            UGA内包含了共享服务器模式下的会话信息。<br>​            共享服务器模式时，如果large pool没有配置，则UGA保存在Share Pool中。</p>
+<p><strong>(三)、Large Pool</strong></p>
+<p>​     <a href="http://blog.itpub.net/batch.download.php?aid=28799" target="_blank" rel="noopener"><img src="../Oracle%E4%B9%8B%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/25264937_201105101501122.jpeg" alt="img" title="null"></a><br>​    1）Large Pool大小通过LARGE_POOL_SIZE参数指定：<br>​        SQL&gt; alter system set large_pool_size=20m scope=both;<br>​    2）作用:<br>​        a.为I/O服务进程分配内存<br>​        b.为备份与恢复操作分配内存<br>​        c.为Oracle共享服务器模式与多个数据库间的联机事务分配内存。<br>​        通过从large pool中为共享服务器模式分配会话内存，可以减少share pool因频繁为大对象分配和回收内存而产生的碎片。将大的对象从share pool中分离出来，可以提高shared pool的使用效率，使其可以为新的请求提供服务或者根据需要保留现有的数据。</p>
+<p><strong>(四)、Java Pool</strong></p>
+<p>​           <a href="http://blog.itpub.net/batch.download.php?aid=28800" target="_blank" rel="noopener"><img src="../Oracle%E4%B9%8B%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/25264937_201105101501123.jpeg" alt="img" title="null">
+</a>    1、JAVA_POOL_SIZE<br>​       　　通过JAVA_POOL_SIZE参数指定java pool大小。<br>​              保存了jvm中特定会话的java code和数据。<br>​    2、在编译数据库中的java代码和使用数据库中的java资源对象时，都会用到share pool。<br>​            java的类加载程序对每个加载的类会使用大约8K的空间。<br>​           系统跟踪运行过程中，动态加载的java类，也会使用到share pool。</p>
+<p><strong>(五)、Redo Log Buffer</strong><br>    1、服务进程从用户空间拷贝每条DML/DDL语句的redo条目到redo log buffer中。<br>    2、redo log buffer是一个可以循环使用的buffer，服务进程拷贝新的redo覆盖掉redo log buffer中已通过LGWR写入磁盘（online redo log）的条目。<br>    3、导致LGWR执行写redo log buffer到online redo log的条件<br>        a.用户执行事务提交commit<br>        b.每3秒钟或redo log buffer内已达到1/3满或包含1MB数据<br>        c.DBWn进程将修改的缓冲区写入磁盘时（如果相应的重做日志数据尚未写入磁盘）</p>
+<p><strong>（六）、ASMM(Automatic Shared Memory Management)</strong>    1、SGA_TARGET<br>          1）SGA_TARGET默认值为0，即ASMM被禁用。需要手动设置SGA各中各组件的大小。<br>          2）当SGA_TARGET为非0时，则启用ASMM，自动调整以下各组件大小：<br>        　　　　DB buffer cache（default pool）<br>        　　　　shared pool<br>        　　　　large pool<br>        　　　　streams pool<br>        　　　　java pool<br>               但ASSM中， 以下参数仍需要手动指定：<br>        　　　　log buffer<br>        　　　　keep、recycle、以及非标准块缓冲区<br>        　　　　固定SGA以及其他内部分配。<br>    2、启用ASMM需要将STATISTICS_LEVEL设置成TYPICAL或ALL<br>    3、启用ASMM，自动调整SGA内部组件大小后。若手动指定某一组件值，则该值为该组件的最小值。如<br>        手动设置SGA_TARGET=8G,SHARE_POOL_SIZE=1G，则ASMM在自动调整SGA内部组件大小时，保证share pool不会低于1G。<br>        SQL&gt; SELECT component, current_size/1024/1024 size_mb FROM   v$sga_dynamic_components;<br>    4、SGA_MAX_SIZE<br>        SGA_MAX_SIZE指定内存中可以分配给SGA的最大值。<br>        SGA_TARGET是一个动态参数，其最大值为SGA_MAX_SIZE指定的值。</p>
+<p><strong>五、PGA</strong></p>
+<p><a href="http://blog.itpub.net/batch.download.php?aid=28801" target="_blank" rel="noopener"><img src="../Oracle%E4%B9%8B%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/25264937_201105101501124.jpeg" alt="img" title="null">
+</a><br><strong>（一）Private SQL Area</strong><br>    1、保存了当前会话的绑定信息以及运行时内存结构。这些信息<br>    2、每个执行sql语句的会话，都有一个private sql area。<br>    3、当多个用户执行相同的sql语句，此sql语句保存在一个称为shared sql area。此share sql area被指定给这些用户的private sql area<br>    4、共享服务器模式：private sql area位于SGA的share pool或large pool中<br>         专用服务器模式：private sql area位于PGA中<br><strong>（二）Cursor、SQL Areas</strong></p>
+<p><strong>（三）Work Area</strong>        PGA的一大部分被分配给Work Area，用来执行如下操作：<br>    　　　　a.基于操作符的排序，group by、order by、rollup和窗口函数。<br>      　　　　参数为sort_area_size<br>    　　　　b.hash散列连接，<br>      　　　　参数为hash_area_size<br>    　　　　c.位图合并，<br>      　　　　参数为bitmap_merge_area_size<br>    　　　　d.位图创建，<br>      　　　　参数为create_bitmap_area_size<br>    　　　　e.批量装载操作使用的写缓存<br><strong>（四）Session memory</strong>     保存了会话的变量，如登录信息及其他与会话相关的信息，共享服务器模式下，Session memory是共享的。</p>
+<p><strong>（五）自动PGA管理</strong>    设置PGA_AGGREGATE_TARGET为非0，则启用PGA自动管理，并忽略所有<em>_area_size的设置。如sort_area_size,hash_area_size等。<br>    默认为启用PGA的自动管理，Oracle根据SGA的20%来动态调整PGA中专用与Work Area部分的内存大小，最小为10MB。<br>    用于实例中各活动工作区（work area）的PGA总量，为PGA_AGGREGATE_TARGET减去其他组件分配的PGA内存。得到的结果，按照特定需求动态分配给对应的工作区。<br>    1）设置PGA_AGGREGATE_TARGET大小的步骤<br>        a.设置PGA_AGGREGATE_TARGET为SGA的20%，对于DSS系统，此值可能过低。<br>        b.运行典型的负载，通过oracle收集的pga统计信息来调整PGA_AGGREGATE_TARGET的值。<br>        c.根据oracle的pga建议调整PGA_AGGREGATE_TARGET大小。<br>    2）禁用自动pga管理<br>        为向后兼容，设置PGA_AGGREGATE_TARGET为0，即禁用pga的自动管理。可使用关联的</em>_area_size参数调整对应工作区的最大大小。<br>        bitmap_merge_area_size<br>        create_bitmap_area_size<br>        hash_area_size<br>        sort_area_size      </p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-2.1TiDB的适用场景/" style="float: left;">
+        ← TiDB4.0课程学习-2.1TiDB 的适用场景
+    </a>
+    
+    
+    <a class="pull-right" href="/2020/05/25/Oracle/Oracle-DataGuard-Rman-auxiliary搭建备库/">
+        Oracle-DataGuard-Rman-auxiliary搭建备库 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

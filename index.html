@@ -97,7 +97,7 @@
 				    
 				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
 				    
-				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(2)</small></a></li>
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
 				    
 				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
 				    
@@ -238,6 +238,50 @@
 
 <section id="intro">
     <div class="container">
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2021/01/06/Oracle/Oracle体系结构及执行流程/">Oracle体系结构及执行流程</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2021-01-05T16:58:10.000Z" itemprop="datePublished">
+          2021-01-06
+      </time>
+    
+    
+    | 
+    <a href='/tags/Oracle/'>Oracle</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        
+实例实例是数据库启动时初始化的一组进程和内存结构
+
+内存结构
+SGA(系统全局区)SGA是一块共享的内存区域，也是最大的一块内存区域
+
+数据库缓冲区缓存缓冲区缓存 是Oracle用来执行SQL 的工作区域，在更新数据时，用户会话不会直接去更新磁盘上的数据，而是先更新缓冲区缓存数据，以减少磁盘IO
+脏缓冲区 
+　　如果缓冲区存储的块和磁盘上的块不一致，该缓冲区就叫做“脏缓冲区”，脏缓冲区最终会由数据库写入器（DBWn）写入到磁盘中去。
+
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2021/01/06/Oracle/Oracle体系结构及执行流程/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
         
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
@@ -611,59 +655,6 @@ users： id 主键
                     
                     <p class="pull-right readMore">
                         <a href="/2021/01/04/MySQL/MySQL锁详解/MySQL加锁过程详解-01-基础知识/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/29/分布式文件存储系统技术与实现/数据混合存储/">数据混合存储</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-29T07:00:03.000Z" itemprop="datePublished">
-          2020-12-29
-      </time>
-    
-    
-    | 
-    <a href='/tags/分布式/'>分布式</a>,
-    
-    <a href='/tags/分布式存储/'>分布式存储</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        课程链接：
-https://developer.aliyun.com/course/32?spm=a2c6h.17661847.0.0.42686fb2saW1fD
-https://developer.aliyun.com/lesson_32_642#_642
-
-当前存储架构中：内存+本地存储才能达到极致性能
-从前：
-
-当前
-
-移动数据时
-
-连续写入数据时，写入SSD，后续再同步到sata盘中
-
-
-RAMCLOOUD内存存储
-
-
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/29/分布式文件存储系统技术与实现/数据混合存储/">Read More...</a>
                     </p>
                     
                 </div>
