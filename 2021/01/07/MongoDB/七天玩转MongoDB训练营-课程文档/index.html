@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>七天玩转MongoDB训练营-课程文档 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/工具/在线视频下载/" class="animsition-link">在线视频下载<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-07T08:04:18.000Z" itemprop="datePublished">
+          2021-01-07
+      </time>
+    
+    
+    | 
+    <a href='/tags/MongoDB/'>MongoDB</a>
+    
+    
+</span>
+                <h1>七天玩转MongoDB训练营-课程文档</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>[toc]</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E8%AF%BE%E7%A8%8B%E6%96%87%E6%A1%A3/image-20210107161047278.png" alt="image-20210107161047278" title="null"></p>
+<h1 id="什么是MongoDB-Serverless版"><a href="#什么是MongoDB-Serverless版" class="headerlink" title="什么是MongoDB Serverless版"></a>什么是MongoDB Serverless版</h1><p>更新时间：2020-11-07 19:37:56</p>
+<p><a href="javascript:void(0)" target="_blank" rel="noopener">本页目录</a></p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-a5f-6cg-yy8" target="_blank" rel="noopener">产品定义</a></li>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-zg6-2su-th0" target="_blank" rel="noopener">使用限制</a></li>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-3lb-0iq-gfg" target="_blank" rel="noopener">产品架构</a></li>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-lx0-gml-3ex" target="_blank" rel="noopener">与云数据库MongoDB版的区别</a></li>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-tjz-i2s-5bi" target="_blank" rel="noopener">读写吞吐量CU</a></li>
+<li><a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.54b64f502lp6Ah#title-afa-t7h-1ig" target="_blank" rel="noopener">用户场景</a></li>
+</ul>
+<p>本文档详细介绍MongoDB Serverless版的架构、实现以及应用场景。</p>
+<h2 id="产品定义"><a href="#产品定义" class="headerlink" title="产品定义"></a>产品定义</h2><p>MongoDB是当今主流的NoSQL数据库，也是功能强大、社区完善的文档数据库，但是由于产品形态偏中大型客户，起配门槛高，对于小企业或个人开发者不够友好。针对这个问题，阿里云推出了MongoDB Serverless形态，该形态是通过内核和代理层面实现命名空间及存储空间隔离的多租户MongoDB数据库服务，提供代理、网络资源、命名空间、存储空间的垂直资源隔离能力，同时提供计算资源按需计费能力，具有资源用量低、简单易用、弹性灵活、价格低廉等优点，完美解决了MongoDB使用门槛高的问题，帮助中小客户轻松上云。</p>
+<h2 id="使用限制"><a href="#使用限制" class="headerlink" title="使用限制"></a>使用限制</h2><p>目前版本的MongoDB Serverless版实例暂不支持弹性扩缩容功能，将会在以后的版本中提供支持。</p>
+<h2 id="产品架构"><a href="#产品架构" class="headerlink" title="产品架构"></a>产品架构</h2><p><a href="https://static-aliyun-doc.oss-cn-hangzhou.aliyuncs.com/assets/img/zh-CN/6369660061/p167850.png" target="_blank" rel="noopener"><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E8%AF%BE%E7%A8%8B%E6%96%87%E6%A1%A3/p167850.png" alt="产品架构图" title="null"></a></p>
+<ul>
+<li>如上图所示，在创建实例后，系统会在VPC中为用户申请虚拟IP（VIP），并使用该虚拟IP随机绑定代理资源池内固定的两个Mongos节点，在提供服务时，仅连接其中一个Mongos节点，当该Mongos节点故障无法访问时，系统会自动切换到另一个Mongos节点，同时故障节点会被自动修复挂起备用，保证服务的高可用。</li>
+<li>通过租户ID（TenantID）+命名空间（Namespace）的方式在Mongos层面实现数据的逻辑隔离。</li>
+</ul>
+<h2 id="与云数据库MongoDB版的区别"><a href="#与云数据库MongoDB版的区别" class="headerlink" title="与云数据库MongoDB版的区别"></a>与云数据库MongoDB版的区别</h2><p>MongoDB Serverless版的底层是通过MongoDB的分片集群来实现的，下表以最近似于Serverless版的1核2GB规格的分片集群实例为例，对比云数据库MongoDB版和MongoDB Serverless版的优缺点。</p>
+<table>
+<thead>
+<tr>
+<th align="left">对比项目</th>
+<th align="left">MongoDB分片集群实例</th>
+<th align="left">MongoDB Serverless版</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">网络类型</td>
+<td align="left">经典网络专有网络</td>
+<td align="left">专有网络</td>
+</tr>
+<tr>
+<td align="left">数据库版本</td>
+<td align="left">3.44.04.2</td>
+<td align="left">4.2</td>
+</tr>
+<tr>
+<td align="left">最大连接数</td>
+<td align="left">1000</td>
+<td align="left">50</td>
+</tr>
+<tr>
+<td align="left">最大IOPS</td>
+<td align="left">1000</td>
+<td align="left">100</td>
+</tr>
+<tr>
+<td align="left">存储空间</td>
+<td align="left">10GB</td>
+<td align="left">10GB</td>
+</tr>
+<tr>
+<td align="left">服务可用性</td>
+<td align="left">支持</td>
+<td align="left">支持</td>
+</tr>
+<tr>
+<td align="left">备份恢复</td>
+<td align="left">控制台支持。</td>
+<td align="left">可通过mongodump、mongorestore支持。详情请参见<a href="https://help.aliyun.com/document_detail/61416.html#concept-uvj-jgd-5fb" target="_blank" rel="noopener">使用MongoDB工具迁移自建数据库上云</a>。</td>
+</tr>
+<tr>
+<td align="left">实例监控</td>
+<td align="left">支持</td>
+<td align="left">支持</td>
+</tr>
+<tr>
+<td align="left">安全管理</td>
+<td align="left">支持白名单设置。支持安全组设置。支持链路加密。支持数据存储加密。支持BYOK。</td>
+<td align="left">支持白名单设置。支持安全组设置。</td>
+</tr>
+<tr>
+<td align="left">账号管理</td>
+<td align="left">支持控制台创建账号。</td>
+<td align="left">提供默认账号，支持修改密码。</td>
+</tr>
+<tr>
+<td align="left">日志管理</td>
+<td align="left">支持慢日志。支持审计日志。支持运行日志。</td>
+<td align="left">不支持</td>
+</tr>
+<tr>
+<td align="left">弹性扩缩容</td>
+<td align="left">不支持，需要在控制台手动扩缩容。</td>
+<td align="left">根据实际业务场景自动扩缩容，节省资源消耗。<strong>说明</strong> 当前版本暂不支持该功能，将会在后续版本中提供支持。</td>
+</tr>
+<tr>
+<td align="left">架构</td>
+<td align="left">单独享有一个集群。</td>
+<td align="left">多租户，通过租户ID和命名空间的方式实现资源隔离。</td>
+</tr>
+<tr>
+<td align="left">售价</td>
+<td align="left">1026.60元/月</td>
+<td align="left">78.2元/月</td>
+</tr>
+</tbody></table>
+<h2 id="读写吞吐量CU"><a href="#读写吞吐量CU" class="headerlink" title="读写吞吐量CU"></a>读写吞吐量CU</h2><p>MongoDB Serverless版较为重要的是它的服务能力，即读写吞吐量。读写吞吐量的单位为读服务能力单元和写服务能力单元，简称CU（Capacity Unit），是数据读写操作的最小单位。当用户对MongoDB Serverless实例的数据库进行读写操作时，会消耗对应的写服务能力单元和读服务能力单元。</p>
+<ul>
+<li>1个单位的读服务能力单元表示从数据表中读取一条4KB数据。</li>
+<li>1个单位的写服务能力单元表示向数据表写入一条4KB数据。</li>
+<li>操作数据大小不足4KB的部分向上取整。例如写入7.6KB数据消耗2个单位的写服务能力单元，读取0.1KB数据消耗1个单位的读服务能力单元。</li>
+</ul>
+<p><strong>说明</strong> 目前MongoDB Serverless版提供了100CU的读写吞吐能力。100CU的实例中最多可创建10个数据库，10个数据库中集合（Collection）的总数可达100个。</p>
+<h2 id="用户场景"><a href="#用户场景" class="headerlink" title="用户场景"></a>用户场景</h2><p>MongoDB Serverless版适用于如下用户：</p>
+<ul>
+<li>中小型轻量级的用户：MongoDB Serverless版非常适用于即开即用型的中小客户，无需购买整个集群，按使用量收费。短暂使用成本可以压缩到原来的10%以下。秒级别服务启动和销毁的速度也让客户的应用非常灵活。</li>
+<li>希望全托管或完全免运维的用户：MongoDB Serverless版后台的运维团队是经过长期技术积累的阿里运维团队，可以非常专业地对集群进行运维、升级、调优和问题处理。对于中小公司提供完全免运维的集群服务，后台服务永远高效稳定。</li>
+</ul>
+<h1 id="关于MongoDB控制台（单节点实例）"><a href="#关于MongoDB控制台（单节点实例）" class="headerlink" title="关于MongoDB控制台（单节点实例）"></a>关于MongoDB控制台（单节点实例）</h1><p>更新时间：2021-01-06 14:49:09</p>
+<p><a href="javascript:void(0)" target="_blank" rel="noopener">本页目录</a></p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/66105.html?spm=a2c6h.20980894.J_2725970650.4.54b64f502lp6Ah#title-5p6-rj1-uqh" target="_blank" rel="noopener">前提条件</a></li>
+<li><a href="https://help.aliyun.com/document_detail/66105.html?spm=a2c6h.20980894.J_2725970650.4.54b64f502lp6Ah#title-d8c-caw-zvr" target="_blank" rel="noopener">控制台首页</a></li>
+<li><a href="https://help.aliyun.com/document_detail/66105.html?spm=a2c6h.20980894.J_2725970650.4.54b64f502lp6Ah#title-l36-xgz-d8o" target="_blank" rel="noopener">MongoDB实例控制台</a></li>
+</ul>
+<p>MongoDB管理控制台是用于管理MongoDB实例的Web应用程序，您可以在MongoDB管理控制台上执行创建实例、设置IP白名单、设置连接数据库的密码、设置网络等操作。</p>
+<p>MongoDB管理控制台是阿里云管理控制台的一部分，关于控制台的通用设置和基本操作请参见<a href="https://help.aliyun.com/document_detail/47605.html" target="_blank" rel="noopener">使用阿里云管理控制台</a>。</p>
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><p>使用阿里云账号登录MongoDB管理控制台。若没有阿里云账号，请单击<a href="https://account.aliyun.com/register/register.htm" target="_blank" rel="noopener">注册</a>。</p>
+<h2 id="控制台首页"><a href="#控制台首页" class="headerlink" title="控制台首页"></a>控制台首页</h2><p>对于MongoDB所有单节点类型的实例而言，控制台首页的界面信息都是相同的。</p>
+<p>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>，进入<strong>副本集实例列表</strong>页面，如下图所示。<a href="https://static-aliyun-doc.oss-accelerate.aliyuncs.com/assets/img/zh-CN/3798106951/p13185.png" target="_blank" rel="noopener"><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E8%AF%BE%E7%A8%8B%E6%96%87%E6%A1%A3/p13185.png" alt="控制台首页" title="null"></a></p>
+<p>参考说明</p>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">名称</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">副本集实例列表</td>
+<td align="left">MongoDB控制台的副本集实例列表，显示同一账户中某个地域下的单节点或副本集实例信息。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">地域</td>
+<td align="left">选择某一个地域，该地域下的所有实例就会显示在实例列表中。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">创建实例</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/66108.html#task-hwt-zlx-p2b" target="_blank" rel="noopener">创建单节点实例</a>入口。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">刷新</td>
+<td align="left">刷新实例信息页面。</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">导出</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/117955.html#concept-262450" target="_blank" rel="noopener">导出实例列表</a>。</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">实例ID</td>
+<td align="left">单击进入该实例详情页面。</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">运行状态</td>
+<td align="left">实例运行状态，根据实例的不同情况也会有不同的状态。</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">管理</td>
+<td align="left">单击进入实例的管理详情页面，如查看基本信息、设置备份与恢复、<a href="https://help.aliyun.com/document_detail/60518.html#concept-sn1-wh5-4fb" target="_blank" rel="noopener">查看监控信息</a>、<a href="https://help.aliyun.com/document_detail/66111.html#task774" target="_blank" rel="noopener">设置白名单</a>等。</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">重启</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/44658.html#concept-yzz-dgl-j2b" target="_blank" rel="noopener">重启实例</a>。</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">更多</td>
+<td align="left">一些操作的便捷按钮，如<a href="https://help.aliyun.com/document_detail/44655.html#concept-yzz-dgl-j2b" target="_blank" rel="noopener">变更配置</a>等。</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left">修改实例备注</td>
+<td align="left">单击铅笔图标可修改实例的备注名，若不修改，则与实例ID一致。</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left">资源组</td>
+<td align="left">通过设置资源组，您可以对单个云账号下多个地域、多种云资源进行集中的分组管理。如何创建资源组请参见<a href="https://help.aliyun.com/document_detail/94485.html#task-xpl-kjm-4fb" target="_blank" rel="noopener">创建资源组</a>。</td>
+</tr>
+</tbody></table>
+<h2 id="MongoDB实例控制台"><a href="#MongoDB实例控制台" class="headerlink" title="MongoDB实例控制台"></a>MongoDB实例控制台</h2><p>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>，单击目标<strong>实例ID/名称</strong>，即可进入MongoDB实例的该实例的管理页面，详情如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="left">控制台页面名称</th>
+<th align="left">名称</th>
+<th align="left">描述</th>
+<th align="left">常用操作链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">界面上方操作区</td>
+<td align="left">-</td>
+<td align="left">迁移MongoDB数据库、备份实例、重启实例等操作。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/93609.html#concept-xdd-13v-cgb" target="_blank" rel="noopener">通过DMS连接MongoDB单节点实例</a><a href="https://help.aliyun.com/document_detail/111245.html#concept-rcw-511-kfb" target="_blank" rel="noopener">使用DTS迁移单节点架构的自建MongoDB数据库上云</a><a href="https://help.aliyun.com/document_detail/55010.html#concept-e1s-szs-qgb" target="_blank" rel="noopener">手动备份MongoDB数据</a><a href="https://help.aliyun.com/document_detail/44658.html#concept-yzz-dgl-j2b" target="_blank" rel="noopener">重启实例</a></td>
+</tr>
+<tr>
+<td align="left">界面左侧导航栏</td>
+<td align="left"><strong>基本信息</strong></td>
+<td align="left">查看实例的基本信息，如实例ID、网络类型，进行变更实例配置操作等。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/44655.html#concept-1580302" target="_blank" rel="noopener">变更配置方案概览</a></td>
+</tr>
+<tr>
+<td align="left"><strong>账号管理</strong></td>
+<td align="left">查看实例账号，重置密码操作。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/54544.html#task194" target="_blank" rel="noopener">重置密码</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>数据库连接</strong></td>
+<td align="left">查看节点的连接地址。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/44623.html#concept-44623-zh" target="_blank" rel="noopener">副本集实例连接说明</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>备份与恢复</strong></td>
+<td align="left">配置实例的自动备份、管理备份数据、按时间点新建实例等。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/55008.html#concept-gs1-qrp-dgb" target="_blank" rel="noopener">设置自动备份MongoDB数据</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>监控信息</strong></td>
+<td align="left">查看实例的资源使用率。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/60518.html#concept-sn1-wh5-4fb" target="_blank" rel="noopener">查看监控信息</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>报警规则</strong></td>
+<td align="left">设置实例报警规则。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/61585.html#concept-fql-tfd-ggb" target="_blank" rel="noopener">设置报警规则</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>服务可用性</strong></td>
+<td align="left">查看当前实例的可用区分布情况。</td>
+<td align="left">无</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>参数列表</strong></td>
+<td align="left">设置数据库参数。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/64192.html#concept-547-r3z-xfb" target="_blank" rel="noopener">设置数据库参数</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>数据安全性</strong></td>
+<td align="left">实例的安全性配置，如白名单、SSL和TDE。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/88888.html#concept-xpy-wcx-w2b" target="_blank" rel="noopener">设置白名单及安全组</a></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>日志管理</strong></td>
+<td align="left">单节点实例不支持日志管理功能。</td>
+<td align="left">无</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>CloudDBA</strong></td>
+<td align="left">通过数据库自治服务DAS对MongoDB数据库进行分析。</td>
+<td align="left"><a href="https://help.aliyun.com/document_detail/135016.html#task-2022555" target="_blank" rel="noopener">性能趋势</a><a href="https://help.aliyun.com/document_detail/135017.html#task-2022558" target="_blank" rel="noopener">实时性能</a><a href="https://help.aliyun.com/document_detail/135128.html#task-2038738" target="_blank" rel="noopener">实例会话</a><a href="https://help.aliyun.com/document_detail/162422.html#task-2350359" target="_blank" rel="noopener">空间分析</a><a href="https://help.aliyun.com/document_detail/135104.html#task-2038586" target="_blank" rel="noopener">慢日志</a></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h1 id="Serverless实例连接说明"><a href="#Serverless实例连接说明" class="headerlink" title="Serverless实例连接说明"></a>Serverless实例连接说明</h1><p>更新时间：2020-10-12 09:29:15</p>
+<p><a href="javascript:void(0)" target="_blank" rel="noopener">本页目录</a></p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#title-omn-981-h1n" target="_blank" rel="noopener">获取数据库连接地址</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#title-4nt-b40-amk" target="_blank" rel="noopener">连接地址说明</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#title-1at-0qm-a3p" target="_blank" rel="noopener">登录MongoDB数据库</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#title-npx-kbc-3ic" target="_blank" rel="noopener">常见的连接场景</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#title-ywd-3y3-nvm" target="_blank" rel="noopener">相关问题</a></li>
+</ul>
+<p>MongoDB Serverless版实例提供高可用数据库连接地址。本文介绍该连接地址的获取方式和连接说明。</p>
+<h2 id="获取数据库连接地址"><a href="#获取数据库连接地址" class="headerlink" title="获取数据库连接地址"></a>获取数据库连接地址</h2><ol>
+<li><p>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>。</p>
+</li>
+<li><p>在页面左上角，选择实例所在的资源组和地域。</p>
+</li>
+<li><p>在左侧导航栏，单击<strong>Serverless实例列表</strong>。</p>
+</li>
+<li><p>找到目标实例，单击实例ID。</p>
+</li>
+<li><p>在左侧导航栏，单击<strong>数据库连接</strong>，查看数据库连接信息。</p>
+<p><a href="http://static-aliyun-doc.oss-cn-hangzhou.aliyuncs.com/assets/img/zh-CN/8215322061/p170985.png" target="_blank" rel="noopener"><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E8%AF%BE%E7%A8%8B%E6%96%87%E6%A1%A3/p170985.png" alt="查看数据库连接信息" title="null"></a></p>
+</li>
+</ol>
+<h2 id="连接地址说明"><a href="#连接地址说明" class="headerlink" title="连接地址说明"></a>连接地址说明</h2><table>
+<thead>
+<tr>
+<th align="left">项目</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">地址类型</td>
+<td align="left">专有网络连接地址：专有网络是一种隔离的网络环境，安全性和性能均高于传统的经典网络。 MongoDB Serverless版实例仅提供专有网络连接地址，专有网络拥有更高的安全性和性能。公网连接地址：由于通过公网连接实例存在一定的安全风险，MongoDB Serverless版实例默认未提供公网连接地址。如果您要使用阿里云以外的设备（例如本地设备）连接MongoDB Serverless版实例，您可以手动<a href="https://help.aliyun.com/document_detail/185468.html#concept-ibc-qvp-kgb" target="_blank" rel="noopener">申请公网连接地址</a>。</td>
+</tr>
+<tr>
+<td align="left">连接地址</td>
+<td align="left">连接地址的格式如下。<code>&lt;host&gt;:&lt;port&gt;</code><host>：登录MongoDB数据库的域名地址。<port>：登录MongoDB数据库的端口。</port></host></td>
+</tr>
+<tr>
+<td align="left">ConnectionstringURI连接地址</td>
+<td align="left">ConnectionstringURI连接地址格式如下。<code>mongodb://[username:password@]host[:port][/[database][?options]]</code>mongodb://：前缀，代表这是一个Connection String URI连接地址。username:password@：连接MongoDB实例的用户名和密码，使用英文冒号（:）分隔。host:port：实例的连接地址和端口号。/database：鉴权数据库名，即数据库账号所属的数据库。?options：指定额外的连接选项。</td>
+</tr>
+</tbody></table>
+<h2 id="登录MongoDB数据库"><a href="#登录MongoDB数据库" class="headerlink" title="登录MongoDB数据库"></a>登录MongoDB数据库</h2><ol>
+<li>获取了上述的<a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.54b64f502lp6Ah#section-e2o-ajm-d6k" target="_blank" rel="noopener">数据库连接地址</a>后，您还需要获取下述信息：<ul>
+<li>MongoDB Serverless版实例的数据库账号，由系统默认提供。 获取方法：<ol>
+<li>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>。</li>
+<li>在页面左上角，选择实例所在的资源组和地域。</li>
+<li>在左侧导航栏，单击<strong>Serverless实例列表</strong>。</li>
+<li>找到目标实例，单击实例ID。</li>
+<li>在<strong>基本信息</strong>页面的<strong>连接信息</strong>区域，查看系统提供的<strong>账号名</strong>。</li>
+</ol>
+</li>
+<li>登录数据库的密码，如密码遗失可以<a href="https://help.aliyun.com/document_detail/185469.html#task-1957446" target="_blank" rel="noopener">重置密码</a>。</li>
+<li>鉴权数据库名，即数据库账号所属的数据库。如果使用系统提供的初始账号，则对应的数据库名为admin。</li>
+</ul>
+</li>
+<li>登录MongoDB数据库。<ul>
+<li><a href="https://help.aliyun.com/document_detail/185472.html#concept-mnd-xg2-qgb" target="_blank" rel="noopener">通过Mongo Shell连接MongoDB Serverless版实例</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185473.html#concept-gy4-qsz-jfb" target="_blank" rel="noopener">程序代码连接</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="常见的连接场景"><a href="#常见的连接场景" class="headerlink" title="常见的连接场景"></a>常见的连接场景</h2><ul>
+<li><a href="https://help.aliyun.com/document_detail/114304.html#concept-183456" target="_blank" rel="noopener">如何通过公网连接MongoDB实例</a></li>
+<li><a href="https://help.aliyun.com/document_detail/113430.html#concept-pqx-xcv-hhb" target="_blank" rel="noopener">ECS实例与MongoDB实例网络类型不同时如何连接</a></li>
+<li><a href="https://help.aliyun.com/document_detail/113706.html#concept-zmx-c1g-jhb" target="_blank" rel="noopener">ECS实例与MongoDB实例地域不同时如何连接</a></li>
+<li><a href="https://help.aliyun.com/document_detail/113831.html#concept-tqc-nxm-jhb" target="_blank" rel="noopener">ECS实例与MongoDB实例不在同一阿里云账号时如何连接</a></li>
+</ul>
+<h2 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h2><ul>
+<li><a href="https://help.aliyun.com/document_detail/61100.html#concept-fyp-rkd-lfb" target="_blank" rel="noopener">排查 Mongo Shell 登录问题</a></li>
+<li><a href="https://help.aliyun.com/document_detail/124888.html#concept-1095988" target="_blank" rel="noopener">排查因连接数耗尽导致的数据库连接问题</a></li>
+<li><a href="https://help.aliyun.com/document_detail/62224.html#concept-62224-zh" target="_blank" rel="noopener">排查 MongoDB CPU使用率高的问题</a></li>
+<li><a href="https://help.aliyun.com/document_detail/61114.html#concept-xzf-lyd-lfb" target="_blank" rel="noopener">如何查询及限制连接数</a></li>
+</ul>
+<h1 id="使用MongoDB工具备份与恢复MongoDB-Serverless版实例"><a href="#使用MongoDB工具备份与恢复MongoDB-Serverless版实例" class="headerlink" title="使用MongoDB工具备份与恢复MongoDB Serverless版实例"></a>使用MongoDB工具备份与恢复MongoDB Serverless版实例</h1><p>更新时间：2021-01-06 11:36:55</p>
+<p><a href="javascript:void(0)" target="_blank" rel="noopener">本页目录</a></p>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/185462.html?spm=a2c6h.20980894.J_2725970650.6.54b64f502lp6Ah#h2-url-1" target="_blank" rel="noopener">背景信息</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185462.html?spm=a2c6h.20980894.J_2725970650.6.54b64f502lp6Ah#h2-url-2" target="_blank" rel="noopener">注意事项</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185462.html?spm=a2c6h.20980894.J_2725970650.6.54b64f502lp6Ah#title-9wn-1h5-all" target="_blank" rel="noopener">使用mongodump备份Serverless实例数据库</a></li>
+<li><a href="https://help.aliyun.com/document_detail/185462.html?spm=a2c6h.20980894.J_2725970650.6.54b64f502lp6Ah#title-c72-dob-smk" target="_blank" rel="noopener">使用mongorestore恢复Serverless实例数据库</a></li>
+</ul>
+<p>您可以使用MongoDB数据库自带的备份还原工具mongodump和mongorestore，备份和恢复MongoDB Serverless版实例。</p>
+<h2 id="背景信息"><a href="#背景信息" class="headerlink" title="背景信息"></a>背景信息</h2><p>由于当前Serverless控制台暂不支持备份与恢复功能，您可以通过MongoDB官方工具来达到备份恢复的目的。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>确保安装的mongodump和mongorestore软件版本为4.2。安装步骤详情请参见官方文档<a href="https://docs.mongodb.com/v3.4/installation/" target="_blank" rel="noopener">Install MongoDB</a>。</li>
+<li>通过MongoDB工具备份Serverless实例的数据库为全量逻辑备份。为保障数据一致性，备份操作开始前请停止源库的相关业务，并停止数据写入。</li>
+<li>执行mongodump备份命令将覆盖dump文件夹中的历史备份文件。如果您之前使用mongodump命令对源库执行过备份操作，请将dump文件夹中的备份文件移动至其他目录并确保dump文件夹为空。</li>
+<li>必须在安装有MongoDB数据库的服务器上执行mongodump和mongorestore命令，而不是在mongo shell环境下执行。</li>
+<li>您必须拥有目标数据库的读写权限。</li>
+<li>您必须先申请公网连接地址。详情请参见<a href="https://help.aliyun.com/document_detail/185468.html#concept-ibc-qvp-kgb" target="_blank" rel="noopener">申请公网连接地址</a>。</li>
+</ul>
+<h2 id="使用mongodump备份Serverless实例数据库"><a href="#使用mongodump备份Serverless实例数据库" class="headerlink" title="使用mongodump备份Serverless实例数据库"></a>使用mongodump备份Serverless实例数据库</h2><ol>
+<li><p>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>。</p>
+</li>
+<li><p>在页面左上角，选择实例所在的资源组和地域。</p>
+</li>
+<li><p>在左侧导航栏，单击<strong>Serverless实例列表</strong>。</p>
+</li>
+<li><p>在左侧导航栏中，单击<strong>数据库连接</strong>。</p>
+</li>
+<li><p>找到并复制公网连接地址。</p>
+</li>
+<li><p>在安装有mongodump和mongorestore的本地服务器中，执行如下命令进行数据备份。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongodump --host <span class="tag">&lt;<span class="name">mongodb_host</span>&gt;</span>:3717 -u <span class="tag">&lt;<span class="name">username</span>&gt;</span> --authenticationDatabase admin</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong></p>
+<ul>
+<li><host>：Serverless实例的公网连接地址。</host></li>
+<li><username>：连接Serverless实例数据库的账号名。您可以在MongoDB控制台<strong>基本信息</strong>页面中的<strong>连接信息</strong>区域找到<strong>账号名</strong>。</username></li>
+</ul>
+<p>示例：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">mongodump</span> <span class="selector-tag">--host</span> <span class="selector-tag">dds-t4n</span>**********<span class="selector-tag">-pub</span><span class="selector-class">.mongodb</span><span class="selector-class">.singapore</span><span class="selector-class">.rds</span><span class="selector-class">.aliyuncs</span><span class="selector-class">.com</span><span class="selector-pseudo">:3717</span> <span class="selector-tag">-u</span> <span class="selector-tag">user12345</span> <span class="selector-tag">--authenticationDatabase</span> <span class="selector-tag">admin</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong> 如果提示无法连接，请先将本地服务器的IP地址添加到Serverless实例的白名单中。详情请参见<a href="https://help.aliyun.com/document_detail/185467.html#concept-xpy-wcx-w2b" target="_blank" rel="noopener">设置白名单</a>。</p>
+</li>
+<li><p>命令行提示<code>Enter password:</code>时，输入数据库账号对应的密码，数据库开始备份。如果您丢失了该密码，请<a href="https://help.aliyun.com/document_detail/185469.html#task-1957446" target="_blank" rel="noopener">重置密码</a>。</p>
+<p><strong>说明</strong> 等待备份完成，数据将备份至当前目录下的dump文件夹中。</p>
+</li>
+</ol>
+<h2 id="使用mongorestore恢复Serverless实例数据库"><a href="#使用mongorestore恢复Serverless实例数据库" class="headerlink" title="使用mongorestore恢复Serverless实例数据库"></a>使用mongorestore恢复Serverless实例数据库</h2><ol>
+<li><p>登录<a href="https://mongodb.console.aliyun.com/" target="_blank" rel="noopener">MongoDB管理控制台</a>。</p>
+</li>
+<li><p>在页面左上角，选择实例所在的资源组和地域。</p>
+</li>
+<li><p>在左侧导航栏，单击<strong>Serverless实例列表</strong>。</p>
+</li>
+<li><p>在左侧导航栏中，单击<strong>数据库连接</strong>。</p>
+</li>
+<li><p>找到并复制公网连接地址。</p>
+</li>
+<li><p>在安装有mongodump和mongorestore的本地服务器中，执行如下命令将备份数据导入至Serverless实例数据库。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongorestore --host <span class="tag">&lt;<span class="name">mongodb_host</span>&gt;</span>:3717 -u <span class="tag">&lt;<span class="name">username</span>&gt;</span> -d <span class="tag">&lt;<span class="name">database</span>&gt;</span>  <span class="tag">&lt;<span class="name">dir</span>&gt;</span> --authenticationDatabase admin</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明</strong></p>
+<ul>
+<li><mongodb_host>：Serverless实例的公网连接地址。</mongodb_host></li>
+<li><username>：连接Serverless实例数据库的账号名。您可以在MongoDB控制台<strong>基本信息</strong>页面中的<strong>连接信息</strong>区域找到<strong>账号名</strong>。</username></li>
+<li><database>：需要导入的数据库。备份文件中如有多个数据库，需要重复本步骤进行其它数据库的导入。</database></li>
+<li><dir>：数据库备份文件所在的目录。
+
+</dir></li>
+</ul>
+<p>示例：</p>
+<ul>
+<li><p>导入数据库备份文件中的mongodbtest数据库：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongorestore --host dds-t4n**********-pub<span class="selector-class">.mongodb</span><span class="selector-class">.singapore</span><span class="selector-class">.rds</span><span class="selector-class">.aliyuncs</span><span class="selector-class">.com</span>:<span class="number">3717</span> -u user12345 -d mongodbtest /dump/mongodbtest --authenticationDatabase admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入数据库备份文件中的test123数据库：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongorestore --host dds-t4n**********-pub<span class="selector-class">.mongodb</span><span class="selector-class">.singapore</span><span class="selector-class">.rds</span><span class="selector-class">.aliyuncs</span><span class="selector-class">.com</span>:<span class="number">3717</span> -u user12345 -d test123 /dump/test123 --authenticationDatabase admin</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>说明</strong> 如果提示无法连接，请先将本地服务器的IP地址添加到Serverless实例的白名单中。详情请参见<a href="https://help.aliyun.com/document_detail/185467.html#concept-xpy-wcx-w2b" target="_blank" rel="noopener">设置白名单</a>。</p>
+</li>
+<li><p>命令行提示<code>Enter password:</code>时，输入数据库账号对应的密码，数据库开始导入。如果您丢失了该密码，请<a href="https://help.aliyun.com/document_detail/185469.html#task-1957446" target="_blank" rel="noopener">重置密码</a>。</p>
+<p><strong>说明</strong> 等待恢复完成，数据将导入至Serverless实例数据库中。</p>
+</li>
+</ol>
+<h1 id="订阅阿里云数据库社区"><a href="#订阅阿里云数据库社区" class="headerlink" title="订阅阿里云数据库社区"></a>订阅阿里云数据库社区</h1><p><a href="https://developer.aliyun.com/community/database?spm=a2c6h.20980894.J_2725970650.7.54b64f502lp6Ah" target="_blank" rel="noopener">https://developer.aliyun.com/community/database?spm=a2c6h.20980894.J_2725970650.7.54b64f502lp6Ah</a></p>
+<h1 id="数据库大讲堂直播加餐"><a href="#数据库大讲堂直播加餐" class="headerlink" title="数据库大讲堂直播加餐"></a>数据库大讲堂直播加餐</h1><p><a href="https://developer.aliyun.com/topic/database/lives?spm=a2c6h.20980894.J_2725970650.8.54b64f502lp6Ah" target="_blank" rel="noopener">https://developer.aliyun.com/topic/database/lives?spm=a2c6h.20980894.J_2725970650.8.54b64f502lp6Ah</a></p>
+<h1 id="了解数据库学习中心"><a href="#了解数据库学习中心" class="headerlink" title="了解数据库学习中心"></a>了解数据库学习中心</h1><p><a href="https://developer.aliyun.com/learning/roadmap/database?spm=a2c6h.20980894.J_2725970650.9.54b64f502lp6Ah" target="_blank" rel="noopener">https://developer.aliyun.com/learning/roadmap/database?spm=a2c6h.20980894.J_2725970650.9.54b64f502lp6Ah</a></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/07/其他工具/在线TS视频下载合并/" style="float: left;">
+        ← 在线TS视频下载合并
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/07/MongoDB/七天玩转MongoDB训练营-玩法详解/">
+        七天玩转MongoDB训练营-玩法详解 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

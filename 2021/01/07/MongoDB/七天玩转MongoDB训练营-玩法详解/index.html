@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>七天玩转MongoDB训练营-玩法详解 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/工具/在线视频下载/" class="animsition-link">在线视频下载<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-07T08:03:55.000Z" itemprop="datePublished">
+          2021-01-07
+      </time>
+    
+    
+    | 
+    <a href='/tags/MongoDB/'>MongoDB</a>
+    
+    
+</span>
+                <h1>七天玩转MongoDB训练营-玩法详解</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>[toc]</p>
+<p>​                <strong>简介：</strong>                作为MongoDB官方的全球战略合作伙伴，阿里云已经全网独家上线MongoDB 4.4版本。现在，阿里云特联合MongoDB 原厂推出七天玩转MongoDB训练营，以帮助更多开发者快速掌握MongoDB核心架构及特色功能。            </p>
+<p>MongoDB 的爱好者们，</p>
+<p>大家好，欢迎参加由阿里云、MongoDB及MongoDB联合推出的七天玩转 MongoDB 训练营。</p>
+<p>MongoDB是一个开源的、基于分布式的、面向文档存储的数据库。作为全球最受欢迎的非关系型数据库，MongoDB数据库平台已下载超过1.1亿次，MongoDB大学全球注册用户累计已超过一百万人。凭借灵活的模式和丰富的文档结构，MongoDB能够帮助各种规模、各个行业的企业的开发人员使用丰富的数据结构快速开发应用。</p>
+<p>作为MongoDB官方的全球战略合作伙伴，阿里云已经全网独家上线MongoDB 4.4版本。现在，阿里云特联合MongoDB 原厂推出七天玩转MongoDB训练营，以帮助更多开发者快速掌握MongoDB核心架构及特色功能。本次训练营邀请了MongoDB高级咨询顾问、阿里云MVP及多位阿里云技术专家共同出品，课程内容经过了半个月的精心打磨，首期限时免费抢报，名额有限，报完即止！</p>
+<p>本帖旨在为大家全面介绍训练营的参与方法，如果其他关于训练营的问题，欢迎报名训练营后加群咨询。</p>
+<h2 id="一、训练营报名"><a href="#一、训练营报名" class="headerlink" title="一、训练营报名"></a>一、训练营报名</h2><p><strong>报名时间：</strong>2020年12月7日 - 12月20日18：00</p>
+<p><strong>开营名额：</strong>2000人，报完即止【已满员】</p>
+<p><strong>报名要求：</strong>希望你有一定的开发基础，对 MongoDB感兴趣想进一步深入了解</p>
+<p><strong>训练营费用</strong>：报名及入群学习免费，开通学习环境可享受1元1个月的 MongoDB Serverless 超低价优惠；开通学习环境后可以跟着训练营的讲师一起学习MongoDB的基本操作，完成理论到实操的跨越，同时还可以完成线上学习任务，获得训练营结营证书、MongoDB周边（限量）及FILCO圣手二代机械键盘（限量）等奖品。</p>
+<p><strong>报名方法：</strong></p>
+<ol>
+<li>登录报名网站：<a href="https://developer.aliyun.com/learning/trainingcamp/mongodb/1" target="_blank" rel="noopener">https://developer.aliyun.com/learning/trainingcamp/mongodb/1</a></li>
+<li>点击“我要报名”按钮或“报名直通”菜单或直接下拉来到报名模块<br><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607255796421-4ca5b581-3c76-4ad4-9dde-3c0b9074dcae.png" alt="image.png" title="null"></li>
+<li>点击立即报名后跳出登录界面，登录阿里云后再次点击立即报名即可成功报名</li>
+</ol>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607255872988-fd764f55-f7bf-418c-9901-5d1bcbb39ae6.png" alt="image.png" title="null"></p>
+<ol>
+<li>报名成功后点击“报名成功钉钉扫码入学习群”按钮，跳出训练营钉群二维码，扫描后等待管理审核，管理员审核成功即可加入训练营钉群</li>
+</ol>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607256049450-28cdf5eb-08a6-4f95-b15b-2df006e4286c.png" alt="image.png" title="null"></p>
+<p>备注：钉钉扫码后会出现下列表格，输入“姓名”、“从事技术领域”两个字段后点击“提交申请”，管理员审核成功即可加入训练营钉群</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607256340608-79073f9a-06b3-43c6-9378-d67db5eafdaf.png" alt="image.png" title="null"></p>
+<h2 id="二、训练营学习"><a href="#二、训练营学习" class="headerlink" title="二、训练营学习"></a>二、训练营学习</h2><ol>
+<li><strong>学习平台</strong>：训练营的学习内容均在钉群进行，报名后请务必扫码加入钉群以便顺利学习</li>
+<li><strong>学习方式</strong>：每晚20-21点，训练营群将会进行当天课程的直播，每堂课的时间约为40分钟；同一时间，钉群内也有阿里云技术专家协助解答大家的问题，请大家抓紧机会提问和交流</li>
+<li><strong>学习打卡</strong>：钉群学习结束后，学员还需回到训练营网页（<a href="https://developer.aliyun.com/learning/trainingcamp/mongodb/1）进行打卡，直播+打卡均完成后，才算完整地完成了本日的学习任务，打卡详细说明请见第三部分" target="_blank" rel="noopener">https://developer.aliyun.com/learning/trainingcamp/mongodb/1）进行打卡，直播+打卡均完成后，才算完整地完成了本日的学习任务，打卡详细说明请见第三部分</a></li>
+</ol>
+<h2 id="三、训练营打卡"><a href="#三、训练营打卡" class="headerlink" title="三、训练营打卡"></a>三、训练营打卡</h2><p>训练营网页上（<a href="https://developer.aliyun.com/learning/trainingcamp/mongodb/1）我们为大家准备了9个打卡任务以配合钉群学习内容进行复习和拓展，9个打卡任务都完成后将获得七天玩转" target="_blank" rel="noopener">https://developer.aliyun.com/learning/trainingcamp/mongodb/1）我们为大家准备了9个打卡任务以配合钉群学习内容进行复习和拓展，9个打卡任务都完成后将获得七天玩转</a> MongoDB 训练营结营证书。<strong>注意：报名后才能打卡哦。</strong></p>
+<h2 id><a href="#" class="headerlink" title></a><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607256710469-5be3faf8-4b28-46ee-a6bb-3c53dd4f723f.png" alt="image.png" title="null"></h2><ol>
+<li><strong>打卡说明：</strong>第1个任务“1元开通环境”及第9个任务“确认证书授予于人姓名”在12月7日-12月31间开放，该时间段内任何时间都可完成任务；第2个任务到第8个任务仅在12月21日-12月31日逐天开放，且每个任务仅开放5天，即“探索学习环境”可以在12月21日-12月25日间完成，“学习使用控制台”可以在12月22日-12月26日间完成，其他任务均以此类推。打卡后需返回训练营页面并刷新，出现“√”后则说明任务完成。</li>
+<li><strong>“1元开通环境”任务完成说明</strong>：点击任务后将进入 MongoDB Serverless 购买界面，请按照以下截图进行规格选择及购买</li>
+</ol>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607259247684-bac553cd-444a-41bf-b102-04d347465cb5.png" alt="image.png" title="null"></p>
+<p>重要提示：</p>
+<p>（1）购买界面需要出现<strong>专有网络</strong>和<strong>虚拟交换机</strong>信息，如未出现<strong>，</strong>可以按照下述方法手动配置专有网络和虚拟交换机信息<strong>【更新：12月16日已上线默认的专有网络和虚拟交换机，可正常下单，无需单独创建】：</strong></p>
+<p>a. <a href="https://vpc.console.aliyun.com/vpc/cn-hangzhou/vpcs" target="_blank" rel="noopener">点击此处创建专有网络和虚拟交换机</a>，注意创建前需选择地域（就近原则），选择完地域后点击创建专有网络</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/e88528e6b24644cfb8d62730c6abbcd5.png" alt="image.png" title="null"></p>
+<p>b. 按照下述截图创建专有网络</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/d2b7d443a6d24cc1afca177ddc62ea31.png" alt="image.png" title="null"></p>
+<p>c. 按照下述截图创建虚拟交换机，注意“可用区”只能选【单可用区】且【必须与最终购买时的地域和可用区一致】，填写完后点击“创建”</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/595d8de7319541bb8617a075446b5ad6.png" alt="image.png" title="null"></p>
+<p>d. 创建成功后会在列表中出现实例</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/43c3e340548b4c7bbe295e2b0deafb9e.png" alt="image.png" title="null"></p>
+<p>e. 返回产品购买页面，开通成功后将有短信提醒，查询和使用实例请详见本文档：<a href="https://help.aliyun.com/document_detail/185465.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/185465.html</a></p>
+<p>（2）如您之前购买的MongoDB Serverless产品被退款，可以选择<a href="https://drcloud.aliyun.com/home" target="_blank" rel="noopener">提交工单</a>，在智能客服界面输入“购买产品后资源不足被退款，无法再以新购价格再次购买”，并点击左下角的“联系人工”<img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/493a1a24df954bfb9722d296f778a00e.png" alt="image.png" title="null"></p>
+<p>选择“MongoDB”产品及费用问题，进入工单界面，问题描述模块填写“购买MongoDB Serverless产品后由于资源不足被退款，订单号：xxxxx，被退款后无法再享受1元的新购优惠，请协助处理。”提交几日后客服会下发46.2元代金券，可以用券购买。</p>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/b1c81464d51148a3b18abf830a17e42d.png" alt="image.png" title="null"></p>
+<ol>
+<li><strong>“确认证书授予人姓名”任务完成说明：</strong>9个打卡任务都完成后训练营学员可以领取训练营电子版证书一张，改证书上会展示学员的昵称，请学员在12月31日前修改个人昵称，以便发放证书</li>
+</ol>
+<p><img src="../%E4%B8%83%E5%A4%A9%E7%8E%A9%E8%BD%ACMongoDB%E8%AE%AD%E7%BB%83%E8%90%A5-%E7%8E%A9%E6%B3%95%E8%AF%A6%E8%A7%A3/1607259865998-a1fc89c7-392e-4da4-b4b5-350a6e178fee.png" alt="image.png" title="null"></p>
+<ol>
+<li><strong>其他任务说明：</strong>其他任务12月21日后逐日开放，按照提示点击连接后进入相应任务页面，完成后回到训练营网页并刷新页面后，出现“√”即表示完成任务</li>
+</ol>
+<h2 id="四、结营考核"><a href="#四、结营考核" class="headerlink" title="四、结营考核"></a>四、结营考核</h2><p>训练营结束后，12月23日（拟定）开始管理员将会带领大家完成结营考试以测试自己在训练营的学习情况，结营考试共有10道题，每道题10分，试题由单选题和多选题组成，每个账号仅有1次考试机会，80分则为通过本次结营考试。<strong>完成网站9天打卡且前100位通过结营考试</strong>的同学将会获得 MongoDB 限量周边一份，<strong>完成网站9天打卡且**</strong>首位满分通过结营考试**的同学将会获得FILCO圣手二代机械键盘一个。</p>
+<h2 id="五、结营礼品"><a href="#五、结营礼品" class="headerlink" title="五、结营礼品"></a>五、结营礼品</h2><ol>
+<li><strong>结营证书：</strong>完成9天打卡后可以获得由阿里云及MongoDB共同颁发的结营证书一份</li>
+<li><strong>MongoDB限量周边：</strong>完成网站9天打卡且前100位通过结营考试的同学将会获得 MongoDB 限量周边一份</li>
+<li><strong>FILCO**</strong>圣手二代机械键盘**：完成网站9天打卡且首位满分通过结营考试的同学将会获得FILCO圣手二代机械键盘一个</li>
+</ol>
+<h2 id="六、几个重要总结"><a href="#六、几个重要总结" class="headerlink" title="六、几个重要总结"></a>六、几个重要总结</h2><p>上面说了这么多，训练营小助手为你总结了几个特别关键的信息，注意这几项就没问题啦：</p>
+<ol>
+<li>训练营要先报名再入群，不报名没法打卡哦</li>
+<li>入群后21日-27日可以在钉群中学习，同时不要忘记还要回网站完成当天的打卡任务，刷新页面出现“√”才算完成哦</li>
+<li>12月31日前记得及时开通学习环境和修改个人昵称，不然无法获得训练营的相关礼物</li>
+<li>开通环境时注意要选择 MongoDB Serverless版的1个月规格，同时“专有网络”和“虚拟交换机”处出现默认信息再继续购买，如未出现则需要手动创建，详情请见问答第三部分；12月17日前购买的用户要在12月17日后“1元开通环境”的任务才会出现“√”</li>
+<li>训练营结束后记得关注群内消息，及时参加结营考试才有机会拿最终大奖哦</li>
+</ol>
+<p>如果你还有其他问题，报名后入群咨询训练营小助手。</p>
+<p>​                            </p>
+<p>分享：                                                    <img src="../data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAIAAAC1nk4lAAABwUlEQVR42u2ZwQ7DMAhD+/8/vR0mVVWCHySBSpPoocqirXUcYyC7Pn94XQ26QTfoBt2gG3SDDoG+rOue/w2e93v++Z3743OgnpwD2pyBlcygTWTqyWmgB2TDC4aZmbaZY3hyIWiTHiBPreRt0Gr3Fc2rdFRp2qRwCGIIgEJNwysP71XuEVyMqXWFJgjuFLTJcWTTldmpmWTQbgwF0SvPidN/7XHMLJr3mWDISmnuYT50IMx0w9lGFPcllge5UMEFeWxwvBOIKsJMuQczyxLHC6BdWOziSmagnORABNtSKlc63hDGTnIxK2nWQHDN+e4BAa7cN1g27aXGBdCqYXFXBYMqy1PSBGWDeMyOa5X1ZXmA/hT3LOISn57fESn/zazOXU8haAVUJQtmmvNXguWpCs7VNLikKl0yOxeurYM/4aOSfMtT43hdD+JOdg+AbopV1SeqKCipPYLHAFzHQcKqqqddrzBlDVZT69NBrTOdHLVVGdE9PVKO5vaOVfV0fCZIITcH5aembr3BO1bbjUNCUW+FYxAwxzdAwzJUOJ7H4pGmGTd0LrwD5e7BJQT0Jidu3X/JNegG3aAbdINu0A36zesLC8y+EkyBjEsAAAAASUVORK5CYIIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" alt="img" title="null">                                            </p>
+<p>推荐关注：</p>
+<p><a href="https://developer.aliyun.com/plan/promotion/1?utm_content=g_1000198932" target="_blank" rel="noopener"> · 手慢无！云服务器免费领取，实时计算净省3258元</a><a href="https://developer.aliyun.com/article/778940?utm_content=g_1000212138" target="_blank" rel="noopener"> · 开发者冬季装备来了！四步夺宝攻略抢先看</a><a href="https://developer.aliyun.com/topic/opensourceday?utm_content=g_1000196451" target="_blank" rel="noopener"> · 每周二看直播，学最新阿里开源技术</a><a href="https://developer.aliyun.com/topic/ffa2020/live?utm_content=g_1000212139" target="_blank" rel="noopener"> · 错过再等一年！Flink Forward Asia 2020线上进行时</a></p>
+<p>​                    <strong>版权声明：</strong>本文内容由阿里云实名注册用户自发贡献，版权归原作者所有，阿里云开发者社区不拥有其著作权，亦不承担相应法律责任。具体规则请查看《<a href="https://developer.aliyun.com/article/768092" target="_blank" rel="noopener">阿里云开发者社区用户服务协议</a>》和《<a href="https://developer.aliyun.com/article/768093" target="_blank" rel="noopener">阿里云开发者社区知识产权保护指引</a>》。如果您发现本社区中有涉嫌抄袭的内容，填写<a href="https://yida.alibaba-inc.com/o/right" target="_blank" rel="noopener">侵权投诉表单</a>进行举报，一经查实，本社区将立刻删除涉嫌侵权内容。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/07/MongoDB/七天玩转MongoDB训练营-课程文档/" style="float: left;">
+        ← 七天玩转MongoDB训练营-课程文档
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/07/MongoDB/七天玩转MongoDB训练营-答疑汇总/">
+        七天玩转MongoDB训练营-答疑汇总 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>

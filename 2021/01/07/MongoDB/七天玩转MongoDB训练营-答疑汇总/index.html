@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>七天玩转MongoDB训练营-答疑汇总 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/工具/在线视频下载/" class="animsition-link">在线视频下载<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-07T02:34:21.000Z" itemprop="datePublished">
+          2021-01-07
+      </time>
+    
+    
+    | 
+    <a href='/tags/MongoDB/'>MongoDB</a>
+    
+    
+</span>
+                <h1>七天玩转MongoDB训练营-答疑汇总</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>[toc]</p>
+<h1 id="【MongoDB训练营】第一课：走进-MongoDB-答疑汇总"><a href="#【MongoDB训练营】第一课：走进-MongoDB-答疑汇总" class="headerlink" title="【MongoDB训练营】第一课：走进 MongoDB 答疑汇总"></a>【MongoDB训练营】第一课：走进 MongoDB 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-22 810浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第一课：走进 MongoDB 答疑汇总</p>
+<ol>
+<li>什么是网络脑裂？<br>简单来说，就是在分布式集群环境下，往往会有一个主节点（大脑），在网络发生分区，可能会出现同时有两个节点都认为自己是主节点，这种情况需要通过一致性协议来避免，否则同时修改了集群状态，可能导致数据错乱，具体可参考：<a href="https://juejin.cn/post/6844903895387340813" target="_blank" rel="noopener">https://juejin.cn/post/6844903895387340813</a></li>
+<li>分片依据的字段有什么选择依据么<br>可以参考三个指标：值的多样性（cardinality，越大越好），单一值出现的频率（frequency，越小越好），shard key 对应的 value 后续发生变更的可能性（尽量不变），更多可参考 MongoDB 大学的这个视频：<a href="https://university.mongodb.com/videos/y/ujlNVJK5dMc" target="_blank" rel="noopener">https://university.mongodb.com/videos/y/ujlNVJK5dMc</a></li>
+<li>每个复制集存储的东西一样吗？<br>一样的，这个也是MongoDB 复制协议必须要保证的。</li>
+<li>MongoDB有自己的时间同步工具吗？<br>MongoDB 使用了本地的物理时钟，但是为了实现因果一致性、分布式事务和 changeStream 等功能，也实现了自己的混合逻辑时钟，混合逻辑时钟会在副本集和分片集群节点间进行同步，具体机制比较复杂，这里不做特别详细的展开，感兴趣可参考：<a href="https://www.mongodb.com/presentations/implementation-of-cluster-wide-causal-consistency-in-mongodb?_ga=2.86791323.22579815.1608534765-1541357686.1598933927" target="_blank" rel="noopener">https://www.mongodb.com/presentations/implementation-of-cluster-wide-causal-consistency-in-mongodb?_ga=2.86791323.22579815.1608534765-1541357686.1598933927</a></li>
+<li>分片集群部署的话，数据的聚合是在mongos中么<br>对于 find 查询，是的，但是对于 aggregation ，也可能是在某个 shard 上。</li>
+<li>MongoDB选注机制<br>这个后面有课程会讲，稍安勿躁。</li>
+<li>MongoDB底层用的B tree还是B+ tree<br>默认的是 WiredTiger 存储引擎，是B+ tree</li>
+<li>oplog的刷新机制<br>这个后面的副本集课程也会讲。</li>
+<li>线上环境哪个阈值的配置最佳？<br>如果是阿里云 MongoDB 实例，参数已经根据规格调整到最佳，正常不需要修改，如果是自建，这个需要根据具体的workload 和 机器配置具体来看，比如 cache size，oplog 大小，是否使用线程池等等，没有标准答案。</li>
+<li>net.serviceExecutor的adaptive模式有什么弊端吗<br>这个参数主要是针对高并发模式下，相比于 thread per client 模式可以降低线程切换的开销，降低机器负载和请求延迟，缺点是，如果不是高并发场景下，吞吐相比于 synchronize 模式会下降。</li>
+<li>HBase和Mongdb在哪些地方有区别?<br>这个问题问的比较宽泛，简单从数据模型来说 MongoDB 的是文档模型，HBase是宽表模型，都具备存储半结构化和非结构化数据的能力，从服务的业务场景来说，MongoDB 服务于互联网业务比较多，比如游戏，在线教育等，HBase 更多的服务于大数据分析等场景；具体的大家去互联网上慢慢探索吧。</li>
+<li>insertMany可以一次插入多少条记录，一百万的记录如何插入<br>建议使用 bulk insert 的方式插入，一批不要超过 1000 条。</li>
+<li>find可以最多返回多少记录，如果记录太多如何处理，有类似翻页功能吗？<br>有 skip，limit 功能，翻页需要业务配合来实现。</li>
+<li>push和pop是原子操作吗？会出现资源竞争吗？<br>单文档操作保证原子，资源的竞争（contention）通过文档级锁来解决。</li>
+<li>集群配置的是时钟同步，有什么解决方案。<br>前面回答过了，通过混合逻辑时钟。</li>
+<li>对单个字段创建b树索引和哈希索引，查询时用哪个索引？</li>
+<li>select，hash 索引会更好，range 查询使用 b 树索引。</li>
+<li>请问mongo多表关联查询时，有没有临时索引提交查询效率？</li>
+<li>目前的多表联合查询能力相比于其他数据库，比如 MySQL 还是相对较弱的，只有一个 $lookup 和 4.4 的 union，目前没有临时索引的设计。</li>
+<li>请问多表关联时，如何增加索引提高查询效率？<br>索引的设计也是一个比较有学问的事情，需要综合考虑到索引的查询加速功能和索引维护本身的开销，具体多表关联查询上，如果不考虑 4.4 的 union，其实就只有 $lookup，这个需要根据query 条件结合 explain 结果具体来看，索引优化本身的一些基本原则，像索引选择性这些都是适用的，具体可参考官方的一些建议：<a href="https://docs.mongodb.com/manual/applications/indexes/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/applications/indexes/</a></li>
+<li>多表关联查询 $lookup不支持分片，是否有其它方法解决还是不建议使用关联查询<br>4.4 的 $unionWith是支持分片集群的，可以进一步看下能否满足业务需求：<a href="https://docs.mongodb.com/manual/reference/operator/aggregation/unionWith/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/reference/operator/aggregation/unionWith/</a></li>
+<li>什么情况下选择复制模式，什么情况下选择集群模式；<br>这里 mongodb 官方其实有一个建议，就是从成本的角度，先选择副本集，然后 scale up，但是到一定阶段，成本必然很高，甚至容量无法满足业务需求，这时候再去考虑采用分片集群。这么建议的原因是使用分片集群本身会引入一定的复杂性，而且如果要用好，还需要业务做配合，比如选择好的 shard key 等。</li>
+<li>在复制模式下，所有节点都部署在同一台服务器上的话，请问这样还有意义吗？<br>从可用性角度，意义不大，从读性能扩展性角度，有意义。</li>
+<li>MongoDB 中存在的事务 和 关系型数据库中的事务有区别么? 是自动提交的 还是 需要手动提交？<br>如果是普通的单条操作，比如 find，insert，update，可以称之为单文档事务，默认提交如果是显示开启的多文档事务，需要手动提交。</li>
+<li>复制集有多写节点的情况吗？<br>在切换的时候，有可能同时存在两个 primary的情况，进而多个节点写，但是使用更高的 writeConcern level ，比如 majority 可以避免，这个后面课程会讲。</li>
+<li>BSON文档大小限制16M,这样是不是不能一味的文档内嵌，而使用引用就要消耗额外的查询？<br>是的，理解的很正确</li>
+</ol>
+<h1 id="【MongoDB训练营】第二课：MongoDB聚合框架-答疑汇总"><a href="#【MongoDB训练营】第二课：MongoDB聚合框架-答疑汇总" class="headerlink" title="【MongoDB训练营】第二课：MongoDB聚合框架 答疑汇总"></a>【MongoDB训练营】第二课：MongoDB聚合框架 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-24 265浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第二课：MongoDB聚合框架 答疑汇总</p>
+<p>问：数组中push元素时，如果文档慢慢变大，会不会出现关系型数据库中行迁移问题？此类问题需要如何优化？<br>答：push大量元素后，索引更新压力也是较大的，他的索引是 multikey index 同时不建议在数组中插入过多元素<br>一看就是oracle dba出没了。。。<br>这个问题我感觉不会，但是可能会出现数据倾斜。</p>
+<p>问：mongodb 为什么只有左外连接？<br>答：join操作反范式设计，违反mongodb设计初衷，可以导致跨分片的查询，性能会有影响<br>右表不能是分片表</p>
+<p>问：从Mysql迁移到mongodb成本有多少，有什么工具吗<br>答：数据模型都不一样了，业务迁移有一定成本，实际上是从关系型到文档型的数据库，业务访问逻辑也需要进行修改。</p>
+<p>问：service的副本是几个，增加分片怎么扩容<br>答：底层是基于mongodb分片，每个shard是3副本的副本集，参见<a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.5cfd4f50kLua7L" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.5cfd4f50kLua7L</a> 产品架构部分 提供az部署<br>根据业务压力由平台引擎自动扩容，主要参考业务压力kps及CU，CU概念参见<a href="https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.5cfd4f50kLua7L" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/184598.html?spm=a2c6h.20980894.J_2725970650.3.5cfd4f50kLua7L</a> 读写吞吐量CU部分</p>
+<p>问：仅能本地连接mongodb？<br>答：这个参见<a href="https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.5cfd4f50kLua7L" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/185471.html?spm=a2c6h.20980894.J_2725970650.5.5cfd4f50kLua7L</a><br>讲的很详细，<br>公网 首先要创建公网地址，设置白名单</p>
+<p>问：买了mongodb是不是不需要自己创建索引？<br>答：目前阶段还是需要自己业务去创建的，但是老师也提到了后续的daas服务可以智能的创建索引</p>
+<p>问：每天凌晨统计海量昨日订单，是交给数据库，还是交给业务？<br>答：从效率角度，数据库测运算减少了数据流转，如果数据库压力比较低，适合在数据库端。同时也解放了业务逻辑</p>
+<p>问：遇到一个问题是在一个集合里面有几百万的数据，物理大小将近10G，通过一个索引字段做排序分页查询，通过skip、limit的方式查询越到后面越慢，有什么优化的方案<br>答：个人认为老师回答不正确，大家可以参考类似mysql类似的优化手段，网上类似的文章很多<br>可以不用skip，而通过where+limit的方式或者通过一个标记直接定位到下次要limit的起始位置</p>
+<p>问：阿里云提供增量备份吗？原理是什么？<br>答：提供按时间点恢复的功能，全量备份+ operation log的方式实现</p>
+<p>问：文档很大，update对性能影响大吗？<br>答：wiredtiger 是按照key-value来管理的，还是得有索引嘛<br>这个我感觉同学问的是集合，不知道对不对。。。</p>
+<p>问：4.4版本增加了那些功能？<br>答：参见老师的社区文章，找到的同学补充下，比如可以更改shard key，全量同步的断点续传，等<br>兼容性较好，4.2迁移4.4 问题少</p>
+<p>问：mongodb其他的引擎<br>答：现在默认是 wiredtiger 大部分都用这个，还有memory引擎，</p>
+<p>问：mongodb最佳实践<br>答：参见老师的ppt</p>
+<p>问：wiredTiger 内存淘汰策略是什么？可以更改吗？<br>答：我觉得这个问题可以参考官方文档，LRU</p>
+<p>问：mongodb和mysql的qps差多少？mongodb可以代替mysql吗？mongodb适用于什么场景？mongodb的缓存模式可以替代mysql+redis吗？mogodb和redis的对比？<br>答：这个我自己回答吧<br>mongodb是文档性数据库，首先使用的场景和mysql就有很大不同，交易类的业务显然不适合用mongodb，但是日志系统具有文档属性，倒是很合适的，但是现在也有很多时序数据库，ch，elk等，所以用什么怎么用还是要看业务和能力。<br>mongodb适用于半结构，非结构数据，比如列不固定，数据一致性能力要求不高，扩展性比较高，但是现在mysql8 也在弥补这块能力。</p>
+<p>问：建议开启balance吗？<br>答：建议开启，同时设置窗口</p>
+<p>问：最后一个OLAP，OPTP的混合场景？<br>答：目前貌似只有大厂的产品感这么宣传吧，对还有最近挺火的tidb</p>
+<h1 id="【MongoDB训练营】第三课：复制集使用及原理介绍-答疑汇总"><a href="#【MongoDB训练营】第三课：复制集使用及原理介绍-答疑汇总" class="headerlink" title="【MongoDB训练营】第三课：复制集使用及原理介绍 答疑汇总"></a>【MongoDB训练营】第三课：复制集使用及原理介绍 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-24 225浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第三课：复制集使用及原理介绍 答疑汇总</p>
+<p>1.MongoDB副本集模式下，如果复制其中一个 节点的DB目录文件到其他新的3台机器上，是否可以使用这3台机器组建一个副本集，而且不需要这3台机器间再去重新同步数据呢？<br>阿里云帮助文档：<br><a href="https://help.aliyun.com/document_detail/58329.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/58329.html</a><br>里面是只把数据复制到一台机器上，然后以单节点模式恢复MongoDB物理备份的数据，然后再删除单节点上local库中原有副本集配置信息，然后再准备两个空节点，跟这个单节点模式的节点initiate成一个新的集群。这样的话，需要在2个空节点间传送数据，现在想避免这种数据传送，请问老师该如何操作。</p>
+<p>答：可以以拷贝数据文件的方式重新组建新的副本级节点，但是要注意数据的一致性。<br>最佳实践：以三节点副本集为例，可以把一个节点shutdown，拷贝数据到新节点，最后在主节点执行rs.add把新节点加入；fsynclock写锁定，保证数据是最新且一致的。</p>
+<p>2.作为之前没有接触过mongodb的人感觉课程内容听不太懂怎么办?另外能不能介绍些mongodb severless的内容,官网介绍说它完美解决了MongoDB使用门槛高的问题，帮助中小客户轻松上云,那么它解决了哪些运维的门槛啊?</p>
+<p>答：大家可以去mongodb大学进行自我学习，mongodb serverless 可以更加透明的提供mongodb服务，提供弹性的扩容；不需要关注太多的参数配置，最后就是性价比了，哈哈。</p>
+<p>3.ops manager是可以单独购买的还是必须购买企业版？有没有可以备份oplog的第三方工具？如果没有现成的 工具如何在oplog写满时备份oplog</p>
+<p>答：ops manager 可以在官网下载，可以做到实例部署、监控、慢日志分析，op log备份等；mongodb dump可以备份op log 另外阿里云也提供这个功能。</p>
+<p>4.我在分片副本集上采用writeConcern=majority, readConcern=majority设置进行数据读写时，某个写操作由于返回writeConcernException而失败，但是随后的读操作却依旧能读到该写写入的值，请问老师这是因为问题出在哪？这样的写操作应该认为它写入成功了吗？</p>
+<p>答：要关注这个writetimeout参数，比如5s，但是复制延迟比较高，还没有及时复制到备库，但是再有一会时间，就满足了majority，那么再等一会是都可以都读到的，还有就是readConcern 比如是local的话是本地就是可以读到的。</p>
+<p>5.Q1. 副本集 和 复制集 是两个概念 还是一个?<br>Q2. linux 环境下 安装的 MongoDB 的日志默认存放位置在哪儿?<br>Q3. 同步时在什么时候判定同步完成?</p>
+<p>答：副本集和复制集是一个概念，replication set<br>op log 存放的位置是可以通过参数配置的。<br>system log：</p>
+<blockquote>
+<blockquote>
+<p>path</p>
+</blockquote>
+</blockquote>
+<p>storage:</p>
+<blockquote>
+<blockquote>
+<p>dbpath:</p>
+</blockquote>
+</blockquote>
+<p>使用下面的命令可以检查集群同步的状态及一致性：<br>rs.status<br>rs.PrintSlaveReplicationInfo<br>rs.PrintReplicationInfo</p>
+<p>6.可以讲解一下因果一致性吗？</p>
+<p>答：因果一致性，个人感觉这块不清楚的可以了解下事务隔离级别，参考老师的链接。</p>
+<p>7.数据量 特别大，比如超过1T 的副本集有什么比较好的备份方案么？</p>
+<p>答：阿里云 云盘提供快照功能实现备份，建议配置hidden节点专门进行备份运维操作。</p>
+<p>8.请问采用三节点副本集的mongo时，会有可能出现由于副本集同步时间差的问题，造成数据从副本读取缺失？这种情况可以通过什么办法避免呢？</p>
+<p>答：异步复制，要避免这种情况，还是要减少大批量事务，<br>如果对一致性要求有一定要求，可以设置合适的readconcern，writeconcern，比如都是majority可以兼顾性能和数据的一致性要求。</p>
+<p>9.云数据库平台开发,问题1的扩充，如果是使用物理备份的话，三个节点都用的其他节点的物理备份。新建副本集时，rs.init好像会清除掉oplog，secondary和hidden节点认为自己无法进行部分同步，最后导致全量同步，这个问题请问怎么解决？</p>
+<p>答：问题1 的回答是针对新建实例加入现有副本集的情况</p>
+<p>10.增加了事务处理的三节点mongo，事务提交的延迟时间，节点同步的延迟时间是怎么处理的呢？</p>
+<p>答：表示一样不太明白，节点同步延迟时间，主要看primary、secondary的负载，<br>事务的提交延迟如果硬要和节点的同步延迟扯上关系 我感觉就是那个writeconcern 你是majority还是其他。</p>
+<p>11.请问夏老师从ops监控里面看到cursor timeout会经常出现，如何能定位到具体的timeout语句？</p>
+<p>答：还是要开发人员及时关闭cursor，另外监控的话 我觉得可以从应用或者中间层测打一些标记。</p>
+<p>12.刚刚视频;里的选举投票是什么意思,成员心跳又是什么意思?</p>
+<p>答：高可用机制， raft这个在很多数据库如redis cluster 中都有应用，不了解的同学自学下，一劳永逸的事情</p>
+<h1 id="【MongoDB训练营】第四课：分片集群的使用及原理介绍-答疑汇总"><a href="#【MongoDB训练营】第四课：分片集群的使用及原理介绍-答疑汇总" class="headerlink" title="【MongoDB训练营】第四课：分片集群的使用及原理介绍 答疑汇总"></a>【MongoDB训练营】第四课：分片集群的使用及原理介绍 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-25 231浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第四课：分片集群的使用及原理介绍 答疑汇总</p>
+<p>1.副本集和分片在生产环境中该如何取舍呢？有什么参考规律么？<br>答：副本集遇到的问题<br>副本集帮助我们解决了 读请求扩展，高可用等问题。那么业务场景进一步增长：<br>存储容量超出单机磁盘容量；活跃数据集超出单机内存容量：很多读请求需要从磁盘读取写入量超出单机IOPS上限mongodb分片集群：水平扩容的方式，支持大数据集和稿吞吐量的情形副本集升级到分片集群 ，客户端需要重启。</p>
+<p>2.change stream的机制是什么，mongoclient在change stream是长连接还是短连接<br>答：change stream 进行op log的解析和读取，目测是长连接。类似oracle的ogg个人感觉。</p>
+<p>3.分片架构比副本集在SQL聚合查询上是否有优势？<br>答：这个可以利用到多shard并发IO的能力，但是数据仍然要经过网络最终有mongos向外输出，如果是高IO，但是最终输出的结果比较少的话，sharding是有优势的。经过Mongos多一跳确实优势不明显。</p>
+<p>4.现网低版本3.2的mongodb分片集群，想要升级到高版本，如何操作比较好，有什么最佳实践？<br>答：参考mongodb官方文档，先升级config节点，再shard节点，最后mongos节点，并结合滚动升级的方式。</p>
+<p>5.现有2节点的sharding，数据量比较大了，单节点1T左右，加起来7万多个chunk，每天开了 0点到6点的balance，然后想着再扩容2个sharding节点，这样的话是不是只在规定的时间内balance?这样的话是不是要好几天才能均衡完？<br>答： 每个shard同一时间只能迁移一个chunk，可以在congfig日志中查看chunk迁移速度。一定会在规定时间内进行chunk迁移的触发，对是触发。</p>
+<p>6.shardkey 的选择、 类型的选择 ，chunk要 大小的设置 能在稍微讲讲吗？<br>答：参见课程ppt，绝对是讲到了，比如基数足够大，频率足够低，单调递增的话用hash<br>chunk的大小建议保持默认值，太大可能有数据不均衡，太小导致过多不必要的迁移。<br>参见群里文档链接。</p>
+<p>7.修改分片键的 命令中的前缀怎么理解，该命令使用上有什么限制？<br>答： 以当前分片键的字段作为新分片键的前缀，比如原分片键用的字段A，那么新分片键（A，B）</p>
+<p>8.Mongo数据订阅有哪些比较好的工具？阿里云有类似的订阅服务么？<br>答：阿里云DTS 可以支持数据迁移、同步、订阅，change stream可以实现数据库不同级别对象的数据订阅</p>
+<p>9.chunk和shardkey的关系？<br>答：sharedkey是数据打散的依据，打散后数据会被存放在chunk，不同的chunk会存放在shared中，chunk是shared对数据管理的底层逻辑单位。</p>
+<p>10.hashed 分片默认会分成多少个chunk？是按数据量增加分裂变多吗？<br>答:分片空数据集合进行hash分片，默认分裂为NUM（shard）*2个chunk；chunk默认chunk 64M 随着数据的增长，会进行分裂，当两个shard数据不均衡时，会进行balancing。</p>
+<p>11.chunk数量有上限吗? hash桶会不会有用尽的情况？<br>答:应该不存在这个限制</p>
+<h1 id="【MongoDB训练营】第五课：ChangeStream使用及原理介绍-答疑汇总"><a href="#【MongoDB训练营】第五课：ChangeStream使用及原理介绍-答疑汇总" class="headerlink" title="【MongoDB训练营】第五课：ChangeStream使用及原理介绍 答疑汇总"></a>【MongoDB训练营】第五课：ChangeStream使用及原理介绍 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-28 137浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第五课：ChangeStream使用及原理介绍 答疑汇总</p>
+<p>1.shardkey唯一值+hash的 数据是不是会更好的均匀分布？<br>答：hash可以实现均与分布，举个例子，我们生产中会对已时间分区的日志进行二级或者混合分区，即以天|月作为一级分区，在以hash作为二级分区。</p>
+<p>2.mongos 有默认的 hash 函数吗？是什么？还是可以由用户自定义？<br>答：mongodb 不可以自定义hash函数。</p>
+<p>3.是不是只有分片才能用mongos?<br>答：只有分片shard集群才可以使用mongos</p>
+<p>4.MongoDB 配置文件 能分享下么 学习参考<br>答：mongodb配置参数可以参考官网说明。</p>
+<p>5.Change stream 断点续传如何解决oplog被覆盖的问题。change stream消息是推送还是基于mongoclient的拉取？使用mongoclient 时是长连接还是短链接？<br>答：断点续传不能解决op log被覆盖的问题，老师解释了两种op log被覆盖的可能原因：<br>一是各种原因导致的消费速度赶不上生产速度，<br>二是短时间内产生很多和我要抽取的目标不相关的日志<br>change stream是长连接。</p>
+<p>6.同城异地的复制集，如何保证同步？<br>答：复制集保证同步 primary-secondary 通过拉取回放op log实现数据同步<br>change stream也可以实现这个功能，但是原理不同。</p>
+<p>7.Change Stream 和触发器的区别是？如果有个场景，比如物流状态变化，我们怎么对接上？<br>答：从应用层面 change stream和触发器是一个概念，只能说是实现解决同一问题的两个思路，但是实现原理上这根本就没有相关性。</p>
+<p>8.change stream对系统性能影响几何？<br>答： 对系统性能影响开销取决于你系统自身的负载如何，目前是单线程的操作，主要开销是在解析上，综合来看，影响是比较小的。</p>
+<h1 id="【MongoDB训练营】第六课：事务功能使用及原理介绍-答疑汇总"><a href="#【MongoDB训练营】第六课：事务功能使用及原理介绍-答疑汇总" class="headerlink" title="【MongoDB训练营】第六课：事务功能使用及原理介绍 答疑汇总"></a>【MongoDB训练营】第六课：事务功能使用及原理介绍 答疑汇总</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-28 91浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第六课：事务功能使用及原理介绍 答疑汇总</p>
+<p>1，复制集默认的事务是那种啊？之前主从arber的架构，从节点挂了后，有7-8小时都没有恢复，发现主节点也写不下去，停库也停不了，只能kill。这种情况应该怎么办<br>A：事务参数不填的话，readConcern默认是local，writeConcer默认是1，这样并不是保持acid的snapshot隔离，可以认为大致满足read recommited且不满足持久化，也就是说事务写的数据在ha切换后，会出现丢失<br>又问 “但是kill之后，再次起库的时候用了10个小时，发现之前的很多oplog 都没落盘，要回滚，这个是什么原因啊”<br>A；可能你的写是majority的写，因为arbiter不包含数据，所以写不进去。不建议使用arbiter，建议1个primary+ 2个secondary的架构，这样主库挂了，仍有2个节点有数据。<br>再问 ”但是kill之后，再次起库的时候用了10个小时，发现之前的很多oplog 都没落盘，要回滚，这个是什么原因啊“<br>A：majority的写，必须写到2个节点后，才能完成，所以数据都没写成功<br>最后 ”好的，生产还是有不少主从arbiter的架构，担心这个问题再次出现，应该怎么调整majority的写“<br>A：一定要用主从arbiter的架构的话，那你的写最好用w:1，也就异步同步数据，主库奔溃的话，刚写的数据可能会丢一点</p>
+<p>2，MongoDB副本集模式下，如果复制其中一个 节点的DB目录文件到其他新的3台机器上，是否可以独立使用这3台新机器组建一个副本集，而且不需要这3台机器间再去同步数据呢，因为他们本来的数据都是一样的？<br>前面的时候问过这个问题，老师说的是把新搭建的节点加入原来的集群里面，我是不能加入原来的集群里，只能用拷贝的这个DB目录新建一个副本集，是否可以？<br>A: 可以的，要以单节点的方式启动新机器上的数据，然后重新初始化为一个新副本集，配置文件里的一些ip port目录等配置参数要同步改一下<br>又问：这样的话，新副本集里面的新增加的节点岂不是要从这个单节点上同步数据吗，如果数据量有几百G，不是要很久吗？<br>A:新副本集的第一个阶段初始化好后，你再拷贝这个新节点的数据到其它2个机器上，再组件副本集，<br>第一个阶段 = 第一个节点， 新副本集的第一个阶段初始化好后，你再拷贝这个新节点的数据到其它2个机器上，再组件副本集<br>再问：用从原来的老副本集里拷贝的DB目录数据文件去启动节点不行，是吗？为什么呢？<br>A:应该也可以，你三个节点都以standby启动，然后再组建副本集</p>
+<p>3，老师，我现在如果扩容一个数据节点就是 4个节点副本集运行，过几天变更的时候再踢掉投票节点，4个节点运行会不会有问题啊<br>A: 4个节点不会有问题的，就是高可用的效果跟3个节点一样<br>又问：4个节点选举不会出现问题吧，一般不是奇数个节点吗<br>A: 不会有问题，偶数节点相当于一个节点的数据浪费了，所以一般是奇数节点</p>
+<h1 id="【MongoDB训练营】第七课：MongoDB最佳实践-答疑汇总【内含前6天课程答疑链接】"><a href="#【MongoDB训练营】第七课：MongoDB最佳实践-答疑汇总【内含前6天课程答疑链接】" class="headerlink" title="【MongoDB训练营】第七课：MongoDB最佳实践 答疑汇总【内含前6天课程答疑链接】"></a>【MongoDB训练营】第七课：MongoDB最佳实践 答疑汇总【内含前6天课程答疑链接】</h1><p><a href="https://developer.aliyun.com/profile/l3bobhip3uijy" target="_blank" rel="noopener">stromal</a> 2020-12-28 132浏览量</p>
+<p><strong>简介：</strong> 【MongoDB训练营】第七课：MongoDB最佳实践 答疑汇总 【内含前6天课程答疑链接】</p>
+<p>1.请问关于MongoDB 5分片环境，每个分片的架构是主从arbiter（交叉部署）， 把其中的部分片的一个副本节点迁移到新机器上，现在每个分片加入一个数据节点，以4个节点的方式运行（主从从arbiter）， 变更当天，再切换剔除其中一个节点，这样的方案可行吗？变更当天需要登录mongos更新分片信息吗？期待老师的答复<br>A：可以的，添加新节点之后会自动进行数据同步，待数据同步完成，将老机器上的节点通过rs.remove()移除就可以了。为分片增加节点不需要更新mongos信息，这个不涉及到分片路由信息的变动。</p>
+<p>2.单个分片的副本集以4节点运行可以吗<br>A: 如果本身已经有三个数据节点了(一个primary和两个secondary)，不建议再加一个arbiter，保持投票节点为奇数个，防止脑裂场景</p>
+<p>3.mongodb和es应用场景有何区别<br>MongoDB的适用场景TJ老师视频中也讲到了，ES的主要场景是全文检索、搜索、时序/日志分析等，还是有很多区别的</p>
+<p>4.mongodb的周边生态建设太缓慢，比如sharding的一致性备份之类的，好像到目前还没有特别完善的方案。您怎么看mingodb的周边生态工具建设<br>A: 在MongoDB周边生态工具上，阿里云提供了DMS(可视化管理工具)、DBS(数据库备份)、DAS(数据库自治)、DTS(数据迁移)等服务，有兴趣可以关注。阿里云MongoDB提供了sharding的一致性备份方案，并且支持恢复到任意时间点，这个基于开源产品的话目前应该确实并没有比较好的方案，存在一些技术难点。</p>
+<p>5.实时数据分析，有个场景，用oracle做的，sql比较能支持复杂条件语句查询分析，但是累计下来数据量越来越大，只能做结转，现在想迁移到用mongo做，但是感觉mongodb貌似不太支持复杂条件的sql查询，有什么好的处理办法吗？谢谢老师<br>A：这个要结合数据模型和业务查询需求来综合看，如果主要的查询分析请求需要涉及多表数据的关联查询，不建议用，除此之外，MongoDB是能满足很多复杂查询的，这个通过MongoDB提供aggregate的各种操作符，可以实现很强大的查询分析能力。</p>
+<p>6.在mongodb内存放图片与视频，能讲一下实际的使用情况吗？<br>A: 这个可能需要看一下具体的case来看</p>
+<p>7.这么大量的数据，memory 要求是不是特别高呢<br>A：MongoDB的分片扩展能力很好，对于大量数据，首先是可以通过sharding集群架构来解决数据分布问题，数据分摊到多个节点/机器来存储。通常来说，MongoDB使用的WiredTiger引擎的cache size与每个shard节点的磁盘数据量是有一个比例关系的。</p>
+<p>8.mongo只用来记录api层的业务数据，提供业务单据的详情查询，后期的报表用es或者关系型数据库做为数据源，这种场景下，mongo是否需要做分片？从mongo将业务数据转成es需要的统计数据，这段处理可以用哪些方法实现呢？<br>A：MongoDB是否要做分片，主要还是当前数据量已经未来业务的增长情况，如果预估数据量会比较大、数据增长较快，则优先使用分片。将数据从MongoDB同步到ES，也有很多的方案，比如mongodb-connector、ES提供的插件都可以做。</p>
+<p>【内含前6天课程答疑汇总】<br>Day1 走进MongoDB<br><a href="https://developer.aliyun.com/article/780279" target="_blank" rel="noopener">https://developer.aliyun.com/article/780279</a></p>
+<p>Day2 MongoDB聚合框架</p>
+<p><a href="https://developer.aliyun.com/article/780474" target="_blank" rel="noopener">https://developer.aliyun.com/article/780474</a></p>
+<p>Day3 复制集使用及原理介绍<br><a href="https://developer.aliyun.com/article/780482" target="_blank" rel="noopener">https://developer.aliyun.com/article/780482</a></p>
+<p>Day4 分片集群的使用及原理介绍<br><a href="https://developer.aliyun.com/article/780552" target="_blank" rel="noopener">https://developer.aliyun.com/article/780552</a></p>
+<p>Day5 ChangeStream使用及原理介绍<br><a href="https://developer.aliyun.com/article/780590" target="_blank" rel="noopener">https://developer.aliyun.com/article/780590</a></p>
+<p>Day6 事务功能使用及原理介绍<br><a href="https://developer.aliyun.com/article/780594" target="_blank" rel="noopener">https://developer.aliyun.com/article/780594</a></p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/07/MongoDB/七天玩转MongoDB训练营-玩法详解/" style="float: left;">
+        ← 七天玩转MongoDB训练营-玩法详解
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/06/Oracle/Oracle体系结构及执行流程/">
+        Oracle体系结构及执行流程 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>
