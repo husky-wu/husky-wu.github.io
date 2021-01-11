@@ -93,6 +93,8 @@
         		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
             	<ul class="sb-submenu">
 				  	
+				    <li><a href="/categories/InfluxDB/" class="animsition-link">InfluxDB<small>(1)</small></a></li>
+				    
 				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(4)</small></a></li>
 				    
 				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
@@ -111,7 +113,13 @@
 				    
 				    <li><a href="/categories/工具/在线视频下载/" class="animsition-link">在线视频下载<small>(1)</small></a></li>
 				    
-				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(1)</small></a></li>
+				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/算法/数据库/" class="animsition-link">数据库<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/数据库工具/" class="animsition-link">数据库工具<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/算法/" class="animsition-link">算法<small>(2)</small></a></li>
 				    
 				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
 				    
@@ -242,6 +250,284 @@
 
 <section id="intro">
     <div class="container">
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">PostgreSQL安装</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-17T03:32:49.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+    
+    | 
+    <a href='/tags/Postgresql/'>Postgresql</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        0.编译环境
+
+Linux: CentOS 5.5
+gcc: 4.1.2
+
+\1. 安装PostgreSQL
+1) 解压postgresql-9.1.7.tar.bz2
+#tar jxvf postgresql-9.1.7.tar.bz2
+ 
+2) 进入解压后的postgresql-9.1.7目录
+#cd postgresql-9.1.7
+
+3) 编译postgresql源码
+#./configure –prefix=/opt/pgsq
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/17/PostgreSQL/PostgreSQL安装/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">PostgreSQL备份恢复</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-17T03:06:59.000Z" itemprop="datePublished">
+          2020-12-17
+      </time>
+    
+    
+    | 
+    <a href='/tags/备份恢复/'>备份恢复</a>,
+    
+    <a href='/tags/Postgresql/'>Postgresql</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        逻辑备份恢复1.逻辑备份1.1登录数据库服务器
+2.逻辑恢复物理备份恢复1.物理备份2.物理恢复
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/17/PostgreSQL/PostgreSQL备份恢复/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">hexo-markdown图片路径设置-通用</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-16T09:10:57.000Z" itemprop="datePublished">
+          2020-12-16
+      </time>
+    
+    
+    | 
+    <a href='/tags/hexo/'>hexo</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        [toc]
+一、Markdown图像（截图/复制图）路径设置
+工具：Typora
+官网：https://typora.io/
+
+1.文件-偏好设置
+2.偏好设置-图像
+如上图，插入图片时：复制到指定路径
+路径填写：./${filename}
+勾选以下3项功能
+
+ 对本地位置的图片应用上述规则
+ 对网络位置的图片应用上述规则
+ 优先使用相对路径
+
+3.关闭偏好设置
+4.将截图复制到markdown中可以看到图片路径为如下格式：![图片文件
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/16/hexo/hexo-markdown图片路径设置-通用/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/16/hexo/hexo引入fancybox优化图片视频查看效果/">hexo引入fancybox优化图片视频查看效果</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-16T08:05:24.000Z" itemprop="datePublished">
+          2020-12-16
+      </time>
+    
+    
+    | 
+    <a href='/tags/hexo/'>hexo</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        
+sakura
+
+
+
+
+一、fancybox介绍在我们平常阅读博文时，常遇到：图片太小，字看不清的情况不怕，fancybox可以将你的图片放大！强大的相册功能！原理：给所有图片加一层a标签，并链接图片地址到蒙版层面上
+简单源码：（多图）
+123456789101112131415161718192021222324252627282930313233&lt;！DOCTYPE html&gt;&lt;html&gt;&lt;head&gt
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/16/hexo/hexo引入fancybox优化图片视频查看效果/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.2HTAP数据库简介/">TiDB4.0课程学习-1.2HTAP 数据库简介</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        TiDB4.0课程学习-1.2HTAP 数据库简介1.2 What’s an HTAP Database? （HTAP 数据库简介）1.2 Why HTAP Matters（HTAP 数据库简介）
+本课程简要介绍了 HTAP 意义，技术难点，TiDB 如何实现 HTAP 以及相关的应用场景。
+学习目标： 帮助学员熟悉 HTAP 领域
+关键知识点： HTAP意义；设计原则以及应用场景
+
+
+为什么需要HTAP
+
+1.什么是HTAP
+
+
+
+
+
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.2HTAP数据库简介/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">TiDB4.0课程学习-1.1分布式数据库发展简史</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
+          2020-12-15
+      </time>
+    
+    
+    | 
+    <a href='/tags/TiDB/'>TiDB</a>,
+    
+    <a href='/tags/学习课程/'>学习课程</a>,
+    
+    <a href='/tags/分布式/'>分布式</a>
+    
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        TiDB4.0课程学习-1.1分布式数据库发展简史1.1 A Brief History of Distributed Database （分布式数据库发展简史）本课程简要介绍了从 20 世纪到 21 世纪分布式数据库的发展历史
+学习目标： 帮助学员了解分布式数据库的发展历史
+关键知识点： 分布式数据库历史，NoSQL 和 NewSQL，OLTP 和 HTAP，新技术
+讲师：冯立元 老师
+
+20世纪初：
+
+数据库业态环境 以 OLTP为
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
         
         <div class="row">
             <div class="col-md-8 col-md-offset-2 opening-statement">
@@ -416,163 +702,9 @@ TiDB 中的读写流程
             </div>
         </div>
         
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">TiDB4.0课程学习-1.1分布式数据库发展简史</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-12-15T06:37:05.000Z" itemprop="datePublished">
-          2020-12-15
-      </time>
-    
-    
-    | 
-    <a href='/tags/TiDB/'>TiDB</a>,
-    
-    <a href='/tags/学习课程/'>学习课程</a>,
-    
-    <a href='/tags/分布式/'>分布式</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        TiDB4.0课程学习-1.1分布式数据库发展简史1.1 A Brief History of Distributed Database （分布式数据库发展简史）本课程简要介绍了从 20 世纪到 21 世纪分布式数据库的发展历史
-学习目标： 帮助学员了解分布式数据库的发展历史
-关键知识点： 分布式数据库历史，NoSQL 和 NewSQL，OLTP 和 HTAP，新技术
-讲师：冯立元 老师
-
-20世纪初：
-
-数据库业态环境 以 OLTP为
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/12/15/TiDB4.0/TiDB4.0课程学习-1.1分布式数据库发展简史/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/11/06/Oracle/Oracle之内存结构/">Oracle之内存结构</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-11-05T16:58:10.000Z" itemprop="datePublished">
-          2020-11-06
-      </time>
-    
-    
-    | 
-    <a href='/tags/Oracle/'>Oracle</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        一、内存结构
-    SGA(System Global Area)：由所有服务进程和后台进程共享；    PGA(Program Global Area)：由每个服务进程、后台进程专有；每个进程都有一个PGA。
-二、SGA    包含实例的数据和控制信息，包含如下内存结构：    1）Database buffer cache：缓存了从磁盘上检索的数据块。    2）Redo log buffer：缓存了写到磁盘之前的重做信息。   
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/11/06/Oracle/Oracle之内存结构/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 opening-statement">
-                <div class="col-md-4">
-                    <h3><a href="/2020/05/25/Oracle/Oracle-DataGuard-Rman-auxiliary搭建备库/">Oracle-DataGuard-Rman-auxiliary搭建备库</a></h3>
-                    <span>
-                        <span class="post-meta">
-      <time datetime="2020-05-25T06:37:05.000Z" itemprop="datePublished">
-          2020-05-25
-      </time>
-    
-    
-    | 
-    <a href='/tags/Oracle/'>Oracle</a>,
-    
-    <a href='/tags/Data-Guard/'>Data Guard</a>,
-    
-    <a href='/tags/主从/'>主从</a>
-    
-    
-</span>
-                    </span>
-                </div>
-                <div class="col-md-8">
-                    <p>
-                      
-                        1.环境介绍百货–数据库服务器
-
-
-
-实例名称
-IP
-账户
-密码
-db_name
-db_unique_name
-service_name
-
-
-
-zbds-baihuo-DB01
-172.16.35.141
-zyadmin
-**
-zbdsora
-zbdsora
-zbdsora
-
-
-zbds-baihuo-DB02
-172.16.35.140
-zyadmin
-**
-zbdsora
-zbdsora_std
-zbdsora_std
-
-
-2.DG
-                      
-                    </p>
-                    
-                    <p class="pull-right readMore">
-                        <a href="/2020/05/25/Oracle/Oracle-DataGuard-Rman-auxiliary搭建备库/">Read More...</a>
-                    </p>
-                    
-                </div>
-                <div class="clearfix"></div>
-                <hr class="nogutter">
-            </div>
-        </div>
-        
         <nav class="pagination" role="pagination">
           <a class="pull-left" href="/archives/4/">← Newer Posts</a>
-          
+          <a class="pull-right" href="/archives/6/">Older Posts →</a>
         </nav>
     </div>
 </section>

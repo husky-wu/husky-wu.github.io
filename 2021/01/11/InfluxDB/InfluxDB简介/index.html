@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!--<![endif]-->
+
+<head>
+  <title>InfluxDB简介 | HuskyWuの博客</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="HuskyWuの博客">
+    <meta name="author" content="HuskyWu">
+    <meta name="description" content="Huskyの技术分享" />
+    <meta name="keywords" content="Oracle" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="HuskyWuの博客" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+    
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+  
+  
+  <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="atom.xml">
+  
+  
+
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Oracle</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">MySQL</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/InfluxDB/" class="animsition-link">InfluxDB<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MongoDB/" class="animsition-link">MongoDB<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/" class="animsition-link">MySQL<small>(13)</small></a></li>
+				    
+				    <li><a href="/categories/Oracle/" class="animsition-link">Oracle<small>(4)</small></a></li>
+				    
+				    <li><a href="/categories/Postgresql/" class="animsition-link">Postgresql<small>(3)</small></a></li>
+				    
+				    <li><a href="/categories/TiDB/" class="animsition-link">TiDB<small>(6)</small></a></li>
+				    
+				    <li><a href="/categories/hexo/" class="animsition-link">hexo<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/分布式/" class="animsition-link">分布式<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/分布式存储/" class="animsition-link">分布式存储<small>(11)</small></a></li>
+				    
+				    <li><a href="/categories/工具/在线视频下载/" class="animsition-link">在线视频下载<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/" class="animsition-link">工具<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/算法/数据库/" class="animsition-link">数据库<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/工具/数据库工具/" class="animsition-link">数据库工具<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/算法/" class="animsition-link">算法<small>(2)</small></a></li>
+				    
+				    <li><a href="/categories/自动运维平台/" class="animsition-link">自动运维平台<small>(1)</small></a></li>
+				    
+				    <li><a href="/categories/MySQL/锁/" class="animsition-link">锁<small>(9)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="https://www.toberoot.com/" class="animsition-link">Booboo&#39;s Blog</a></li>
+                    
+                    <li><a href="https://www.huangjingxue.com" class="animsition-link">Apple&#39;s Blog</a></li>
+                    
+                    <li><a href="https://footman-ljn.github.io/" class="animsition-link">Footman&#39;s Blog</a></li>
+                    
+                    <li><a href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html" class="animsition-link">MySQL</a></li>
+                    
+                    <li><a href="https://oracle-base.com/" class="animsition-link">Oracle</a></li>
+                    
+                    <li><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/editions-and-components-of-sql-server-version-15?view=sql-server-ver15" class="animsition-link">SQL server</a></li>
+                    
+                    <li><a href="http://www.postgres.cn/docs/11/" class="animsition-link">PostgreSQL</a></li>
+                    
+                    <li><a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls" class="animsition-link">Caché</a></li>
+                    
+                    <li><a href="https://university.pingcap.com/tidb-dba-courses/" class="animsition-link">TiDB</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            
+            <li><a href="javascript:;" class="popup-trigger" title="Search"><span class="search-icon"></span>Search</a></li>
+            
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">HuskyWuの博客</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2021-01-11T05:45:40.000Z" itemprop="datePublished">
+          2021-01-11
+      </time>
+    
+    
+    | 
+    <a href='/tags/InfluxDB/'>InfluxDB</a>
+    
+    
+</span>
+                <h1>InfluxDB简介</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>时序数据库官网：<a href="https://docs.influxdata.com/" target="_blank" rel="noopener">https://docs.influxdata.com/</a></p>
+<p>官方文档v1.7：<a href="https://docs.influxdata.com/influxdb/v1.7/" target="_blank" rel="noopener">https://docs.influxdata.com/influxdb/v1.7/</a></p>
+<p>官方文档v2.0：<a href="https://docs.influxdata.com/influxdb/v2.0/get-started/" target="_blank" rel="noopener">https://docs.influxdata.com/influxdb/v2.0/get-started/</a></p>
+<p>时序数据库：<a href="http://hbasefly.com/category/时序数据库/?wypgtk=ujslu" target="_blank" rel="noopener">http://hbasefly.com/category/%e6%97%b6%e5%ba%8f%e6%95%b0%e6%8d%ae%e5%ba%93/?wypgtk=ujslu</a></p>
+<p>以下部分摘自 知乎 <a href="https://zhuanlan.zhihu.com/c_1111268015752089600" target="_blank" rel="noopener">mercury的算法铺子</a> <a href="https://zhuanlan.zhihu.com/p/97247465" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/97247465</a></p>
+<h2 id="InfluxDB-是什么"><a href="#InfluxDB-是什么" class="headerlink" title="InfluxDB 是什么"></a>InfluxDB 是什么</h2><p>InfluxDB 是用Go语言编写的一个开源分布式时序、事件和指标数据库，无需外部依赖。</p>
+<p>InfluxDB在DB-Engines的时序数据库类别里排名第一。</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/APM-Diagram-2.png" alt="APM diagram" title="null"></p>
+<h2 id="为什么要使用InfluxDB"><a href="#为什么要使用InfluxDB" class="headerlink" title="为什么要使用InfluxDB"></a>为什么要使用InfluxDB</h2><h4 id="快速部署"><a href="#快速部署" class="headerlink" title="快速部署"></a>快速部署</h4><p>InfluxDB以单个二进制文件提供了时间序列平台所需的一切-多租户时间序列数据库，UI和仪表板工具，后台处理和监视代理。所有这些使部署和设置变得轻而易举，并且更易于保护。</p>
+<h4 id="深度洞察和分析"><a href="#深度洞察和分析" class="headerlink" title="深度洞察和分析"></a>深度洞察和分析</h4><p><a href="https://www.influxdata.com/products/flux/" target="_blank" rel="noopener">Flux</a>是第四代编程语言，旨在用于数据脚本，ETL，监视和警报。作为一种功能语言，您可以构建查询并将通用逻辑分离为易于共享并有助于加快开发速度的函数和库。Flux还可以用于与其他SQL数据存储库（Postgres，Microsoft SQL Server，SQLite和SAP Hana）以及基于云的数据存储库（Google Bigtable，Amazon Athena和Snowflake）一起充实您的时间序列数据。丰富的时间序列数据提供了可以进一步深入了解您的数据的上下文。</p>
+<h4 id="优化开发人员的生产力"><a href="#优化开发人员的生产力" class="headerlink" title="优化开发人员的生产力"></a>优化开发人员的生产力</h4><p>现在，可以在统一的API中访问InfluxDB中的所有内容（提取，查询，存储和可视化）。因为现在可以通过编程方式访问和控制平台中的所有内容，所以这使开发人员能够更快地获得出色的表现。这与跨10种语言（例如Go，Java，PHP和Python）的一组强大的客户端库结合在一起，并且一组InfluxDB命令行工具可帮助开发人员以他们最熟悉的方式进行开发。</p>
+<h4 id="从UI开始"><a href="#从UI开始" class="headerlink" title="从UI开始"></a>从UI开始</h4><p>InfluxDB具有一流的UI，其中包括Data Explorer，仪表板工具和脚本编辑器。使用数据资源管理器快速浏览您收集的指标和事件数据，并应用常见的转换。仪表板工具随附了方便的可视化列表，可帮助您更快地查看数据见解。最后，使用脚本编辑器通过易于访问的示例，自动完成和实时语法检查来快速学习Flux。</p>
+<h4 id="易于构建，易于共享的模板"><a href="#易于构建，易于共享的模板" class="headerlink" title="易于构建，易于共享的模板"></a>易于构建，易于共享的模板</h4><p><a href="https://www.influxdata.com/products/influxdb-templates/" target="_blank" rel="noopener">InfluxDB模板</a>（一套新工具，其中包括打包程序和一套预制的监控解决方案）使您可以与全世界的同事和其他社区成员共享监控专业知识。InfluxDB模板库提供的可用模板涵盖了一些最流行的工具，应用程序和协议。这些模板也可以作为代码检入，以适合您的持续集成和部署管道，从而使部署（更重要的是回滚）更改变得轻松自如。</p>
+<h2 id="重要特性"><a href="#重要特性" class="headerlink" title="重要特性"></a>重要特性</h2><ul>
+<li>极简架构：单机版的InfluxDB只需要安装一个binary，即可运行使用，完全没有任何的外部依赖。</li>
+<li>极强的写入能力： 底层采用自研的TSM存储引擎，TSM也是基于LSM的思想，提供极强的写能力以及高压缩率。</li>
+<li>高效查询：对Tags会进行索引，提供高效的检索。</li>
+<li>InfluxQL：提供SQL-Like的查询语言，极大的方便了使用，数据库在易用性上演进的终极目标都是提供Query Language。</li>
+<li>Continuous Queries: 通过CQ能够支持auto-rollup和pre-aggregation，对常见的查询操作可以通过CQ来预计算加速查询。</li>
+</ul>
+<h2 id="存储引擎-从LSM-到-TSM"><a href="#存储引擎-从LSM-到-TSM" class="headerlink" title="存储引擎: 从LSM 到 TSM"></a>存储引擎: 从LSM 到 TSM</h2><p>InfluxDB 采用自研的TSM (Time-Structured Merge Tree) 作为存储引擎， 其核心思想是通过牺牲掉一些功能来对性能达到极致优化，其官方文档上有项目存储引擎经历了从LevelDB到BlotDB，再到选择自研TSM的过程，整个选择转变的思考。</p>
+<p>时序数据库的需求</p>
+<ul>
+<li>数十亿个单独的数据点</li>
+<li>高写入吞吐量</li>
+<li>高读取吞吐量</li>
+<li>大型删除（数据过期）</li>
+<li>主要是插入/追加工作负载，很少更新</li>
+</ul>
+<p>LSM 的局限性</p>
+<p>在官方文档上有写， 为了解决高写入吞吐量的问题， Influxdb 一开始选择了LevelDB 作为其存储引擎。 然而，随着更多地了解人们对时间序列数据的需求，influxdb遇到了一些无法克服的挑战。</p>
+<p>LSM （日志结构合并树）为 LevelDB的引擎原理， 具体细节可以参考。 <a href="https://zhuanlan.zhihu.com/p/65483906" target="_blank" rel="noopener">LSM 树原理详解</a></p>
+<ol>
+<li>levelDB 不支持热备份。 对数据库进行安全备份必须关闭后才能复制。LevelDB的RocksDB和HyperLevelDB变体可以解决此问题。</li>
+<li>时序数据库需要提供一种自动管理数据保存的方式。 即删除过期数据， 而在levelDB 中，删除的代价过高。（通过添加墓碑的方式， 段结构合并的时候才会真正物理性的删除）。</li>
+</ol>
+<h2 id="InfluxDB-的解决方案-TSM"><a href="#InfluxDB-的解决方案-TSM" class="headerlink" title="InfluxDB 的解决方案 - TSM"></a>InfluxDB 的解决方案 - TSM</h2><p>按不同的时间范围划分为不同的分区（Shard），因为时序数据写入都是按时间线性产生的，所以分区的产生也是按时间线性增长的，写入通常是在最新的分区，而不会散列到多个分区。分区的优点是数据回收的物理删除非常简单，直接把整个分区删除即可。</p>
+<ul>
+<li>在最开始的时候， influxdb 采用的方案每个shard都是一个独立的数据库实例，底层都是一套独立的LevelDB存储引擎。 这时带来的问题是，LevelDB底层采用level compaction策略，每个存储引擎都会打开比较多的文件，随着shard的增多，最终进程打开的文件句柄会很快触及到上限。</li>
+<li>由于遇到大量的客户反馈文件句柄过多的问题，InfluxDB在新版本的存储引擎选型中选择了BoltDB替换LevelDB。BoltDB底层数据结构是mmap B+树。 但由于B+ 树会产生大量的随机写。 所以写入性能较差。</li>
+<li>之后Influxdb 最终决定仿照LSM 的思想自研TSM ，主要改进点是基于时序数据库的特性作出一些优化，包含Cache、WAL以及Data File等各个组件，也会有flush、compaction等这类数据操作。</li>
+</ul>
+<h2 id="InfluxDB-系统架构"><a href="#InfluxDB-系统架构" class="headerlink" title="InfluxDB 系统架构"></a>InfluxDB 系统架构</h2><p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-5df0a8734422a15a601d301f0b1d4b1a_1440w.jpg" alt="img" title="null"></p>
+<p>DataBase: 用户可以通过 create database xxx 来创建一个database。</p>
+<p>Retention Policy（RP）： 数据保留策略， 可用来规定数据的的过期时间。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">RETENTION</span> <span class="keyword">POLICY</span> <span class="string">"a_year"</span> <span class="keyword">ON</span> <span class="string">"food_data"</span> <span class="keyword">DURATION</span> <span class="number">52</span>w <span class="keyword">REPLICATION</span> <span class="number">1</span> SHARD <span class="keyword">DURATION</span> <span class="number">1</span>h</span><br></pre></td></tr></table></figure>
+
+<p>上述语句可以创建一个保存周期为52周的RP。REPLICATION 1 表示副本数量为1。 ”SHARD DURATION”指定每个Shard Group对应多长时间。</p>
+<p>一个数据库可以用多个RP ， 不同的表可以设置不同的RP。</p>
+<p>Shard Group ： 实现了数据分区，但是Shard Group只是一个逻辑概念，在它里面包含了大量Shard，Shard才是InfluxDB中真正存储数据以及提供读写服务的概念。</p>
+<p>Share ：结构示意图如下：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-eed8fb66e129e431c3e2b2332731c462_1440w.jpg" alt="img" title="null"></p>
+<p>Share 就是上面章节所介绍的TSM 引擎， 负责把数据写入文件。</p>
+<p>具体的过程类似于LSM，数据来了先存到cashe， 等cashe 大小到一定程度就会异步flush 到TSM文件。 同时WAL（Write Ahead Log） 用来预防数据丢失。</p>
+<h2 id="TSM-原理"><a href="#TSM-原理" class="headerlink" title="TSM 原理"></a>TSM 原理</h2><p>先来看一下Influxdb 数据模型：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-e11efa6aa2417de387cd27edf4b4a5be_1440w.jpg" alt="img" title="null"></p>
+<p>重要概念：</p>
+<ol>
+<li>Measurement : 类似于mysql 的表名。 （census）</li>
+<li>tag key： 类似于mysql 加了索引的列名</li>
+<li>Field key : 类似于mysql 没加索引的列名</li>
+<li>Point：类似SQL中一行记录，而并不是一个点。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> census,location=<span class="number">1</span>,scientist=langstroth butterflies=<span class="number">12</span>,honeybees=<span class="number">23</span> <span class="number">1435362189575692182</span> </span><br><span class="line">//向census 插入一条数据，location,scientist 为 tag <span class="keyword">key</span> ，butterflies和honeybees 为filed <span class="keyword">key</span> ，tag 和filed 之间空格间隔。 <span class="number">1435362189575692182</span>为时间戳， 可省略。</span><br><span class="line"><span class="keyword">show</span> series <span class="keyword">from</span> census</span><br></pre></td></tr></table></figure>
+
+<p>InfluxDB 核心概念 – Series</p>
+<p>时序数据的时间线就是一个数据源采集的一个指标随着时间的流逝而源源不断地吐出数据，这样形成的一条数据线称之为时间线。</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-323bac9a0d57ba572187b3f0bcd59823_1440w.jpg" alt="img" title="null"></p>
+<p>InfluxDB在时序数据模型设计方面提出了一个非常重要的概念：SeriesKey。SeriesKey实际上就是measurement+datasource(tags)。时序数据写入内存之后按照SeriesKey进行组织。</p>
+<p>时序数据在内存中表示为一个Map：&lt;Key, List&lt;Timestamp|Value&gt;&gt;， 其中Key = seriesKey + fieldKey。这个Map执行flush操作形成TSM文件。</p>
+<p>TSM 文件结构</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-d991b843fe41fb323e74f1003f5e6a70_1440w.jpg" alt="img" title="null"></p>
+<p>TSM文件最核心的由Series Data Section以及Series Index Section两个部分组成，其中前者表示存储时序数据的Block，而后者存储文件级别B+树索引Block，用于在文件中快速查询时间序列数据块。</p>
+<p>Series Data Block</p>
+<p>Map中一个Key对应一系列时序数据，因此能想到的最简单的flush策略是将这一系列时序数据在内存中构建成一个Block并持久化到文件。然而，有可能一个Key对应的时序数据非常之多，导致一个Block非常之大，超过Block大小阈值，因此在实际实现中有可能会将同一个Key对应的时序数据构建成多个连续的Block。但是，在任何时候，同一个Block中只会存储同一种Key的数据。</p>
+<p>另一个需要关注的点在于，Map会按照Key顺序排列并执行flush，这是构建索引的需求。Series Data Block文件结构如下图所示：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-ca626f3de5a23afc458f05c459061a52_1440w.jpg" alt="img" title="null"></p>
+<p>Series Index Block</p>
+<p>每个key 对应一个Index Block。</p>
+<p>很多时候用户需要根据Key查询某段时间（比如最近一小时）的时序数据，如果没有索引，就会需要将整个TSM文件加载到内存中才能一个Data Block一个Data Block查找，这样一方面非常占用内存，另一方面查询效率非常之低。为了在不占用太多内存的前提下提高查询效率，TSM文件引入了索引，其实TSM文件索引和HFile文件索引基本相同。TSM文件索引数据由一系列索引Block组成，每个索引Block的结构如下图所示：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-d50de545498784557fe4c2444341d80d_1440w.jpg" alt="img" title="null"></p>
+<p>Series Index Block由Index Block Meta以及一系列Index Entry构成：</p>
+<ol>
+<li>Index Block Meta最核心的字段是Key，表示这个索引Block内所有IndexEntry所索引的时序数据块都是该Key对应的时序数据。</li>
+<li>Index Entry表示一个索引字段，指向对应的Series Data Block。指向的Data Block由Offset唯一确定，Offset表示该Data Block在文件中的偏移量，Size表示指向的Data Block大小。Min Time和Max Time表示指向的Data Block中时序数据集合的最小时间以及最大时间，用户在根据时间范围查找时可以根据这两个字段进行过滤。</li>
+</ol>
+<h2 id="TSM引擎工作原理－时序数据读取"><a href="#TSM引擎工作原理－时序数据读取" class="headerlink" title="TSM引擎工作原理－时序数据读取"></a>TSM引擎工作原理－时序数据读取</h2><p>基于对TSM文件的了解，在一个文件内部根据Key查找一个某个时间范围的时序数据就会变得很简单，整个过程如下图所示：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-66b58901ebd1c1d0f666f66b71e49d02_1440w.jpg" alt="img" title="null"></p>
+<p>上图中中间部分为索引层，TSM在启动之后就会将TSM文件的索引部分加载到内存，数据部分因为太大并不会直接加载到内存。用户查询可以分为三步：</p>
+<ol>
+<li>首先根据Key找到对应的SeriesIndex Block，因为Key是有序的，所以可以使用二分查找来具体实现。</li>
+<li>找到SeriesIndex Block之后再根据查找的时间范围，使用[MinTime, MaxTime]索引定位到可能的Series Data Block列表。</li>
+<li>将满足条件的Series Data Block加载到内存中解压进一步使用二分查找算法根据timestamp查找即可找到。</li>
+</ol>
+<h2 id="多维查询之倒排索引"><a href="#多维查询之倒排索引" class="headerlink" title="多维查询之倒排索引"></a>多维查询之倒排索引</h2><p>上个章节讲的是如何根据key 查到数据。 然而，在实际场景中， 经常会有根据表名和 部分tag 来查询数据的场景。 比如最开始的那个表， 用户要查cenus 表 location=1 在一周内的所有butterflies 总数。 这种的话如果tag 和measurement 不做索引的话，则查询方式只能是遍历对比。</p>
+<p>InfluxDB给出了倒排索引的实现，称之为TimeSeries Index，意为TimeSeries的索引，简称TSI。InfluxDB TSI在1.3版本之前仅支持Memory-Based Index实现，1.3之后又实现了Disk-Based Index实现。</p>
+<p>Memory-Based Index</p>
+<p>Memory-Based Index方案将所有TimeSeries索引加载到内存提供服务，核心数据结构主要有：</p>
+<p><img src="../InfluxDB%E7%AE%80%E4%BB%8B/v2-e2e2b3111a5dff7189a59e2e34d63f2c_1440w.jpg" alt="img" title="null"></p>
+<ul>
+<li>seriesByID：通过SeriesID查询Series的一个Map。</li>
+<li>seriesByTagKeyValue：双层Map，第一层是TagKey对应其所有的TagValue，第二层是TagValue对应的所有Series的ID。可以看到，当TimeSeries的基数变得很大，这个map所占的内存会相当多。</li>
+<li>sortedSeriesIDs：一个排序的SeriesID列表。</li>
+</ul>
+<p><em>Q：考虑下如何查询多个tag 纬度下的series ID？A：答案是拉出多个 seriesID List 求交集。</em></p>
+<p>Disk-Based Index</p>
+<p>Disk-baesd index 的实现思路和TSM file 的实现原理一样。 先写入WAL 预写日志，然后数据存入cashe ， 当cashe 积攒到一定大小后， flush 到文件。</p>
+<p><em>Q: 新插入一条数据， 如何判断series key 是否已经存在？ A：Bloom Filter</em></p>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><p>下载 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://dl.influxdata.com/influxdb/releases/influxdb_1.7.9_amd64.deb</span><br><span class="line">sudo dpkg -i influxdb_1.7.9_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<p>启动:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./influxd 启动influxdb 服务器。 ./influx 启动shell 客户端。 </span><br><span class="line">远程连接服务端 ./influx -host XXX -port xx</span><br></pre></td></tr></table></figure>
+
+<p>创建数据库：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> monit</span><br><span class="line"><span class="keyword">use</span> monit</span><br></pre></td></tr></table></figure>
+
+<p>插入数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> census,location=<span class="number">1</span>,scientist=langstroth butterflies=<span class="number">12</span>,honeybees=<span class="number">23</span></span><br><span class="line">//无需先创建measurement</span><br></pre></td></tr></table></figure>
+
+<p>查询数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> census</span><br></pre></td></tr></table></figure>
+
+<p>http 接口访问：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -G 'http://localhost:8086/query?pretty=true' <span class="comment">--data-urlencode "db=mydb" --data-urlencode "q=SELECT \"value\" FROM \"cpu_load_short\" WHERE \"region\"='us-west'"</span></span><br></pre></td></tr></table></figure>
+
+<p>q= 除了可以接查询语句， 还可以接建RP， 建CQ ， 插入等等操作</p>
+<p>支持同时多个点写入和同时多个查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -i -XPOST 'http://localhost:8086/write?db=mydb' <span class="comment">--data-binary 'cpu_load_short,host=server02 value=0.67 cpu_load_short,host=server02,region=us-west value=0.55 1422568543702900257</span></span><br><span class="line">cpu_load_short,direction=in,host=server01,region=us-west value=2.0 1422568543702900257'</span><br></pre></td></tr></table></figure>
+
+<p>支持连续查询(Continuous Queries简称CQ) 来处理数据采样。</p>
+<p>假设我有一个数据库monitor ， 里面有一张表monit.biz.douyin 记录抖音的数据打点，tag（metric，province，carrier）。 我之前创建了一个名叫3_month的RP ，我想按照metric 和province 两个tag聚合每分钟抖音的打点数量 。建立CQ 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE CONTINUOUS QUERY &quot;douyin_1min_sum&quot; ON &quot;monitor&quot; BEGIN SELECT sum(&quot;count&quot;) INTO monitor.&quot;3_month&quot;.&quot;monit.biz.douyin.1min&quot; FROM monitor.&quot;default&quot;.&quot;monit.biz.douyin&quot; GROUP BY time(1m),metric，province END</span><br></pre></td></tr></table></figure>
+
+<p>monit.biz.douyin.1min 就是聚合完的新表。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="m-pagination col-md-8 col-md-offset-2 col-sm-24" role="pagination">
+    
+    <a class="pull-left" href="/2021/01/11/算法/算法的时间与空间复杂度/" style="float: left;">
+        ← 算法的时间与空间复杂度
+    </a>
+    
+    
+    <a class="pull-right" href="/2021/01/08/其他工具/数据库工具/">
+        数据库工具 →
+    </a>
+    
+</nav>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-24"><script type="text/javascript">
+  /**
+   * 搜狐畅言
+   */
+
+  /*
+  document.write('<div id="SOHUCS" sid="' + window.location.pathname.slice(1) + '" ></div>');
+
+  window.onload = function () {
+    (function () {
+      var appid = 'cytXXXX';
+      var conf = 'prod_xxxxxxxxxxxxxxxxx';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var loadJs = function (d, a, id) {
+        var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type", "text/javascript");
+        b.setAttribute("charset", "UTF-8");
+        b.setAttribute("src", d);
+        if (id) {
+          b.setAttribute("id", id);
+        }
+        if (typeof a === "function") {
+          if (window.attachEvent) {
+            b.onreadystatechange = function () {
+              var e = b.readyState;
+              if (e === "loaded" || e === "complete") {
+                b.onreadystatechange = null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)
+      };
+
+      loadJs("https://changyan.sohu.com/upload/changyan.js", function () {
+        window.changyan.api.config({
+          appid: appid,
+          conf: conf
+        })
+      });
+    })();
+  }
+  */
+
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By HuskyWu. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/husky-wu" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+
+    resizeHero();
+
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+
+
+
+      
+            <style>
+.local-search-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(255, 255, 255, .9);
+  color: #333;
+  z-index: 9999;
+  border-radius: 5px;
+  overflow: scroll;
+}
+#local-search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #151515;
+  background-color: initial;
+}
+.search-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+.search-result-list > li {
+  margin-top: 15px;
+  border-bottom: 1px solid #ddd;
+  transition: all ease .3s;
+}
+.search-result-list > li:hover {
+  border-bottom: 1px solid gray;
+}
+.search-result-title {
+  font-size: 16px;
+}
+.search-result {
+  line-height: 20px;
+}
+.search-keyword {
+  font-weight: normal;
+  color: #c00;
+}
+
+@media (min-width: 890px) {
+  .popup-btn-close {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    border: 1px solid #151515;
+    padding: 0px 10px;
+    border-top-left-radius: 8px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+  .popup-btn-close:hover {
+    background: #151515;
+    opacity: .9;
+    color: #fff;
+  }
+}
+@media (max-width: 890px) {
+  .popup-btn-close {
+    font-size: 0;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px #888;
+    cursor: pointer;
+  }
+  .popup-btn-close::after {
+    content: '←';
+    color: #151515;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="popup search-popup local-search-popup">
+  <span class="popup-btn-close">
+    ESC
+  </span>
+  <div class="container">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="local-search-header clearfix">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="local-search-input-wrapper">
+          <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+        </div>
+      </div>
+      <div id="local-search-result"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem += "<a target='_blank' href='" + articleUrl + "'>" +
+                  "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                  "...</p>" + "</a>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+      
+</body>
+</html>
